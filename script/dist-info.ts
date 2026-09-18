@@ -143,11 +143,11 @@ export function getUpdatesURL() {
   // const architecturePath = getDistArchitecture() === 'arm64' ? 'arm64/' : ''
   // return `https://central.github.com/api/deployments/desktop/desktop/${architecturePath}latest?version=${version}&env=${getChannel()}`
   if (process.platform === 'win32') {
-    return `https://zetaloop.github.io/desktop-metadata/win32-${getDistArchitecture()}-${getChannel()}`
-    // example: https://zetaloop.github.io/desktop-metadata/win32-x64-production/RELEASES
+    return `https://naiheSH.github.io/desktop-metadata/win32-${getDistArchitecture()}-${getChannel()}`
+    // example: https://naiheSH.github.io/desktop-metadata/win32-x64-production/RELEASES
   } else if (process.platform === 'darwin') {
-    return `https://zetaloop.github.io/desktop-metadata/darwin-${getDistArchitecture()}-${getChannel()}/releases.json`
-    // example: https://zetaloop.github.io/desktop-metadata/darwin-arm64-production/releases.json
+    return `https://naiheSH.github.io/desktop-metadata/darwin-${getDistArchitecture()}-${getChannel()}/releases.json`
+    // example: https://naiheSH.github.io/desktop-metadata/darwin-arm64-production/releases.json
   } else {
     throw new Error(`No updates available for platform: ${process.platform}`)
   }

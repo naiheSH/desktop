@@ -1,0 +1,34 @@
+name: Check Official Upstream
+
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the latest official GitHub Desktop release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          upstream_tag=$(gh api repos/desktop/desktop/releases/latest --jq .tag_name)
+          if gh release view "$upstream_tag" --repo "$REPOSITORY" >/dev/null 2>&1; then
+            echo "Official release $upstream_tag is already published here."
+            exit 0
+          fi
+
+          title="Upstream GitHub Desktop release detected: $upstream_tag"
+          existing=$(gh issue list --repo "$REPOSITORY" --state open --search "in:title \"$title\"" --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            echo "Issue #$existing already tracks $upstream_tag."
+            exit 0
+          fi
+
+          gh issue create --repo "$REPOSITORY" --title "$title" --body "The official repository published [$upstream_tag](https://github.com/desktop/desktop/releases/tag/$upstream_tag). Sync it into \\`l10n\\`, resolve localization conflicts, build the artifacts, then run the metadata release workflow."

@@ -57,7 +57,7 @@ function packageOSX() {
   // Use a patched Squirrel.framework to allow auto-updates
   // without requiring code signing
   const arch = getDistArchitecture()
-  const squirrelUrl = `https://github.com/zetaloop/Squirrel.Mac/releases/latest/download/Squirrel-${arch}.zip`
+  const squirrelUrl = `https://github.com/naiheSH/Squirrel.Mac/releases/latest/download/Squirrel-${arch}.zip`
   const frameworkPath = `${distPath}/${productName}.app/Contents/Frameworks`
   const squirrelPath = `${frameworkPath}/Squirrel.framework`
 
