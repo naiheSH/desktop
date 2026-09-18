@@ -1771,7 +1771,7 @@ export class CommitMessage extends React.Component<
     return (
       <div
         role="group"
-        aria-label="Create commit"
+        aria-label="创建提交"
         className={className}
         onContextMenu={this.onContextMenu}
         ref={this.wrapperRef}
