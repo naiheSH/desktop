@@ -21,9 +21,6 @@ interface IDiffOptionsProps {
   readonly showSideBySideDiff: boolean
   readonly onShowSideBySideDiffChanged: (showSideBySideDiff: boolean) => void
 
-  readonly enableDifftastic: boolean
-  readonly onEnableDifftasticChanged: (enableDifftastic: boolean) => void
-
   /** Called when the user opens the diff options popover */
   readonly onDiffOptionsOpened: () => void
 }
@@ -84,14 +81,8 @@ export class DiffOptions extends React.Component<
     )
   }
 
-  private onEnableDifftasticChanged = (
-    event: React.FormEvent<HTMLInputElement>
-  ) => {
-    return this.props.onEnableDifftasticChanged(event.currentTarget.checked)
-  }
-
   public render() {
-    const buttonLabel = `差异对比${__DARWIN__ ? '设置' : '设置'}`
+    const buttonLabel = `Diff ${__DARWIN__ ? 'Settings' : 'Options'}`
     return (
       <div className="diff-options-component" ref={this.diffOptionsRef}>
         <button
@@ -118,7 +109,7 @@ export class DiffOptions extends React.Component<
   }
 
   private renderPopover() {
-    const header = `差异对比${__DARWIN__ ? '设置' : '设置'}`
+    const header = `Diff ${__DARWIN__ ? 'Settings' : 'Options'}`
     return (
       <Popover
         ariaLabelledby="diff-options-popover-header"
@@ -129,7 +120,6 @@ export class DiffOptions extends React.Component<
         onClickOutside={this.closePopover}
       >
         <h3 id="diff-options-popover-header">{header}</h3>
-        {this.renderEnableDifftastic()}
         {this.renderHideWhitespaceChanges()}
         {this.renderShowSideBySide()}
       </Popover>
@@ -146,11 +136,11 @@ export class DiffOptions extends React.Component<
   private renderShowSideBySide() {
     return (
       <fieldset role="radiogroup">
-        <legend>显示方式</legend>
+        <legend>Diff display</legend>
         <RadioButton
           value="Unified"
           checked={!this.props.showSideBySideDiff}
-          label="同屏"
+          label="Unified"
           onSelected={this.onUnifiedSelected}
         />
         <RadioButton
@@ -158,7 +148,7 @@ export class DiffOptions extends React.Component<
           checked={this.props.showSideBySideDiff}
           label={
             <>
-              <div>分屏</div>
+              <div>Split</div>
             </>
           }
           onSelected={this.onSideBySideSelected}
@@ -170,7 +160,7 @@ export class DiffOptions extends React.Component<
   private renderHideWhitespaceChanges() {
     return (
       <fieldset>
-        <legend>空白字符</legend>
+        <legend>Whitespace</legend>
         <Checkbox
           value={
             this.props.hideWhitespaceChanges
@@ -178,28 +168,16 @@ export class DiffOptions extends React.Component<
               : CheckboxValue.Off
           }
           onChange={this.onHideWhitespaceChangesChanged}
-          label={__DARWIN__ ? '隐藏空白字符差异' : '隐藏空白字符差异'}
+          label={
+            __DARWIN__ ? 'Hide Whitespace Changes' : 'Hide whitespace changes'
+          }
         />
         {this.props.isInteractiveDiff && (
           <p className="secondary-text">
-            如果隐藏空白字符差异，将会禁用单独选中某几行文本的功能。
+            Interacting with individual lines or hunks will be disabled while
+            hiding whitespace.
           </p>
         )}
-      </fieldset>
-    )
-  }
-
-  private renderEnableDifftastic() {
-    return (
-      <fieldset>
-        <legend>集成</legend>
-        <Checkbox
-          value={
-            this.props.enableDifftastic ? CheckboxValue.On : CheckboxValue.Off
-          }
-          onChange={this.onEnableDifftasticChanged}
-          label="使用 Difftastic 渲染差异"
-        />
       </fieldset>
     )
   }

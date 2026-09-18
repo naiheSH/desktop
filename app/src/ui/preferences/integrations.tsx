@@ -8,13 +8,8 @@ import { suggestedExternalEditor } from '../../lib/editors/shared'
 import { CustomIntegrationForm } from './custom-integration-form'
 import { ICustomIntegration } from '../../lib/custom-integration'
 import { enableCustomIntegration } from '../../lib/feature-flag'
-import { Checkbox, CheckboxValue } from '../lib/checkbox'
-import { TextBox } from '../lib/text-box'
-import { TabBar } from '../tab-bar'
 
 const CustomIntegrationValue = 'other'
-const DifftasticDocsUrl = 'https://difftastic.wilfred.me.uk/'
-const MergirafUrl = 'https://mergiraf.org/'
 
 interface IIntegrationsPreferencesProps {
   readonly availableEditors: ReadonlyArray<string>
@@ -31,14 +26,6 @@ interface IIntegrationsPreferencesProps {
   readonly onCustomEditorChanged: (customEditor: ICustomIntegration) => void
   readonly onUseCustomShellChanged: (useCustomShell: boolean) => void
   readonly onCustomShellChanged: (customShell: ICustomIntegration) => void
-  readonly copilotUseCommitHistoryStyle: boolean
-  readonly onCopilotUseCommitHistoryStyleChanged: (value: boolean) => void
-  readonly copilotCustomStyle: string
-  readonly onCopilotCustomStyleChanged: (value: string) => void
-  readonly copilotDiffTruncationLimit: number
-  readonly onCopilotDiffTruncationLimitChanged: (value: number) => void
-  readonly enableDifftastic: boolean
-  readonly onEnableDifftasticChanged: (value: boolean) => void
 }
 
 interface IIntegrationsPreferencesState {
@@ -48,11 +35,6 @@ interface IIntegrationsPreferencesState {
   readonly customEditor: ICustomIntegration
   readonly useCustomShell: boolean
   readonly customShell: ICustomIntegration
-  readonly copilotUseCommitHistoryStyle: boolean
-  readonly copilotCustomStyle: string
-  readonly copilotDiffTruncationLimit: number
-  readonly enableDifftastic: boolean
-  readonly selectedTabIndex: number
 }
 
 export class Integrations extends React.Component<
@@ -72,11 +54,6 @@ export class Integrations extends React.Component<
       customEditor: this.props.customEditor,
       useCustomShell: this.props.useCustomShell,
       customShell: this.props.customShell,
-      copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
-      copilotCustomStyle: this.props.copilotCustomStyle,
-      copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
-      enableDifftastic: this.props.enableDifftastic,
-      selectedTabIndex: 0,
     }
   }
 
@@ -111,10 +88,6 @@ export class Integrations extends React.Component<
       useCustomShell: nextProps.useCustomShell,
       customShell: nextProps.customShell,
       customEditor: nextProps.customEditor,
-      copilotUseCommitHistoryStyle: nextProps.copilotUseCommitHistoryStyle,
-      copilotCustomStyle: nextProps.copilotCustomStyle,
-      copilotDiffTruncationLimit: nextProps.copilotDiffTruncationLimit,
-      enableDifftastic: nextProps.enableDifftastic,
     })
   }
 
@@ -208,43 +181,10 @@ export class Integrations extends React.Component<
     }
   }
 
-  private onCopilotUseCommitHistoryStyleChanged = (
-    event: React.FormEvent<HTMLInputElement>
-  ) => {
-    const checked = event.currentTarget.checked
-    this.setState({ copilotUseCommitHistoryStyle: checked })
-    this.props.onCopilotUseCommitHistoryStyleChanged(checked)
-  }
-
-  private onCopilotCustomStyleChanged = (value: string) => {
-    this.setState({ copilotCustomStyle: value })
-    this.props.onCopilotCustomStyleChanged(value)
-  }
-
-  private onCopilotDiffTruncationLimitChanged = (
-    event: React.FormEvent<HTMLSelectElement>
-  ) => {
-    const value = parseInt(event.currentTarget.value, 10)
-    this.setState({ copilotDiffTruncationLimit: value })
-    this.props.onCopilotDiffTruncationLimitChanged(value)
-  }
-
-  private onEnableDifftasticChanged = (
-    event: React.FormEvent<HTMLInputElement>
-  ) => {
-    const checked = event.currentTarget.checked
-    this.setState({ enableDifftastic: checked })
-    this.props.onEnableDifftasticChanged(checked)
-  }
-
-  private onTabClicked = (selectedTabIndex: number) => {
-    this.setState({ selectedTabIndex })
-  }
-
   private renderExternalEditor() {
     const options = this.props.availableEditors
     const { selectedExternalEditor, useCustomEditor } = this.state
-    const label = __DARWIN__ ? '编辑器' : '编辑器'
+    const label = __DARWIN__ ? 'External Editor' : 'External editor'
 
     if (!enableCustomIntegration() && options.length === 0) {
       // this is emulating the <Select/> component's UI so the styles are
@@ -256,11 +196,10 @@ export class Integrations extends React.Component<
         <div className="select-component no-options-found">
           <label>{label}</label>
           <span>
-            没有可用的编辑器。
+            No editors found.{' '}
             <LinkButton uri={suggestedExternalEditor.url}>
-              装个 {suggestedExternalEditor.name}
+              Install {suggestedExternalEditor.name}?
             </LinkButton>
-            ？
           </span>
         </div>
       )
@@ -269,7 +208,7 @@ export class Integrations extends React.Component<
     return (
       <Select
         label={enableCustomIntegration() ? undefined : label}
-        aria-label="编辑器"
+        aria-label="External editor"
         value={
           useCustomEditor
             ? CustomIntegrationValue
@@ -284,7 +223,9 @@ export class Integrations extends React.Component<
         ))}
         {enableCustomIntegration() && (
           <option key={CustomIntegrationValue} value={CustomIntegrationValue}>
-            {__DARWIN__ ? '配置自定义编辑器…' : '配置自定义编辑器…'}
+            {__DARWIN__
+              ? 'Configure Custom Editor…'
+              : 'Configure custom editor…'}
           </option>
         )}
       </Select>
@@ -301,11 +242,10 @@ export class Integrations extends React.Component<
       <Row>
         <div className="no-options-found">
           <span>
-            需要一个编辑器？
+            No other editors found.{' '}
             <LinkButton uri={suggestedExternalEditor.url}>
-              装个 {suggestedExternalEditor.name} 吧
+              Install {suggestedExternalEditor.name}?
             </LinkButton>
-            。
           </span>
         </div>
       </Row>
@@ -355,8 +295,8 @@ export class Integrations extends React.Component<
 
     return (
       <Select
-        label={enableCustomIntegration() ? undefined : '终端'}
-        aria-label="终端"
+        label={enableCustomIntegration() ? undefined : 'Shell'}
+        aria-label="Shell"
         value={useCustomShell ? CustomIntegrationValue : selectedShell}
         onChange={this.onSelectedShellChanged}
       >
@@ -367,7 +307,7 @@ export class Integrations extends React.Component<
         ))}
         {enableCustomIntegration() && (
           <option key={CustomIntegrationValue} value={CustomIntegrationValue}>
-            {__DARWIN__ ? '配置自定义终端…' : '配置自定义终端…'}
+            {__DARWIN__ ? 'Configure Custom Shell…' : 'Configure custom shell…'}
           </option>
         )}
       </Select>
@@ -411,127 +351,22 @@ export class Integrations extends React.Component<
     this.props.onCustomShellChanged(customShell)
   }
 
-  private renderCopilotSettings() {
-    const copilotHistoryDescId = 'copilot-history-description'
-    const copilotCustomStyleDescId = 'copilot-custom-style-description'
-    const copilotDiffTruncationLimitDescId =
-      'copilot-diff-truncation-limit-description'
-    const truncationOptions = [
-      { value: 0, label: '无限制' },
-      { value: 100000, label: '100k' },
-      { value: 200000, label: '200k' },
-      { value: 300000, label: '300k' },
-      { value: 400000, label: '400k' },
-      { value: 500000, label: '500k' },
-      { value: 600000, label: '600k' },
-      { value: 700000, label: '700k' },
-      { value: 800000, label: '800k' },
-      { value: 900000, label: '900k' },
-      { value: 1000000, label: '1000k' },
-    ]
-    return (
-      <div className="copilot-settings-component">
-        <h2>GitHub Copilot</h2>
-        <p className="git-settings-description">
-          以下调整选项是汉化版的增强功能。
-        </p>
-        <Checkbox
-          label="参考最近的提交历史"
-          value={
-            this.state.copilotUseCommitHistoryStyle
-              ? CheckboxValue.On
-              : CheckboxValue.Off
-          }
-          onChange={this.onCopilotUseCommitHistoryStyleChanged}
-          ariaDescribedBy={copilotHistoryDescId}
-        />
-        <p id={copilotHistoryDescId} className="git-settings-description">
-          生成提交消息时参考最近十条提交消息内容。
-        </p>
-        <TextBox
-          label="自定义提交风格"
-          value={this.state.copilotCustomStyle}
-          onValueChanged={this.onCopilotCustomStyleChanged}
-          placeholder="例如：采用简洁的 Conventional Commits 风格，使用中文"
-          ariaDescribedBy={copilotCustomStyleDescId}
-        />
-        <p id={copilotCustomStyleDescId} className="git-settings-description">
-          生成提交消息时采用此处要求的风格。
-        </p>
-        <Select
-          label="读取字数限制"
-          value={this.state.copilotDiffTruncationLimit.toString()}
-          onChange={this.onCopilotDiffTruncationLimitChanged}
-          aria-describedby={copilotDiffTruncationLimitDescId}
-        >
-          {truncationOptions.map(o => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </Select>
-        <p
-          id={copilotDiffTruncationLimitDescId}
-          className="git-settings-description"
-        >
-          生成提交消息时最多读取的改动字符数，超出的部分会被忽略。
-        </p>
-      </div>
-    )
-  }
-
-  private renderDifftasticSettings() {
-    const enableDifftasticDescId = 'enable-difftastic-description'
-
-    return (
-      <div className="copilot-settings-component">
-        <h2>Difftastic</h2>
-        <p className="git-settings-description">
-          以下调整选项是汉化版的增强功能。
-        </p>
-        <Checkbox
-          label="使用 Difftastic 渲染差异"
-          value={
-            this.state.enableDifftastic ? CheckboxValue.On : CheckboxValue.Off
-          }
-          onChange={this.onEnableDifftasticChanged}
-          ariaDescribedBy={enableDifftasticDescId}
-        />
-        <p id={enableDifftasticDescId} className="git-settings-description">
-          Difftastic 是一个基于代码语法结构的差异引擎，改用它来分析文件差异。
-        </p>
-        <p className="git-settings-description">
-          您需要自己通过 Scoop、Homebrew 等方式安装{' '}
-          <LinkButton uri={DifftasticDocsUrl}>Difftastic</LinkButton>。
-        </p>
-        <p className="git-settings-description">
-          这是实验性功能，做着玩的不保证能用。某些功能（例如选择特定几行、仅格式化的改动等）可能会出问题。
-        </p>
-        <p className="git-settings-description">
-          顺便一提您也可以试试{' '}
-          <LinkButton uri={MergirafUrl}>Mergiraf</LinkButton>
-          ，它是一个基于语法结构的合并引擎。
-        </p>
-      </div>
-    )
-  }
-
-  private renderGeneralSettings() {
+  public render() {
     if (!enableCustomIntegration()) {
       return (
-        <>
-          <h2>默认应用</h2>
+        <DialogContent>
+          <h2>Applications</h2>
           <Row>{this.renderExternalEditor()}</Row>
           <Row>{this.renderSelectedShell()}</Row>
-        </>
+        </DialogContent>
       )
     }
 
     return (
-      <>
+      <DialogContent>
         <fieldset>
           <legend>
-            <h2>{__DARWIN__ ? '编辑器' : '编辑器'}</h2>
+            <h2>{__DARWIN__ ? 'External Editor' : 'External editor'}</h2>
           </legend>
           <Row>{this.renderExternalEditor()}</Row>
           {this.state.useCustomEditor && this.renderCustomExternalEditor()}
@@ -539,41 +374,11 @@ export class Integrations extends React.Component<
         </fieldset>
         <fieldset>
           <legend>
-            <h2>终端</h2>
+            <h2>Shell</h2>
           </legend>
           <Row>{this.renderSelectedShell()}</Row>
           {this.state.useCustomShell && this.renderCustomShell()}
         </fieldset>
-      </>
-    )
-  }
-
-  private renderCurrentTab() {
-    if (this.state.selectedTabIndex === 0) {
-      return this.renderGeneralSettings()
-    } else if (this.state.selectedTabIndex === 1) {
-      return this.renderCopilotSettings()
-    } else if (this.state.selectedTabIndex === 2) {
-      return this.renderDifftasticSettings()
-    }
-
-    return null
-  }
-
-  public render() {
-    return (
-      <DialogContent className="integrations-preferences">
-        <TabBar
-          selectedIndex={this.state.selectedTabIndex}
-          onTabClicked={this.onTabClicked}
-        >
-          <span>通用</span>
-          <span>Copilot</span>
-          <span>Difftastic</span>
-        </TabBar>
-        <div className="integrations-preferences-content">
-          {this.renderCurrentTab()}
-        </div>
       </DialogContent>
     )
   }
