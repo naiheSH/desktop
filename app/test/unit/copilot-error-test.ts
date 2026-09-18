@@ -208,10 +208,7 @@ describe('getCopilotPaymentRequiredErrorFromSessionError', () => {
       errorCode: 'billing_not_configured',
     })
 
-    assert.equal(
-      error?.message,
-      'GitHub Copilot billing is not configured for this account.'
-    )
+    assert.equal(error?.message, '此账户未配置 GitHub Copilot 计费。')
     assert.equal(error?.code, 'billing_not_configured')
   })
 

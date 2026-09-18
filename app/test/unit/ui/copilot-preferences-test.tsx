@@ -734,7 +734,7 @@ describe('CopilotPreferences', () => {
     const view = render(<CopilotPreferences {...defaults()} />)
 
     assert.strictEqual(screen.queryByRole('heading', { name: 'Usage' }), null)
-    assert.ok(screen.getByAltText('Avatar for Mona Lisa'))
+    assert.ok(screen.getByAltText('Mona Lisa 的头像'))
     assert.ok(screen.getByText('Mona Lisa'))
     assert.ok(screen.getByText('@mona'))
     assert.ok(screen.getByText('Chat messages'))

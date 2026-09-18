@@ -46,15 +46,15 @@ export class CopilotDisclaimer extends React.Component<ICopilotDisclaimerProps> 
       >
         <DialogContent>
           <p id="copilot-disclaimer-body">
-            Copilot is powered by AI, so mistakes are possible.
+            Copilot 由 AI 驱动，可能会出现错误。
             {children !== undefined && <> {children}</>}{' '}
-            <LinkButton uri="https://gh.io/copilot-for-desktop-transparency">
-              Learn more about Copilot in GitHub Desktop.
+            <LinkButton uri="https://docs.github.com/zh/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-in-github-desktop">
+              了解 GitHub Desktop 中 Copilot 的更多信息。
             </LinkButton>
           </p>
         </DialogContent>
         <DialogFooter>
-          <OkCancelButtonGroup destructive={true} okButtonText="I understand" />
+          <OkCancelButtonGroup destructive={true} okButtonText="我已知悉" />
         </DialogFooter>
       </Dialog>
     )
