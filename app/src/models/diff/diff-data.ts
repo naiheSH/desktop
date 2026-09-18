@@ -58,6 +58,12 @@ interface ITextDiffData {
   readonly maxLineNumber: number
   /** Whether or not the diff has invisible bidi characters */
   readonly hasHiddenBidiChars: boolean
+  /** Whether this diff was rendered by the optional Difftastic integration. */
+  readonly renderedByDifft?: boolean
+  /** Detected language used by Difftastic, if it rendered the diff. */
+  readonly renderedByDifftLanguage?: string | null
+  /** Diagnostic returned when Difftastic could not render the diff. */
+  readonly difftRenderFailure?: string | null
 }
 
 export interface ITextDiff extends ITextDiffData {
@@ -126,3 +132,21 @@ export type IDiff =
   | ISubmoduleDiff
   | ILargeTextDiff
   | IUnrenderableDiff
+
+export function isDifftRenderedDiff(diff: IDiff | null): boolean {
+  return diff?.kind === DiffType.Text || diff?.kind === DiffType.LargeText
+    ? diff.renderedByDifft === true
+    : false
+}
+
+export function getDifftRenderedLanguage(diff: IDiff | null): string | null {
+  return diff?.kind === DiffType.Text || diff?.kind === DiffType.LargeText
+    ? diff.renderedByDifftLanguage ?? null
+    : null
+}
+
+export function getDifftRenderFailure(diff: IDiff | null): string | null {
+  return diff?.kind === DiffType.Text || diff?.kind === DiffType.LargeText
+    ? diff.difftRenderFailure ?? null
+    : null
+}
