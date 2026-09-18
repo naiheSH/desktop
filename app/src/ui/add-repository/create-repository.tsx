@@ -11,7 +11,6 @@ import {
   RepositoryType,
 } from '../../lib/git'
 import { TextBox } from '../lib/text-box'
-import { Button } from '../lib/button'
 import { Row } from '../lib/row'
 import { Checkbox, CheckboxValue } from '../lib/checkbox'
 import { writeDefaultReadme } from './write-default-readme'
@@ -20,15 +19,12 @@ import { writeGitDescription } from '../../lib/git/description'
 import { getGitIgnoreNames, writeGitIgnore } from './gitignores'
 import { ILicense, getLicenses, writeLicense } from './licenses'
 import { writeGitAttributes } from './git-attributes'
-import { getDefaultDir, setDefaultDir } from '../lib/default-dir'
 import { Dialog, DialogContent, DialogFooter, DialogError } from '../dialog'
 import { LinkButton } from '../lib/link-button'
 import { PopupType } from '../../models/popup'
 import { Ref } from '../lib/ref'
 import { enableReadmeOverwriteWarning } from '../../lib/feature-flag'
 import { OkCancelButtonGroup } from '../dialog/ok-cancel-button-group'
-import { showOpenDialog } from '../main-process-proxy'
-import { pathExists } from '../lib/path-exists'
 import { mkdir } from 'fs/promises'
 import { directoryExists } from '../../lib/directory-exists'
 import { FoldoutType } from '../../lib/app-state'
@@ -37,16 +33,18 @@ import { isTopMostDialog } from '../dialog/is-top-most'
 import { InputError } from '../lib/input-description/input-error'
 import { InputWarning } from '../lib/input-description/input-warning'
 import { CreateRepositoryError } from '../../lib/error-with-metadata'
+import { RepositoryPath } from '../lib/repository-path'
+import { pathExists } from '../../lib/path-exists'
 
 /** URL used to provide information about submodules to the user. */
 const submoduleDocsUrl = 'https://gh.io/git-submodules'
 
 /** The sentinel value used to indicate no gitignore should be used. */
-const NoGitIgnoreValue = '无'
+const NoGitIgnoreValue = 'None'
 
 /** The sentinel value used to indicate no license should be used. */
 const NoLicenseValue: ILicense = {
-  name: '无',
+  name: 'None',
   featured: false,
   body: '',
   hidden: false,
@@ -64,8 +62,15 @@ interface ICreateRepositoryProps {
 }
 
 interface ICreateRepositoryState {
-  readonly path: string | null
+  /** The resolved full path (path + sanitized name), or null if incomplete. */
+  readonly fullPath: string | null
+
+  /** The raw name entered by the user. Needed for readme/license/description. */
   readonly name: string
+
+  /** The base directory path. Needed for persisting default directory. */
+  readonly path: string | null
+
   readonly description: string
 
   /** Is the given path able to be written to? */
@@ -103,22 +108,6 @@ interface ICreateRepositoryState {
   readonly readMeExists: boolean
 }
 
-// We use this instead of sanitizedRepositoryName because it deals with
-// valid repository names on GitHub.com but here we only care about whether
-// we'll be able to create a directory with the given name. If a user
-// creates a repository with a name that GitHub.com doesn't like here it'll
-// get sanitized in the Publish dialog later on.
-//
-// Note that we don't sanitize `\` or `/` here since we use `Path.join` to
-// create the full path and that will handle those characters appropriately
-// letting users type something like OrgA\RepoB and have the new repo be
-// created in the OrgA folder.
-//
-// macOS and Linux allow are way more allowing so there's no need to sanitize
-const safeDirectoryName = (name: string) => {
-  return __WIN32__ ? name.replace(/[<>:"|?*]/g, '-').replace(/\s+$/, '') : name
-}
-
 /** The Create New Repository component. */
 export class CreateRepository extends React.Component<
   ICreateRepositoryProps,
@@ -126,7 +115,9 @@ export class CreateRepository extends React.Component<
 > {
   private checkIsTopMostDialog = isTopMostDialog(
     () => {
-      this.updateReadMeExists(this.state.path, this.state.name)
+      if (this.state.fullPath !== null) {
+        this.updateReadMeExists(this.state.fullPath)
+      }
       window.addEventListener('focus', this.onWindowFocus)
     },
     () => {
@@ -137,22 +128,10 @@ export class CreateRepository extends React.Component<
   public constructor(props: ICreateRepositoryProps) {
     super(props)
 
-    // If there is an initial path, remove the last part of the path which will
-    // be the suggested repository name. For example, if the initial path is
-    // /Users/adam/Projects/MyProject, the path will be /Users/adam/Projects and
-    // the name will be MyProject, so the repository will be created at
-    // /Users/adam/Projects/MyProject.
-    const path = this.props.initialPath
-      ? Path.dirname(this.props.initialPath)
-      : null
-
-    const name = this.props.initialPath
-      ? safeDirectoryName(Path.basename(this.props.initialPath))
-      : ''
-
     this.state = {
-      path,
-      name,
+      fullPath: null,
+      path: null,
+      name: '',
       description: '',
       createWithReadme: false,
       creating: false,
@@ -165,10 +144,6 @@ export class CreateRepository extends React.Component<
       readMeExists: false,
       isSubFolderOfRepository: false,
     }
-
-    if (path === null) {
-      this.initializePath()
-    }
   }
 
   public async componentDidMount() {
@@ -178,11 +153,6 @@ export class CreateRepository extends React.Component<
     const licenses = await getLicenses()
 
     this.setState({ gitIgnoreNames, licenses })
-
-    const path = this.state.path ?? (await getDefaultDir())
-
-    this.updateIsRepository(path, this.state.name)
-    this.updateReadMeExists(path, this.state.name)
   }
 
   public componentDidUpdate(): void {
@@ -193,34 +163,28 @@ export class CreateRepository extends React.Component<
     this.checkIsTopMostDialog(false)
   }
 
-  private initializePath = async () => {
-    const path = await getDefaultDir()
-    this.setState(s => (s.path === null ? { path } : null))
+  private onFullPathChanged = (fullPath: string | null) => {
+    this.setState({
+      fullPath,
+      isRepository: false,
+      isSubFolderOfRepository: false,
+    })
+
+    if (fullPath !== null) {
+      this.updateIsRepository(fullPath)
+      this.updateReadMeExists(fullPath)
+    }
   }
 
-  private onPathChanged = async (path: string) => {
-    this.setState({ path, isValidPath: null, isRepository: false })
-
-    this.updateIsRepository(path, this.state.name)
-    this.updateReadMeExists(path, this.state.name)
+  private onPathChanged = (path: string) => {
+    this.setState({ path })
   }
 
   private onNameChanged = (name: string) => {
-    const { path } = this.state
-
     this.setState({ name })
-
-    if (path === null) {
-      return
-    }
-
-    this.updateIsRepository(path, name)
-    this.updateReadMeExists(this.state.path, name)
   }
 
-  private async updateIsRepository(path: string, name: string) {
-    const fullPath = Path.join(path, safeDirectoryName(name))
-
+  private async updateIsRepository(fullPath: string) {
     const type = await getRepositoryType(fullPath).catch(e => {
       log.error(`Unable to determine repository type`, e)
       return { kind: 'missing' } as RepositoryType
@@ -232,7 +196,7 @@ export class CreateRepository extends React.Component<
       // If the path is considered unsafe by Git we won't be able to
       // verify that it's a repository (or worktree). So we'll fall back to this
       // naive approximation.
-      isRepository = await directoryExists(join(path, '.git'))
+      isRepository = await directoryExists(join(fullPath, '.git'))
     }
 
     if (type.kind === 'regular') {
@@ -243,10 +207,9 @@ export class CreateRepository extends React.Component<
       isSubFolderOfRepository = !isRepository
     }
 
-    // Only update isRepository if the path is still the same one we were using
-    // to check whether it looked like a repository.
+    // Only update if the full path is still what we were checking.
     this.setState(state =>
-      state.path === path && state.name === name
+      state.fullPath === fullPath
         ? { isRepository, isSubFolderOfRepository }
         : null
     )
@@ -256,51 +219,26 @@ export class CreateRepository extends React.Component<
     this.setState({ description })
   }
 
-  private showFilePicker = async () => {
-    const path = await showOpenDialog({
-      properties: ['createDirectory', 'openDirectory'],
-    })
-
-    if (path === null) {
+  private async updateReadMeExists(fullPath: string) {
+    if (!enableReadmeOverwriteWarning()) {
       return
     }
 
-    this.setState({ path, isRepository: false })
-    this.updateIsRepository(path, this.state.name)
+    const readMePath = Path.join(fullPath, 'README.md')
+    const readMeExists = await pathExists(readMePath)
+
+    // Only update if the full path is still current.
+    this.setState(state =>
+      state.fullPath === fullPath ? { readMeExists } : null
+    )
   }
 
-  private async updateReadMeExists(path: string | null, name: string) {
-    if (!enableReadmeOverwriteWarning() || path === null) {
-      return
-    }
-
-    const fullPath = Path.join(path, safeDirectoryName(name), 'README.md')
-    const readMeExists = await pathExists(fullPath)
-
-    // Only update readMeExists if the path is still the same
-    this.setState(state => (state.path === path ? { readMeExists } : null))
-  }
-
-  private resolveRepositoryRoot = async (): Promise<string | null> => {
-    const currentPath = this.state.path
-    if (currentPath === null) {
-      return null
-    }
-
-    if (this.props.initialPath && this.props.initialPath === currentPath) {
-      // if the user provided an initial path and didn't change it, we should
-      // validate it is an existing path and use that for the repository
-      try {
-        await mkdir(currentPath, { recursive: true })
-        return currentPath
-      } catch {}
-    }
-
-    return Path.join(currentPath, safeDirectoryName(this.state.name))
+  private resolveRepositoryRoot(): string | null {
+    return this.state.fullPath
   }
 
   private createRepository = async () => {
-    const fullPath = await this.resolveRepositoryRoot()
+    const fullPath = this.resolveRepositoryRoot()
 
     if (fullPath === null) {
       // Shouldn't be able to get here with a null full path, but if you did,
@@ -435,7 +373,7 @@ export class CreateRepository extends React.Component<
       const wd = status.workingDirectory
       const files = wd.files
       if (files.length > 0) {
-        await createCommit(repository, 'Initial commit', files) // Desktop-CN: 提交名称请勿翻译
+        await createCommit(repository, 'Initial commit', files)
       }
     } catch (e) {
       log.error(`createRepository: initial commit failed at ${fullPath}`, e)
@@ -457,7 +395,7 @@ export class CreateRepository extends React.Component<
     // repository from an empty folder, because this value will be the
     // repository path itself
     if (!this.props.initialPath && this.state.path !== null) {
-      setDefaultDir(this.state.path)
+      RepositoryPath.setDefaultPath(this.state.path)
     }
   }
 
@@ -467,24 +405,6 @@ export class CreateRepository extends React.Component<
     this.setState({
       createWithReadme: event.currentTarget.checked,
     })
-  }
-
-  private renderSanitizedName() {
-    const sanitizedName = safeDirectoryName(this.state.name)
-    if (this.state.name === sanitizedName) {
-      return null
-    }
-
-    return (
-      <InputWarning
-        id="repo-sanitized-name-warning"
-        trackedUserInput={this.state.name}
-        ariaLiveMessage={`仓库将会命名为 ${sanitizedName}，空格与无效字符会被替换成横线。`}
-      >
-        <p>仓库将会命名为 {sanitizedName}</p>
-        <span className="sr-only">空格与无效字符会被替换成横线。</span>
-      </InputWarning>
-    )
   }
 
   private onGitIgnoreChange = (event: React.FormEvent<HTMLSelectElement>) => {
@@ -504,7 +424,7 @@ export class CreateRepository extends React.Component<
     return (
       <Row>
         <Select
-          label={__DARWIN__ ? 'Git 忽略规则' : 'Git 忽略规则'}
+          label={__DARWIN__ ? 'Git Ignore' : 'Git ignore'}
           value={this.state.gitIgnore}
           onChange={this.onGitIgnoreChange}
         >
@@ -529,7 +449,7 @@ export class CreateRepository extends React.Component<
     return (
       <Row>
         <Select
-          label="许可证"
+          label="License"
           value={this.state.license}
           onChange={this.onLicenseChange}
         >
@@ -557,53 +477,58 @@ export class CreateRepository extends React.Component<
       return null
     }
 
-    return <DialogError>无法在该路径创建文件夹，没有创建权限。</DialogError>
+    return (
+      <DialogError>
+        Directory could not be created at this path. You may not have
+        permissions to create a directory here.
+      </DialogError>
+    )
   }
 
   private renderGitRepositoryError() {
-    const { isRepository, path, name } = this.state
+    const { isRepository, fullPath } = this.state
 
-    if (!path || path.length === 0 || !isRepository) {
+    if (!fullPath || !isRepository) {
       return null
     }
-
-    const fullPath = Path.join(path, safeDirectoryName(name))
 
     return (
       <Row>
         <InputError
           id="existing-repository-path-error"
-          trackedUserInput={this.state.path + this.state.name}
-          ariaLiveMessage={`文件夹 ${fullPath} 已经是一个 Git 仓库。是否需要直接添加这个仓库？`}
+          trackedUserInput={fullPath}
+          ariaLiveMessage={`The directory ${fullPath} appears to be a Git repository. Would you like to add this repository instead?`}
         >
-          文件夹 <Ref>{fullPath}</Ref> 已经是一个 Git 仓库。是否需要直接{' '}
+          The directory <Ref>{fullPath}</Ref>appears to be a Git repository.
+          Would you like to{' '}
           <LinkButton onClick={this.onAddRepositoryClicked}>
-            添加这个仓库
-          </LinkButton>
-          ？
+            add this repository
+          </LinkButton>{' '}
+          instead?
         </InputError>
       </Row>
     )
   }
 
   private renderGitRepositorySubFolderMessage() {
-    const { isSubFolderOfRepository, path, name } = this.state
+    const { isSubFolderOfRepository, fullPath } = this.state
 
-    if (!path || path.length === 0 || !isSubFolderOfRepository) {
+    if (!fullPath || !isSubFolderOfRepository) {
       return null
     }
-
-    const fullPath = Path.join(path, safeDirectoryName(name))
 
     return (
       <Row>
         <InputWarning
           id="path-is-subfolder-of-repository"
-          trackedUserInput={this.state.path + this.state.name}
-          ariaLiveMessage={`文件夹 ${fullPath} 是一个 Git 仓库的子目录。有兴趣了解一下子模块机制吗？`}
+          trackedUserInput={fullPath}
+          ariaLiveMessage={`The directory ${fullPath} appears to be a subfolder Git repository. Did you know about submodules?`}
         >
-          文件夹 <Ref>{fullPath}</Ref> 是一个 Git 仓库的子目录。
-          <LinkButton uri={submoduleDocsUrl}>点击了解子模块机制。</LinkButton>
+          The directory <Ref>{fullPath}</Ref>appears to be a subfolder of Git
+          repository.
+          <LinkButton uri={submoduleDocsUrl}>
+            Learn about submodules.
+          </LinkButton>
         </InputWarning>
       </Row>
     )
@@ -626,32 +551,26 @@ export class CreateRepository extends React.Component<
         <InputWarning
           id="readme-overwrite-warning"
           trackedUserInput={this.state.createWithReadme}
-          ariaLiveMessage="该文件夹已经有一个 README.md 文件，如果再选择添加的话，现有的文件会被覆盖。"
+          ariaLiveMessage="This directory contains a README.md file already. Checking
+          this box will result in the existing file being overwritten."
         >
-          该文件夹已经有一个 <Ref>README.md</Ref>{' '}
-          文件，如果再选择添加的话，现有的文件会被覆盖。
+          This directory contains a <Ref>README.md</Ref> file already. Checking
+          this box will result in the existing file being overwritten.
         </InputWarning>
       </Row>
     )
   }
 
   private renderPathMessage = () => {
-    const { path, name, isRepository } = this.state
+    const { fullPath, isRepository } = this.state
 
-    if (
-      path === null ||
-      path.trim().length === 0 ||
-      name.trim().length === 0 ||
-      isRepository
-    ) {
+    if (fullPath === null || isRepository) {
       return null
     }
 
-    const fullPath = Path.join(path, safeDirectoryName(name))
-
     return (
       <div id="create-repo-path-msg">
-        仓库将被创建在 <Ref>{fullPath}</Ref>。
+        The repository will be created at <Ref>{fullPath}</Ref>.
       </div>
     )
   }
@@ -659,31 +578,28 @@ export class CreateRepository extends React.Component<
   private onAddRepositoryClicked = () => {
     this.props.onDismissed()
 
-    const { path, name } = this.state
+    const { fullPath } = this.state
 
-    // Shouldn't be able to even get here if path is null.
-    if (path !== null) {
+    if (fullPath !== null) {
       this.props.dispatcher.showPopup({
         type: PopupType.AddRepository,
-        path: Path.join(path, safeDirectoryName(name)),
+        path: fullPath,
       })
     }
   }
 
   public render() {
     const disabled =
-      this.state.path === null ||
-      this.state.path.length === 0 ||
-      this.state.name.trim().length === 0 ||
+      this.state.fullPath === null ||
       this.state.creating ||
       this.state.isRepository
-
-    const loadingDefaultDir = this.state.path === null
 
     return (
       <Dialog
         id="create-repository"
-        title={__DARWIN__ ? '创建仓库' : '创建仓库'}
+        title={
+          __DARWIN__ ? 'Create a New Repository' : 'Create a new repository'
+        }
         loading={this.state.creating}
         onSubmit={this.createRepository}
         onDismissed={this.props.onDismissed}
@@ -691,38 +607,32 @@ export class CreateRepository extends React.Component<
         {this.renderInvalidPathError()}
 
         <DialogContent>
-          <Row>
-            <TextBox
-              value={this.state.name}
-              label="名称"
-              placeholder="仓库的名字"
-              onValueChanged={this.onNameChanged}
-              ariaDescribedBy="existing-repository-path-error repo-sanitized-name-warning"
-            />
-          </Row>
-
-          {this.renderSanitizedName()}
+          <RepositoryPath
+            initialName={
+              this.props.initialPath
+                ? Path.basename(this.props.initialPath)
+                : undefined
+            }
+            initialPath={
+              this.props.initialPath
+                ? Path.dirname(this.props.initialPath)
+                : undefined
+            }
+            onFullPathChanged={this.onFullPathChanged}
+            onNameChanged={this.onNameChanged}
+            onPathChanged={this.onPathChanged}
+            namePlaceholder="repository name"
+            pathPlaceholder="repository path"
+            nameAriaDescribedBy="existing-repository-path-error repo-sanitized-name-warning"
+            pathAriaDescribedBy="existing-repository-path-error path-is-subfolder-of-repository"
+          />
 
           <Row>
             <TextBox
               value={this.state.description}
-              label="介绍"
+              label="Description"
               onValueChanged={this.onDescriptionChanged}
             />
-          </Row>
-
-          <Row>
-            <TextBox
-              value={this.state.path ?? ''}
-              label={__DARWIN__ ? '文件夹路径' : '文件夹路径'}
-              placeholder="仓库的位置"
-              onValueChanged={this.onPathChanged}
-              disabled={loadingDefaultDir}
-              ariaDescribedBy="existing-repository-path-error path-is-subfolder-of-repository"
-            />
-            <Button onClick={this.showFilePicker} disabled={loadingDefaultDir}>
-              选择…
-            </Button>
           </Row>
 
           {this.renderGitRepositoryError()}
@@ -730,7 +640,7 @@ export class CreateRepository extends React.Component<
 
           <Row>
             <Checkbox
-              label="添加 README 自述文件"
+              label="Initialize this repository with a README"
               value={
                 this.state.createWithReadme
                   ? CheckboxValue.On
@@ -749,8 +659,10 @@ export class CreateRepository extends React.Component<
         <DialogFooter>
           {this.renderPathMessage()}
           <OkCancelButtonGroup
-            okButtonText={__DARWIN__ ? '创建' : '创建'}
-            okButtonDisabled={disabled || loadingDefaultDir}
+            okButtonText={
+              __DARWIN__ ? 'Create Repository' : 'Create repository'
+            }
+            okButtonDisabled={disabled}
             okButtonAriaDescribedBy="create-repo-path-msg"
           />
         </DialogFooter>
@@ -761,6 +673,8 @@ export class CreateRepository extends React.Component<
   private onWindowFocus = () => {
     // Verify whether or not a README.md file exists at the chosen directory
     // in case one has been added or removed and the warning can be displayed.
-    this.updateReadMeExists(this.state.path, this.state.name)
+    if (this.state.fullPath !== null) {
+      this.updateReadMeExists(this.state.fullPath)
+    }
   }
 }

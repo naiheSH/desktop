@@ -51,9 +51,9 @@ export class Notifications extends React.Component<
     return (
       <DialogContent>
         <div className="advanced-section">
-          <h2>通知</h2>
+          <h2>Notifications</h2>
           <Checkbox
-            label="启用系统通知"
+            label="Enable notifications"
             value={
               this.props.notificationsEnabled
                 ? CheckboxValue.On
@@ -61,9 +61,9 @@ export class Notifications extends React.Component<
             }
             onChange={this.onNotificationsEnabledChanged}
           />
-          <p className="git-settings-description">
-            在当前仓库发生重要事件时显示通知。
-            {this.renderNotificationHint()}
+          <p className="settings-description">
+            Allows the display of notifications when high-signal events take
+            place in the current repository.{this.renderNotificationHint()}
           </p>
         </div>
       </DialogContent>
@@ -102,11 +102,12 @@ export class Notifications extends React.Component<
     if (suggestGrantNotificationPermission) {
       return (
         <>
-          您需要{' '}
+          {' '}
+          You need to{' '}
           <LinkButton onClick={this.onGrantNotificationPermission}>
-            允许
+            grant permission
           </LinkButton>{' '}
-          GitHub Desktop 显示通知。
+          to display these notifications from GitHub Desktop.
         </>
       )
     }
@@ -120,21 +121,28 @@ export class Notifications extends React.Component<
     if (warnNotificationsDenied) {
       return (
         <div className="setting-hint-warning">
-          <span className="warning-icon">⚠️</span> GitHub Desktop
-          没有显示通知的权限。请在{' '}
-          <LinkButton uri={notificationSettingsURL}>系统通知设置</LinkButton>{' '}
-          中设置允许。
+          <span className="warning-icon">⚠️</span> GitHub Desktop has no
+          permission to display notifications. Please, enable them in the{' '}
+          <LinkButton uri={notificationSettingsURL}>
+            Notifications Settings
+          </LinkButton>
+          .
         </div>
       )
     }
 
-    const verb = suggestConfigureNotifications ? '正确配置' : '允许'
+    const verb = suggestConfigureNotifications
+      ? 'properly configured'
+      : 'enabled'
 
     return (
       <>
-        请确保已在{' '}
-        <LinkButton uri={notificationSettingsURL}>系统通知设置</LinkButton> 里为
-        GitHub Desktop {verb}了通知权限。
+        {' '}
+        Make sure notifications are {verb} for GitHub Desktop in the{' '}
+        <LinkButton uri={notificationSettingsURL}>
+          Notifications Settings
+        </LinkButton>
+        .
       </>
     )
   }

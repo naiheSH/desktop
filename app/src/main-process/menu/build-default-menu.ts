@@ -4,22 +4,27 @@ import { MenuEvent } from './menu-event'
 import { truncateWithEllipsis } from '../../lib/truncate-with-ellipsis'
 import { getLogDirectoryPath } from '../../lib/logging/get-log-path'
 import { UNSAFE_openDirectory } from '../shell'
+import { enableWorktreeSupport } from '../../lib/feature-flag'
 import { MenuLabelsEvent } from '../../models/menu-labels'
 import * as ipcWebContents from '../ipc-webcontents'
 import { mkdir } from 'fs/promises'
 import { buildTestMenu } from './build-test-menu'
 
-const createPullRequestLabel = __DARWIN__ ? '创建拉取请求' : '创建拉取请求'
+const createPullRequestLabel = __DARWIN__
+  ? 'Create Pull Request'
+  : 'Create &pull request'
 const showPullRequestLabel = __DARWIN__
-  ? '打开 GitHub 查看拉取请求'
-  : '打开 GitHub 查看拉取请求'
-const defaultBranchNameValue = __DARWIN__ ? '默认分支' : '默认分支'
-const confirmRepositoryRemovalLabel = __DARWIN__ ? '删除…' : '删除…'
-const repositoryRemovalLabel = __DARWIN__ ? '删除' : '删除'
+  ? 'View Pull Request on GitHub'
+  : 'View &pull request on GitHub'
+const defaultBranchNameValue = __DARWIN__ ? 'Default Branch' : 'default branch'
+const confirmRepositoryRemovalLabel = __DARWIN__ ? 'Remove…' : '&Remove…'
+const repositoryRemovalLabel = __DARWIN__ ? 'Remove' : '&Remove'
 const confirmStashAllChangesLabel = __DARWIN__
-  ? '暂存所有改动…'
-  : '暂存所有改动…'
-const stashAllChangesLabel = __DARWIN__ ? '暂存所有改动' : '暂存所有改动'
+  ? 'Stash All Changes…'
+  : '&Stash all changes…'
+const stashAllChangesLabel = __DARWIN__
+  ? 'Stash All Changes'
+  : '&Stash all changes'
 
 enum ZoomDirection {
   Reset,
@@ -31,7 +36,11 @@ export const separator: Electron.MenuItemConstructorOptions = {
   type: 'separator',
 }
 
-export function buildDefaultMenu({
+export function buildDefaultMenu(params: MenuLabelsEvent): Electron.Menu {
+  return Menu.buildFromTemplate(buildDefaultMenuTemplate(params))
+}
+
+export function buildDefaultMenuTemplate({
   selectedExternalEditor,
   selectedShell,
   askForConfirmationOnForcePush,
@@ -42,7 +51,7 @@ export function buildDefaultMenu({
   isStashedChangesVisible = false,
   askForConfirmationWhenStashingAllChanges = true,
   isChangesFilterVisible = true,
-}: MenuLabelsEvent): Electron.Menu {
+}: MenuLabelsEvent): Electron.MenuItemConstructorOptions[] {
   contributionTargetDefaultBranch = truncateWithEllipsis(
     contributionTargetDefaultBranch,
     25
@@ -63,57 +72,56 @@ export function buildDefaultMenu({
       label: 'GitHub Desktop',
       submenu: [
         {
-          label: '关于',
+          label: 'About GitHub Desktop',
           click: emit('show-about'),
           id: 'about',
         },
         separator,
         {
-          label: '设置…',
+          label: 'Settings…',
           id: 'preferences',
           accelerator: 'CmdOrCtrl+,',
           click: emit('show-preferences'),
         },
         separator,
         {
-          label: '安装命令行工具…',
+          label: 'Install Command Line Tool…',
           id: 'install-cli',
           click: emit('install-darwin-cli'),
         },
         separator,
         {
-          label: '服务',
           role: 'services',
           submenu: [],
         },
         separator,
-        { label: '隐藏 GitHub Desktop', role: 'hide' },
-        { label: '隐藏其他', role: 'hideOthers' },
-        { label: '全部显示', role: 'unhide' },
+        { role: 'hide' },
+        { role: 'hideOthers' },
+        { role: 'unhide' },
         separator,
-        { label: '退出 GitHub Desktop', role: 'quit' },
+        { role: 'quit' },
       ],
     })
   }
 
   const fileMenu: Electron.MenuItemConstructorOptions = {
-    label: __DARWIN__ ? '文件' : '文件',
+    label: __DARWIN__ ? 'File' : '&File',
     submenu: [
       {
-        label: __DARWIN__ ? '新建仓库…' : '新建仓库…',
+        label: __DARWIN__ ? 'New Repository…' : 'New &repository…',
         id: 'new-repository',
         click: emit('create-repository'),
         accelerator: 'CmdOrCtrl+N',
       },
       separator,
       {
-        label: __DARWIN__ ? '添加本地仓库…' : '添加本地仓库…',
+        label: __DARWIN__ ? 'Add Local Repository…' : 'Add &local repository…',
         id: 'add-local-repository',
         accelerator: 'CmdOrCtrl+O',
         click: emit('add-local-repository'),
       },
       {
-        label: __DARWIN__ ? '克隆在线仓库…' : '克隆在线仓库…',
+        label: __DARWIN__ ? 'Clone Repository…' : 'Clo&ne repository…',
         id: 'clone-repository',
         accelerator: 'CmdOrCtrl+Shift+O',
         click: emit('clone-repository'),
@@ -128,7 +136,7 @@ export function buildDefaultMenu({
     fileItems.push(
       separator,
       {
-        label: '设置…',
+        label: '&Options…',
         id: 'preferences',
         accelerator: 'CmdOrCtrl+,',
         click: emit('show-preferences'),
@@ -136,7 +144,7 @@ export function buildDefaultMenu({
       separator,
       {
         role: 'quit',
-        label: '退出',
+        label: 'E&xit',
         accelerator: exitAccelerator,
       }
     )
@@ -145,23 +153,23 @@ export function buildDefaultMenu({
   template.push(fileMenu)
 
   template.push({
-    label: __DARWIN__ ? '编辑' : '编辑',
+    label: __DARWIN__ ? 'Edit' : '&Edit',
     submenu: [
-      { role: 'undo', label: __DARWIN__ ? '撤销' : '撤销' },
-      { role: 'redo', label: __DARWIN__ ? '重做' : '重做' },
+      { role: 'undo', label: __DARWIN__ ? 'Undo' : '&Undo' },
+      { role: 'redo', label: __DARWIN__ ? 'Redo' : '&Redo' },
       separator,
-      { role: 'cut', label: __DARWIN__ ? '剪切' : '剪切' },
-      { role: 'copy', label: __DARWIN__ ? '复制' : '复制' },
-      { role: 'paste', label: __DARWIN__ ? '粘贴' : '粘贴' },
+      { role: 'cut', label: __DARWIN__ ? 'Cut' : 'Cu&t' },
+      { role: 'copy', label: __DARWIN__ ? 'Copy' : '&Copy' },
+      { role: 'paste', label: __DARWIN__ ? 'Paste' : '&Paste' },
       {
-        label: __DARWIN__ ? '全选' : '全选',
+        label: __DARWIN__ ? 'Select All' : 'Select &all',
         accelerator: 'CmdOrCtrl+A',
         click: emit('select-all'),
       },
       separator,
       {
         id: 'find',
-        label: __DARWIN__ ? '查找' : '查找',
+        label: __DARWIN__ ? 'Find' : '&Find',
         accelerator: 'CmdOrCtrl+F',
         click: emit('find-text'),
       },
@@ -169,35 +177,42 @@ export function buildDefaultMenu({
   })
 
   template.push({
-    label: __DARWIN__ ? '查看' : '查看',
+    label: __DARWIN__ ? 'View' : '&View',
     submenu: [
       {
-        label: __DARWIN__ ? '文件改动' : '文件改动',
+        label: __DARWIN__ ? 'Show Changes' : '&Changes',
         id: 'show-changes',
         accelerator: 'CmdOrCtrl+1',
         click: emit('show-changes'),
       },
       {
-        label: __DARWIN__ ? '提交历史' : '提交历史',
+        label: __DARWIN__ ? 'Show History' : '&History',
         id: 'show-history',
         accelerator: 'CmdOrCtrl+2',
         click: emit('show-history'),
       },
       {
-        label: __DARWIN__ ? '仓库列表' : '仓库列表',
+        label: __DARWIN__ ? 'Show Repository List' : 'Repository &list',
         id: 'show-repository-list',
         accelerator: 'CmdOrCtrl+T',
         click: emit('choose-repository'),
       },
       {
-        label: __DARWIN__ ? '分支列表' : '分支列表',
+        label: __DARWIN__ ? 'Show Branches List' : '&Branches list',
         id: 'show-branches-list',
         accelerator: 'CmdOrCtrl+B',
         click: emit('show-branches'),
       },
+      {
+        label: __DARWIN__ ? 'Show Worktrees List' : 'Wor&ktrees list',
+        id: 'show-worktrees-list',
+        accelerator: 'CmdOrCtrl+Alt+W',
+        click: emit('show-worktrees'),
+        visible: enableWorktreeSupport(),
+      },
       separator,
       {
-        label: __DARWIN__ ? '摘要' : '摘要',
+        label: __DARWIN__ ? 'Go to Summary' : 'Go to &Summary',
         id: 'go-to-commit-message',
         accelerator: 'CmdOrCtrl+G',
         click: emit('go-to-commit-message'),
@@ -212,47 +227,53 @@ export function buildDefaultMenu({
       },
       {
         label: __DARWIN__
-          ? `${isChangesFilterVisible ? '隐藏' : '显示'}改动筛选器`
-          : `${isChangesFilterVisible ? '隐藏' : '显示'}改动筛选器`,
+          ? `${isChangesFilterVisible ? 'Hide' : 'Show'} Changes Filter`
+          : `${
+              isChangesFilterVisible ? 'Hide' : 'Show'
+            } Toggle Chan&ges Filter`,
         id: 'toggle-changes-filter',
         accelerator: 'CmdOrCtrl+L',
         click: emit('toggle-changes-filter'),
       },
       {
-        label: __DARWIN__ ? '全屏' : '全屏',
+        label: __DARWIN__ ? 'Toggle Full Screen' : 'Toggle &full screen',
         role: 'togglefullscreen',
       },
       separator,
       {
-        label: __DARWIN__ ? '重置缩放' : '重置缩放',
+        label: __DARWIN__ ? 'Reset Zoom' : 'Reset zoom',
         accelerator: 'CmdOrCtrl+0',
         click: zoom(ZoomDirection.Reset),
       },
       {
-        label: __DARWIN__ ? '放大' : '放大',
+        label: __DARWIN__ ? 'Zoom In' : 'Zoom in',
         accelerator: 'CmdOrCtrl+=',
         click: zoom(ZoomDirection.In),
       },
       {
-        label: __DARWIN__ ? '缩小' : '缩小',
+        label: __DARWIN__ ? 'Zoom Out' : 'Zoom out',
         accelerator: 'CmdOrCtrl+-',
         click: zoom(ZoomDirection.Out),
       },
       {
-        label: __DARWIN__ ? '增加宽度' : '增加宽度',
+        label: __DARWIN__
+          ? 'Expand Active Resizable'
+          : 'Expand active resizable',
         id: 'increase-active-resizable-width',
         accelerator: 'CmdOrCtrl+9',
         click: emit('increase-active-resizable-width'),
       },
       {
-        label: __DARWIN__ ? '减少宽度' : '减少宽度',
+        label: __DARWIN__
+          ? 'Contract Active Resizable'
+          : 'Contract active resizable',
         id: 'decrease-active-resizable-width',
         accelerator: 'CmdOrCtrl+8',
         click: emit('decrease-active-resizable-width'),
       },
       separator,
       {
-        label: '刷新',
+        label: '&Reload',
         id: 'reload-window',
         // Ctrl+Alt is interpreted as AltGr on international keyboards and this
         // can clash with other shortcuts. We should always use Ctrl+Shift for
@@ -268,7 +289,9 @@ export function buildDefaultMenu({
       },
       {
         id: 'show-devtools',
-        label: __DARWIN__ ? '开发者工具' : '开发者工具',
+        label: __DARWIN__
+          ? 'Toggle Developer Tools'
+          : '&Toggle developer tools',
         accelerator: (() => {
           return __DARWIN__ ? 'Alt+Command+I' : 'Ctrl+Shift+I'
         })(),
@@ -289,7 +312,7 @@ export function buildDefaultMenu({
   const pushEventType = isForcePushForCurrentRepository ? 'force-push' : 'push'
 
   template.push({
-    label: __DARWIN__ ? '仓库' : '仓库',
+    label: __DARWIN__ ? 'Repository' : '&Repository',
     id: 'repository',
     submenu: [
       {
@@ -300,13 +323,13 @@ export function buildDefaultMenu({
       },
       {
         id: 'pull',
-        label: __DARWIN__ ? '拉取' : '拉取',
+        label: __DARWIN__ ? 'Pull' : 'Pu&ll',
         accelerator: 'CmdOrCtrl+Shift+P',
         click: emit('pull'),
       },
       {
         id: 'fetch',
-        label: __DARWIN__ ? '获取更新' : '获取更新',
+        label: __DARWIN__ ? 'Fetch' : '&Fetch',
         accelerator: 'CmdOrCtrl+Shift+T',
         click: emit('fetch'),
       },
@@ -319,42 +342,38 @@ export function buildDefaultMenu({
       separator,
       {
         id: 'view-repository-on-github',
-        label: __DARWIN__ ? '打开 GitHub' : '打开 GitHub',
+        label: __DARWIN__ ? 'View on GitHub' : '&View on GitHub',
         accelerator: 'CmdOrCtrl+Shift+G',
         click: emit('view-repository-on-github'),
       },
       {
         label: __DARWIN__
-          ? `打开 ${selectedShell ?? '终端'}` // 去除中文间多余空格
-              .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
-          : `打开 ${selectedShell ?? '终端'}` // 去除中文间多余空格
-              .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2'),
+          ? `Open in ${selectedShell ?? 'Shell'}`
+          : `O&pen in ${selectedShell ?? 'shell'}`,
         id: 'open-in-shell',
         accelerator: 'Ctrl+`',
         click: emit('open-in-shell'),
       },
       {
         label: __DARWIN__
-          ? '打开文件夹'
+          ? 'Show in Finder'
           : __WIN32__
-          ? '打开文件夹'
-          : '打开文件夹',
+          ? 'Show in E&xplorer'
+          : 'Show in your File Manager',
         id: 'open-working-directory',
         accelerator: 'CmdOrCtrl+Shift+F',
         click: emit('open-working-directory'),
       },
       {
         label: __DARWIN__
-          ? `打开 ${selectedExternalEditor ?? '默认编辑器'}` // 去除中文间多余空格
-              .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
-          : `打开 ${selectedExternalEditor ?? '默认编辑器'}` // 去除中文间多余空格
-              .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2'),
+          ? `Open in ${selectedExternalEditor ?? 'External Editor'}`
+          : `&Open in ${selectedExternalEditor ?? 'external editor'}`,
         id: 'open-external-editor',
         accelerator: 'CmdOrCtrl+Shift+A',
         click: emit('open-external-editor'),
       },
       {
-        label: __DARWIN__ ? '选择编辑器打开…' : '选择编辑器打开…',
+        label: __DARWIN__ ? 'Open With…' : 'Open &with…',
         id: 'open-with-external-editor',
         accelerator: 'CmdOrCtrl+Shift+Alt+A',
         click: emit('open-with-external-editor'),
@@ -362,13 +381,23 @@ export function buildDefaultMenu({
       separator,
       {
         id: 'create-issue-in-repository-on-github',
-        label: __DARWIN__ ? '创建议题' : '创建议题',
+        label: __DARWIN__
+          ? 'Create Issue on GitHub'
+          : 'Create &issue on GitHub',
         accelerator: 'CmdOrCtrl+I',
         click: emit('create-issue-in-repository-on-github'),
       },
       separator,
       {
-        label: __DARWIN__ ? '仓库设置…' : '仓库设置…',
+        id: 'create-worktree',
+        label: __DARWIN__ ? 'New Worktree…' : 'New work&tree…',
+        click: emit('create-worktree'),
+        accelerator: 'CmdOrCtrl+Shift+W',
+        visible: enableWorktreeSupport(),
+      },
+      ...(enableWorktreeSupport() ? [separator] : []),
+      {
+        label: __DARWIN__ ? 'Repository Settings…' : 'Repository &settings…',
         id: 'show-repository-settings',
         click: emit('show-repository-settings'),
       },
@@ -377,26 +406,26 @@ export function buildDefaultMenu({
 
   const branchSubmenu = [
     {
-      label: __DARWIN__ ? '新建分支…' : '新建分支…',
+      label: __DARWIN__ ? 'New Branch…' : 'New &branch…',
       id: 'create-branch',
       accelerator: 'CmdOrCtrl+Shift+N',
       click: emit('create-branch'),
     },
     {
-      label: __DARWIN__ ? '重命名…' : '重命名…',
+      label: __DARWIN__ ? 'Rename…' : '&Rename…',
       id: 'rename-branch',
       accelerator: 'CmdOrCtrl+Shift+R',
       click: emit('rename-branch'),
     },
     {
-      label: __DARWIN__ ? '删除…' : '删除…',
+      label: __DARWIN__ ? 'Delete…' : '&Delete…',
       id: 'delete-branch',
       accelerator: 'CmdOrCtrl+Shift+D',
       click: emit('delete-branch'),
     },
     separator,
     {
-      label: __DARWIN__ ? '放弃所有改动…' : '放弃所有改动…',
+      label: __DARWIN__ ? 'Discard All Changes…' : 'Discard all changes…',
       id: 'discard-all-changes',
       accelerator: 'CmdOrCtrl+Shift+Backspace',
       click: emit('discard-all-changes'),
@@ -412,45 +441,49 @@ export function buildDefaultMenu({
     separator,
     {
       label: __DARWIN__
-        ? `同步上游 ${contributionTargetDefaultBranch}`
-        : `同步上游 ${contributionTargetDefaultBranch}`,
+        ? `Update from ${contributionTargetDefaultBranch}`
+        : `&Update from ${contributionTargetDefaultBranch}`,
       id: 'update-branch-with-contribution-target-branch',
       accelerator: 'CmdOrCtrl+Shift+U',
       click: emit('update-branch-with-contribution-target-branch'),
     },
     {
-      label: __DARWIN__ ? '对比分支' : '对比分支',
+      label: __DARWIN__ ? 'Compare to Branch' : '&Compare to branch',
       id: 'compare-to-branch',
       accelerator: 'CmdOrCtrl+Shift+B',
       click: emit('compare-to-branch'),
     },
     {
-      label: __DARWIN__ ? '合并到当前分支…' : '合并到当前分支…',
+      label: __DARWIN__
+        ? 'Merge into Current Branch…'
+        : '&Merge into current branch…',
       id: 'merge-branch',
       accelerator: 'CmdOrCtrl+Shift+M',
       click: emit('merge-branch'),
     },
     {
-      label: __DARWIN__ ? '压缩合并到当前分支…' : '压缩合并到当前分支…',
+      label: __DARWIN__
+        ? 'Squash and Merge into Current Branch…'
+        : 'Squas&h and merge into current branch…',
       id: 'squash-and-merge-branch',
       accelerator: 'CmdOrCtrl+Shift+H',
       click: emit('squash-and-merge-branch'),
     },
     {
-      label: __DARWIN__ ? '重构当前分支…' : '重构当前分支…',
+      label: __DARWIN__ ? 'Rebase Current Branch…' : 'R&ebase current branch…',
       id: 'rebase-branch',
       accelerator: 'CmdOrCtrl+Shift+E',
       click: emit('rebase-branch'),
     },
     separator,
     {
-      label: __DARWIN__ ? 'GitHub 对比分支' : 'GitHub 对比分支',
+      label: __DARWIN__ ? 'Compare on GitHub' : 'Compare on &GitHub',
       id: 'compare-on-github',
       accelerator: 'CmdOrCtrl+Shift+C',
       click: emit('compare-on-github'),
     },
     {
-      label: __DARWIN__ ? 'GitHub 查看分支' : 'GitHub 查看分支',
+      label: __DARWIN__ ? 'View Branch on GitHub' : 'View branch on GitHub',
       id: 'branch-on-github',
       accelerator: 'CmdOrCtrl+Alt+B',
       click: emit('branch-on-github'),
@@ -458,7 +491,7 @@ export function buildDefaultMenu({
   ]
 
   branchSubmenu.push({
-    label: __DARWIN__ ? '预览拉取请求' : '预览拉取请求',
+    label: __DARWIN__ ? 'Preview Pull Request' : 'Preview pull request',
     id: 'preview-pull-request',
     accelerator: 'CmdOrCtrl+Alt+P',
     click: emit('preview-pull-request'),
@@ -472,27 +505,26 @@ export function buildDefaultMenu({
   })
 
   template.push({
-    label: __DARWIN__ ? '分支' : '分支',
+    label: __DARWIN__ ? 'Branch' : '&Branch',
     id: 'branch',
     submenu: branchSubmenu,
   })
 
   if (__DARWIN__) {
     template.push({
-      label: '窗口',
       role: 'window',
       submenu: [
-        { label: '最小化', role: 'minimize' },
-        { label: '缩放', role: 'zoom' },
-        { label: '关闭窗口', role: 'close' },
+        { role: 'minimize' },
+        { role: 'zoom' },
+        { role: 'close' },
         separator,
-        { label: '全部置于顶层', role: 'front' },
+        { role: 'front' },
       ],
     })
   }
 
   const submitIssueItem: Electron.MenuItemConstructorOptions = {
-    label: __DARWIN__ ? '报告问题…' : '报告问题…',
+    label: __DARWIN__ ? 'Report Issue…' : 'Report issue…',
     click() {
       shell
         .openExternal('https://github.com/desktop/desktop/issues/new/choose')
@@ -501,7 +533,7 @@ export function buildDefaultMenu({
   }
 
   const contactSupportItem: Electron.MenuItemConstructorOptions = {
-    label: __DARWIN__ ? '在线支持…' : '在线支持…',
+    label: __DARWIN__ ? 'Contact GitHub Support…' : '&Contact GitHub support…',
     click() {
       shell
         .openExternal(
@@ -512,30 +544,30 @@ export function buildDefaultMenu({
   }
 
   const showUserGuides: Electron.MenuItemConstructorOptions = {
-    label: '使用指南',
+    label: 'Show User Guides',
     click() {
       shell
-        .openExternal('https://docs.github.com/zh/desktop')
+        .openExternal('https://docs.github.com/en/desktop')
         .catch(err => log.error('Failed opening user guides page', err))
     },
   }
 
   const showKeyboardShortcuts: Electron.MenuItemConstructorOptions = {
-    label: __DARWIN__ ? '快捷键表' : '快捷键表',
+    label: __DARWIN__ ? 'Show Keyboard Shortcuts' : 'Show keyboard shortcuts',
     click() {
       shell
         .openExternal(
-          'https://docs.github.com/zh/desktop/installing-and-configuring-github-desktop/overview/keyboard-shortcuts'
+          'https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/overview/keyboard-shortcuts'
         )
         .catch(err => log.error('Failed opening keyboard shortcuts page', err))
     },
   }
 
   const showLogsLabel = __DARWIN__
-    ? '运行日志'
+    ? 'Show Logs in Finder'
     : __WIN32__
-    ? '运行日志'
-    : '运行日志'
+    ? 'S&how logs in Explorer'
+    : 'S&how logs in your File Manager'
 
   const showLogsItem: Electron.MenuItemConstructorOptions = {
     label: showLogsLabel,
@@ -559,18 +591,17 @@ export function buildDefaultMenu({
 
   if (__DARWIN__) {
     template.push({
-      label: '帮助',
       role: 'help',
       submenu: helpItems,
     })
   } else {
     template.push({
-      label: '帮助',
+      label: '&Help',
       submenu: [
         ...helpItems,
         separator,
         {
-          label: '关于',
+          label: '&About GitHub Desktop',
           click: emit('show-about'),
           id: 'about',
         },
@@ -580,7 +611,7 @@ export function buildDefaultMenu({
 
   ensureItemIds(template)
 
-  return Menu.buildFromTemplate(template)
+  return template
 }
 
 function getPushLabel(
@@ -588,22 +619,22 @@ function getPushLabel(
   askForConfirmationOnForcePush: boolean
 ): string {
   if (!isForcePushForCurrentRepository) {
-    return __DARWIN__ ? '推送' : '推送'
+    return __DARWIN__ ? 'Push' : 'P&ush'
   }
 
   if (askForConfirmationOnForcePush) {
-    return __DARWIN__ ? '强制推送…' : '强制推送…'
+    return __DARWIN__ ? 'Force Push…' : 'Force P&ush…'
   }
 
-  return __DARWIN__ ? '强制推送' : '强制推送'
+  return __DARWIN__ ? 'Force Push' : 'Force P&ush'
 }
 
 function getStashedChangesLabel(isStashedChangesVisible: boolean): string {
   if (isStashedChangesVisible) {
-    return __DARWIN__ ? '隐藏暂存的改动' : '隐藏暂存的改动'
+    return __DARWIN__ ? 'Hide Stashed Changes' : 'H&ide stashed changes'
   }
 
-  return __DARWIN__ ? '显示暂存的改动' : '显示暂存的改动'
+  return __DARWIN__ ? 'Show Stashed Changes' : 'Sho&w stashed changes'
 }
 
 type ClickHandler = (

@@ -64,7 +64,7 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
   }
 
   public render() {
-    const title = __DARWIN__ ? '打开拉取请求' : '打开拉取请求'
+    const title = __DARWIN__ ? 'Open a Pull Request' : 'Open a pull request'
     const {
       baseBranch,
       currentBranch,
@@ -77,7 +77,7 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
       onDismissed,
     } = this.props
     const { linesAdded, linesDeleted } = changesetData
-    const commits = `${commitCount}个提交${commitCount > 1 ? '' : ''}`
+    const commits = `${commitCount} commit${commitCount > 1 ? 's' : ''}`
 
     return (
       <DialogHeader
@@ -87,7 +87,7 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
       >
         <div className="break"></div>
         <div className="base-branch-details">
-          从 <Ref>{currentBranch.name}</Ref> 合并{commits}到{' '}
+          Merge {commits} into{' '}
           <BranchSelect
             repository={this.props.repository}
             branch={baseBranch}
@@ -98,21 +98,18 @@ export class OpenPullRequestDialogHeader extends React.Component<IOpenPullReques
             onChange={onBranchChange}
             noBranchesMessage={
               <>
-                <p>很抱歉，找不到此远程分支。</p>
-                <p>您只能对远程分支发起拉取请求。</p>
+                <p>Sorry, I can't find that remote branch.</p>
+                <p>You can only open pull requests against remote branches.</p>
               </>
             }
-          />
+          />{' '}
+          from <Ref>{currentBranch.name}</Ref>.
         </div>
         <div className="lines-added-deleted">
-          <div className="sr-only">改动行数：</div>
-          <span aria-hidden="true" className="lines-added">
-            新增{linesAdded}行
-          </span>
-          <span>，</span>
-          <span aria-hidden="true" className="lines-deleted">
-            删除{linesDeleted}行
-          </span>
+          <span className="sr-only">Lines changed:</span>
+          <span className="lines-added">{linesAdded} added lines</span>
+          <span>, </span>
+          <span className="lines-deleted">{linesDeleted} removed lines</span>
         </div>
       </DialogHeader>
     )

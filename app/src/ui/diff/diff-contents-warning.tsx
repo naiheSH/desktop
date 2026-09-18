@@ -67,11 +67,12 @@ export class DiffContentsWarning extends React.Component<IDiffContentsWarningPro
       case DiffContentsWarningType.UnicodeBidiCharacters:
         return (
           <>
-            该改动包含双向 Unicode
-            文本，实际运行效果可能和这里显示的不一致。如需检查，请使用一个能显示隐藏
-            Unicode 字符的编辑器。
+            This diff contains bidirectional Unicode text that may be
+            interpreted or compiled differently than what appears below. To
+            review, open the file in an editor that reveals hidden Unicode
+            characters.{' '}
             <LinkButton uri="https://github.co/hiddenchars">
-              点击了解这一潜在危险
+              Learn more about bidirectional Unicode characters
             </LinkButton>
           </>
         )
@@ -80,9 +81,11 @@ export class DiffContentsWarning extends React.Component<IDiffContentsWarningPro
         const { lineEndingsChange } = item
         return (
           <>
-            根据 Git 配置，该文件的换行符将从 '{lineEndingsChange.from}' 转换为
-            '{lineEndingsChange.to}
-            '。
+            This file uses '{lineEndingsChange.from}' line endings, but{' '}
+            <LinkButton uri="https://docs.github.com/get-started/git-basics/configuring-git-to-handle-line-endings">
+              Git is configured to convert them
+            </LinkButton>{' '}
+            to '{lineEndingsChange.to}' the next time the file is checked out.
           </>
         )
     }

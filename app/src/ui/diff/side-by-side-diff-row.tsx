@@ -453,7 +453,10 @@ export class SideBySideDiffRow extends React.Component<
 
           {syntaxHighlightLine(data.content, data.tokens)}
           {data.noNewLineIndicator && (
-            <Octicon symbol={narrowNoNewlineSymbol} title="文件末尾没有空行" />
+            <span className="no-newline-indicator">
+              <Octicon symbol={narrowNoNewlineSymbol} />
+              <span> No newline at end of file</span>
+            </span>
           )}
         </div>
       </div>
@@ -469,7 +472,7 @@ export class SideBySideDiffRow extends React.Component<
       case DiffHunkExpansionType.Up:
         return {
           icon: octicons.foldUp,
-          title: '向上展开',
+          title: 'Expand Up',
           handler: this.onExpandHunk(hunkIndex, expansionType),
         }
       // This can only be the last dummy hunk. In this case, we expand the
@@ -477,13 +480,13 @@ export class SideBySideDiffRow extends React.Component<
       case DiffHunkExpansionType.Down:
         return {
           icon: octicons.foldDown,
-          title: '向下展开',
+          title: 'Expand Down',
           handler: this.onExpandHunk(hunkIndex - 1, expansionType),
         }
       case DiffHunkExpansionType.Short:
         return {
           icon: octicons.fold,
-          title: '中间展开',
+          title: 'Expand All',
           handler: this.onExpandHunk(hunkIndex, expansionType),
         }
     }
@@ -642,12 +645,12 @@ export class SideBySideDiffRow extends React.Component<
           {!isOnlyOneCheckInRow && (
             <span className="sr-only">
               {' '}
-              行 {lineNumbers.at(0)} 到 {lineNumbers.at(-1)}{' '}
+              Lines {lineNumbers.at(0)} to {lineNumbers.at(-1)}{' '}
               {diffType === DiffRowType.Added
-                ? '增加'
+                ? 'added'
                 : diffType === DiffRowType.Deleted
-                ? '删除'
-                : '修改'}
+                ? 'deleted'
+                : 'modified'}
             </span>
           )}
         </span>
@@ -782,11 +785,11 @@ export class SideBySideDiffRow extends React.Component<
           {this.renderLineNumberCheck(isSelected)}
           {lineNumbers.map((lineNumber, index) => (
             <span key={index}>
-              {lineNumber && <span className="sr-only">行 </span>}
+              {lineNumber && <span className="sr-only">Line </span>}
               {lineNumber}
               {lineNumber && isSelected !== undefined && (
                 <span className="sr-only">
-                  {column === DiffColumn.After ? ' 增加' : ' 删除'}
+                  {column === DiffColumn.After ? ' added' : ' deleted'}
                 </span>
               )}
             </span>
@@ -937,7 +940,7 @@ export class SideBySideDiffRow extends React.Component<
   }
 
   private onMouseDownLineNumber = (evt: React.MouseEvent) => {
-    if (evt.buttons === 2) {
+    if (evt.button !== 0) {
       return
     }
 

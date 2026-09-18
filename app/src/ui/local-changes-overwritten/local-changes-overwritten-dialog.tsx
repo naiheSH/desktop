@@ -11,6 +11,7 @@ import { RetryAction, RetryActionType } from '../../models/retry-actions'
 import { Dispatcher } from '../dispatcher'
 import { PathText } from '../lib/path-text'
 import { assertNever } from '../../lib/fatal-error'
+import { PopupType } from '../../models/popup'
 
 interface ILocalChangesOverwrittenDialogProps {
   readonly repository: Repository
@@ -49,15 +50,17 @@ export class LocalChangesOverwrittenDialog extends React.Component<
 
   public render() {
     const overwrittenText =
-      this.props.files.length > 0 ? '以下文件将会被覆盖：' : null
+      this.props.files.length > 0
+        ? ' The following files would be overwritten:'
+        : null
 
     return (
       <Dialog
-        title="错误"
+        title="Error"
         id="local-changes-overwritten"
         loading={this.state.stashing}
         disabled={this.state.stashing}
-        onDismissed={this.props.onDismissed}
+        onDismissed={this.onDismissPopup}
         onSubmit={this.onSubmit}
         type="error"
         role="alertdialog"
@@ -66,8 +69,8 @@ export class LocalChangesOverwrittenDialog extends React.Component<
         <DialogContent>
           <div id="local-changes-error-description">
             <p>
-              无法{this.getRetryActionName()}，因为当前分支有改动还没提交。
-              {overwrittenText}
+              Unable to {this.getRetryActionName()} when changes are present on
+              your branch.{overwrittenText}
             </p>
             {this.renderFiles()}
             {this.renderStashText()}
@@ -97,25 +100,37 @@ export class LocalChangesOverwrittenDialog extends React.Component<
     )
   }
 
+  private get canStashChanges() {
+    return (
+      !this.props.hasExistingStash &&
+      !this.state.stashing &&
+      this.props.retryAction.type !== RetryActionType.PopStash
+    )
+  }
+
   private renderStashText() {
-    if (this.props.hasExistingStash && !this.state.stashing) {
+    if (!this.canStashChanges) {
       return null
     }
 
-    return <p>您可以先把改动暂存，之后再恢复。</p>
+    return <p>You can stash your changes now and recover them afterwards.</p>
   }
 
   private renderFooter() {
-    if (this.props.hasExistingStash && !this.state.stashing) {
+    if (!this.canStashChanges) {
       return <DefaultDialogFooter />
     }
 
     return (
       <DialogFooter>
         <OkCancelButtonGroup
-          okButtonText={__DARWIN__ ? '暂存并继续' : '暂存并继续'}
-          okButtonTitle="把当前未提交的改动保存到一个暂存区，您可稍后恢复这些改动"
-          cancelButtonText="关闭"
+          okButtonText={
+            __DARWIN__
+              ? 'Stash Changes and Continue'
+              : 'Stash changes and continue'
+          }
+          okButtonTitle="This will create a stash with your current changes. You can recover them by restoring the stash afterwards."
+          cancelButtonText="Close"
         />
       </DialogFooter>
     )
@@ -150,33 +165,49 @@ export class LocalChangesOverwrittenDialog extends React.Component<
   }
 
   /**
+   * on Dismiss, abort rebase if the retryAction is rebase, then call the onDismissed callback
+   */
+  private onDismissPopup = async () => {
+    const { dispatcher, retryAction, onDismissed } = this.props
+    // default dismiss handler , closes the popup via onPopupDismissedFn
+    onDismissed()
+
+    // Rebase flow is interrupted, user aborting due to unstashed changes, close outer multi commit operation popup
+    if (retryAction.type === RetryActionType.Rebase) {
+      dispatcher.closePopup(PopupType.MultiCommitOperation)
+    }
+  }
+
+  /**
    * Returns a user-friendly string to describe the current retryAction.
    */
   private getRetryActionName() {
     switch (this.props.retryAction.type) {
       case RetryActionType.Checkout:
-        return '检出'
+        return 'checkout'
       case RetryActionType.Pull:
-        return '拉取'
+        return 'pull'
       case RetryActionType.Merge:
-        return '合并'
+        return 'merge'
       case RetryActionType.Rebase:
-        return '重构'
+        return 'rebase'
       case RetryActionType.Clone:
-        return '克隆'
+        return 'clone'
       case RetryActionType.Fetch:
-        return '获取更新'
+        return 'fetch'
       case RetryActionType.Push:
-        return '推送'
+        return 'push'
       case RetryActionType.CherryPick:
       case RetryActionType.CreateBranchForCherryPick:
-        return '摘取'
+        return 'cherry-pick'
       case RetryActionType.Squash:
-        return '压缩'
+        return 'squash'
       case RetryActionType.Reorder:
-        return '重排'
+        return 'reorder'
       case RetryActionType.DiscardChanges:
-        return '放弃改动'
+        return 'discard changes'
+      case RetryActionType.PopStash:
+        return 'restore stashed changes'
       default:
         assertNever(
           this.props.retryAction,
