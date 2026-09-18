@@ -166,9 +166,7 @@ describe('welcome and sign-in wrappers', () => {
       warning.querySelector('svg')?.getAttribute('aria-hidden'),
       'true'
     )
-    fireEvent.click(
-      screen.getByRole('link', { name: /sign in using your browser/i })
-    )
+    fireEvent.click(screen.getByRole('link', { name: '通过浏览器登录' }))
 
     assert.deepStrictEqual(dispatcher.enteredEndpoints, [])
     assert.deepStrictEqual(dispatcher.confirmationGuidanceRequests, [])
@@ -226,7 +224,7 @@ describe('welcome and sign-in wrappers', () => {
 
     fireEvent.click(
       screen.getByRole('button', {
-        name: /continue with browser/i,
+        name: '打开浏览器',
         hidden: true,
       })
     )
@@ -235,9 +233,7 @@ describe('welcome and sign-in wrappers', () => {
       'https://enterprise.example.com',
     ])
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Cancel', hidden: true })
-    )
+    fireEvent.click(screen.getByRole('button', { name: '取消', hidden: true }))
     assert.strictEqual(await result, undefined)
     assert.strictEqual(dispatcher.closedPopupCount, 1)
   })
@@ -260,9 +256,7 @@ describe('welcome and sign-in wrappers', () => {
       />
     )
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Cancel', hidden: true })
-    )
+    fireEvent.click(screen.getByRole('button', { name: '取消', hidden: true }))
 
     assert.strictEqual(await result, undefined)
     assert.strictEqual(store.getState(), null)
