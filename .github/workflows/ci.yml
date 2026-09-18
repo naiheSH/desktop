@@ -87,12 +87,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-26, windows-2025]
+        # node-gyp 10 cannot discover Visual Studio 18 on windows-2025.
+        # windows-2022 provides the supported Visual Studio 2022 toolchain.
+        os: [macos-26, windows-2022]
         arch: [x64, arm64]
         include:
           - os: macos-26
             friendlyName: macOS
-          - os: windows-2025
+          - os: windows-2022
             friendlyName: Windows
     timeout-minutes: 60
     environment: ${{ inputs.environment }}
@@ -176,7 +178,7 @@ jobs:
           - os: macos-26
             friendlyName: macOS
             arch: arm64
-          - os: windows-2025
+          - os: windows-2022
             friendlyName: Windows
             arch: x64
     timeout-minutes: 60
