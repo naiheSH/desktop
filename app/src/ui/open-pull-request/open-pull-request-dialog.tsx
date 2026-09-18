@@ -58,7 +58,7 @@ interface IOpenPullRequestDialogProps {
   /** Whether we should hide whitespace in diff. */
   readonly hideWhitespaceInDiff: boolean
 
-  readonly enableDifftastic: boolean
+  readonly enableDifftastic?: boolean
 
   /** The type of image diff to display. */
   readonly imageDiffType: ImageDiffType
@@ -184,7 +184,6 @@ export class OpenPullRequestDialog extends React.Component<IOpenPullRequestDialo
         fileListWidth={fileListWidth}
         files={files}
         hideWhitespaceInDiff={hideWhitespaceInDiff}
-        enableDifftastic={this.props.enableDifftastic}
         imageDiffType={imageDiffType}
         nonLocalCommitSHA={nonLocalCommitSHA}
         selectedFile={file}

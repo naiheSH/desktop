@@ -30,8 +30,8 @@ interface IDiffHeaderProps {
   /** Called when the user changes the hide whitespace in diffs setting. */
   readonly onHideWhitespaceInDiffChanged: (checked: boolean) => Promise<void>
 
-  readonly enableDifftastic: boolean
-  readonly onEnableDifftasticChanged: (checked: boolean) => void
+  readonly enableDifftastic?: boolean
+  readonly onEnableDifftasticChanged?: (checked: boolean) => void
 
   /** Called when the user opens the diff options popover */
   readonly onDiffOptionsOpened: () => void

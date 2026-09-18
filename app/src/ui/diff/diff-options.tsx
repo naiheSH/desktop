@@ -21,8 +21,8 @@ interface IDiffOptionsProps {
   readonly showSideBySideDiff: boolean
   readonly onShowSideBySideDiffChanged: (showSideBySideDiff: boolean) => void
 
-  readonly enableDifftastic: boolean
-  readonly onEnableDifftasticChanged: (enableDifftastic: boolean) => void
+  readonly enableDifftastic?: boolean
+  readonly onEnableDifftasticChanged?: (enableDifftastic: boolean) => void
 
   /** Called when the user opens the diff options popover */
   readonly onDiffOptionsOpened: () => void
@@ -87,7 +87,7 @@ export class DiffOptions extends React.Component<
   private onEnableDifftasticChanged = (
     event: React.FormEvent<HTMLInputElement>
   ) => {
-    return this.props.onEnableDifftasticChanged(event.currentTarget.checked)
+    return this.props.onEnableDifftasticChanged?.(event.currentTarget.checked)
   }
 
   public render() {

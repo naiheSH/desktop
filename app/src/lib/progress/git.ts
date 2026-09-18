@@ -59,7 +59,7 @@ export interface IGitOutput {
   readonly kind: 'context'
   readonly percent: number
   readonly text: string
-  readonly text_: string
+  readonly text_?: string
 }
 
 /**
@@ -138,7 +138,7 @@ export interface IGitProgressInfo {
    * for presenting the actual output from Git to the user.
    */
   readonly text: string
-  readonly text_: string
+  readonly text_?: string
 }
 
 /**

@@ -31,10 +31,7 @@ export async function createCommit(
   // do the same thing.
   await unstageAll(repository)
 
-  await stageFiles(repository, files, {
-    partialDiffsByFileID: options?.partialDiffsByFileID,
-    requireDisplayedDiffForPartial: options?.requireDisplayedDiffForPartial,
-  })
+  await stageFiles(repository, files)
 
   const args = ['-F', '-']
 

@@ -31,14 +31,14 @@ interface IIntegrationsPreferencesProps {
   readonly onCustomEditorChanged: (customEditor: ICustomIntegration) => void
   readonly onUseCustomShellChanged: (useCustomShell: boolean) => void
   readonly onCustomShellChanged: (customShell: ICustomIntegration) => void
-  readonly copilotUseCommitHistoryStyle: boolean
-  readonly onCopilotUseCommitHistoryStyleChanged: (value: boolean) => void
-  readonly copilotCustomStyle: string
-  readonly onCopilotCustomStyleChanged: (value: string) => void
-  readonly copilotDiffTruncationLimit: number
-  readonly onCopilotDiffTruncationLimitChanged: (value: number) => void
-  readonly enableDifftastic: boolean
-  readonly onEnableDifftasticChanged: (value: boolean) => void
+  readonly copilotUseCommitHistoryStyle?: boolean
+  readonly onCopilotUseCommitHistoryStyleChanged?: (value: boolean) => void
+  readonly copilotCustomStyle?: string
+  readonly onCopilotCustomStyleChanged?: (value: string) => void
+  readonly copilotDiffTruncationLimit?: number
+  readonly onCopilotDiffTruncationLimitChanged?: (value: number) => void
+  readonly enableDifftastic?: boolean
+  readonly onEnableDifftasticChanged?: (value: boolean) => void
 }
 
 interface IIntegrationsPreferencesState {
@@ -72,10 +72,11 @@ export class Integrations extends React.Component<
       customEditor: this.props.customEditor,
       useCustomShell: this.props.useCustomShell,
       customShell: this.props.customShell,
-      copilotUseCommitHistoryStyle: this.props.copilotUseCommitHistoryStyle,
-      copilotCustomStyle: this.props.copilotCustomStyle,
-      copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit,
-      enableDifftastic: this.props.enableDifftastic,
+      copilotUseCommitHistoryStyle:
+        this.props.copilotUseCommitHistoryStyle ?? false,
+      copilotCustomStyle: this.props.copilotCustomStyle ?? '',
+      copilotDiffTruncationLimit: this.props.copilotDiffTruncationLimit ?? 0,
+      enableDifftastic: this.props.enableDifftastic ?? false,
       selectedTabIndex: 0,
     }
   }
@@ -111,10 +112,11 @@ export class Integrations extends React.Component<
       useCustomShell: nextProps.useCustomShell,
       customShell: nextProps.customShell,
       customEditor: nextProps.customEditor,
-      copilotUseCommitHistoryStyle: nextProps.copilotUseCommitHistoryStyle,
-      copilotCustomStyle: nextProps.copilotCustomStyle,
-      copilotDiffTruncationLimit: nextProps.copilotDiffTruncationLimit,
-      enableDifftastic: nextProps.enableDifftastic,
+      copilotUseCommitHistoryStyle:
+        nextProps.copilotUseCommitHistoryStyle ?? false,
+      copilotCustomStyle: nextProps.copilotCustomStyle ?? '',
+      copilotDiffTruncationLimit: nextProps.copilotDiffTruncationLimit ?? 0,
+      enableDifftastic: nextProps.enableDifftastic ?? false,
     })
   }
 
@@ -213,12 +215,12 @@ export class Integrations extends React.Component<
   ) => {
     const checked = event.currentTarget.checked
     this.setState({ copilotUseCommitHistoryStyle: checked })
-    this.props.onCopilotUseCommitHistoryStyleChanged(checked)
+    this.props.onCopilotUseCommitHistoryStyleChanged?.(checked)
   }
 
   private onCopilotCustomStyleChanged = (value: string) => {
     this.setState({ copilotCustomStyle: value })
-    this.props.onCopilotCustomStyleChanged(value)
+    this.props.onCopilotCustomStyleChanged?.(value)
   }
 
   private onCopilotDiffTruncationLimitChanged = (
@@ -226,7 +228,7 @@ export class Integrations extends React.Component<
   ) => {
     const value = parseInt(event.currentTarget.value, 10)
     this.setState({ copilotDiffTruncationLimit: value })
-    this.props.onCopilotDiffTruncationLimitChanged(value)
+    this.props.onCopilotDiffTruncationLimitChanged?.(value)
   }
 
   private onEnableDifftasticChanged = (
@@ -234,7 +236,7 @@ export class Integrations extends React.Component<
   ) => {
     const checked = event.currentTarget.checked
     this.setState({ enableDifftastic: checked })
-    this.props.onEnableDifftasticChanged(checked)
+    this.props.onEnableDifftasticChanged?.(checked)
   }
 
   private onTabClicked = (selectedTabIndex: number) => {
