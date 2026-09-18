@@ -1,7 +1,7 @@
 import { Repository } from '../../models/repository'
 import { IMenuItem } from '../../lib/menu-item'
 import { Repositoryish } from './group-repositories'
-import { clipboard } from 'electron'
+import { writeClipboardText } from '../main-process-proxy'
 import {
   RevealInFileManagerLabel,
   DefaultEditorLabel,
@@ -32,28 +32,26 @@ export const generateRepositoryListContextMenu = (
   const github =
     repository instanceof Repository && repository.gitHubRepository != null
   const openInExternalEditor = config.externalEditorLabel
-    ? `打开 ${config.externalEditorLabel}` // 去除中文间多余空格
-        .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
+    ? `Open in ${config.externalEditorLabel}`
     : DefaultEditorLabel
   const openInShell = config.shellLabel
-    ? `打开 ${config.shellLabel}` // 去除中文间多余空格
-        .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
+    ? `Open in ${config.shellLabel}`
     : DefaultShellLabel
 
   const items: ReadonlyArray<IMenuItem> = [
     ...buildAliasMenuItems(config),
     ...buildWorktreeMenuItems(config),
     {
-      label: __DARWIN__ ? '复制名称' : '复制名称',
-      action: () => clipboard.writeText(repository.name),
+      label: __DARWIN__ ? 'Copy Repo Name' : 'Copy repo name',
+      action: () => writeClipboardText(repository.name),
     },
     {
-      label: __DARWIN__ ? '复制路径' : '复制路径',
-      action: () => clipboard.writeText(repository.path),
+      label: __DARWIN__ ? 'Copy Repo Path' : 'Copy repo path',
+      action: () => writeClipboardText(repository.path),
     },
     { type: 'separator' },
     {
-      label: '打开 GitHub',
+      label: 'View on GitHub',
       action: () => config.onViewOnGitHub(repository),
       enabled: github,
     },
@@ -74,7 +72,7 @@ export const generateRepositoryListContextMenu = (
     },
     { type: 'separator' },
     {
-      label: config.askForConfirmationOnRemoveRepository ? '删除…' : '删除',
+      label: config.askForConfirmationOnRemoveRepository ? 'Remove…' : 'Remove',
       action: () => config.onRemoveRepository(repository),
     },
   ]
@@ -91,17 +89,17 @@ const buildAliasMenuItems = (
     return []
   }
 
-  const verb = repository.alias == null ? '设置' : '更改'
+  const verb = repository.alias == null ? 'Create' : 'Change'
   const items: Array<IMenuItem> = [
     {
-      label: __DARWIN__ ? `${verb}别名` : `${verb}别名`,
+      label: __DARWIN__ ? `${verb} Alias` : `${verb} alias`,
       action: () => config.onChangeRepositoryAlias(repository),
     },
   ]
 
   if (repository.alias !== null) {
     items.push({
-      label: __DARWIN__ ? '删除别名' : '删除别名',
+      label: __DARWIN__ ? 'Remove Alias' : 'Remove alias',
       action: () => config.onRemoveRepositoryAlias(repository),
     })
   }
