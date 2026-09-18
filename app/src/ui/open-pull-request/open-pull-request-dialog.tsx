@@ -58,8 +58,6 @@ interface IOpenPullRequestDialogProps {
   /** Whether we should hide whitespace in diff. */
   readonly hideWhitespaceInDiff: boolean
 
-  readonly enableDifftastic?: boolean
-
   /** The type of image diff to display. */
   readonly imageDiffType: ImageDiffType
 
