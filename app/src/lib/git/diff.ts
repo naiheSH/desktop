@@ -38,34 +38,6 @@ import { enableImagePreviewsForDDSFiles } from '../feature-flag'
 import { unstageAll } from './reset'
 import { stageFiles } from './update-index'
 import { isAbsolute } from 'path'
-import { projectDifftTextDiff } from '../difft/desktop-text-diff-projection'
-import { invokeDifft } from '../difft/invoke-difft'
-
-type DifftTextSource =
-  | {
-      readonly kind: 'blob'
-      readonly path: string
-      readonly ref: string
-    }
-  | {
-      readonly kind: 'empty'
-      readonly path: string
-    }
-  | {
-      readonly kind: 'working-directory'
-      readonly path: string
-    }
-
-interface IDifftTextSnapshot {
-  readonly oldPath: string
-  readonly newPath: string
-  readonly oldText: string
-  readonly newText: string
-}
-
-type DifftTextSnapshotLoader =
-  | (() => Promise<IDifftTextSnapshot | null>)
-  | undefined
 
 /**
  * V8 has a limit on the size of string it can create (~256MB), and unless we want to
@@ -144,8 +116,7 @@ export async function getCommitDiff(
   repository: Repository,
   file: FileChange,
   commitish: string,
-  hideWhitespaceInDiff: boolean = false,
-  preferDifftastic: boolean = false
+  hideWhitespaceInDiff: boolean = false
 ): Promise<IDiff> {
   const args = [
     'log',
@@ -173,33 +144,7 @@ export async function getCommitDiff(
     encoding: 'buffer',
   })
 
-  const parentCommitish =
-    file instanceof CommittedFileChange ? file.parentCommitish : `${commitish}^`
-
-  return buildDiff(
-    stdout,
-    repository,
-    file,
-    commitish,
-    commitish,
-    undefined,
-    preferDifftastic && !hideWhitespaceInDiff
-      ? () =>
-          loadDifftTextSnapshot(repository, {
-            old: getBlobOrEmptyDifftSource(
-              getOldPathOrDefault(file),
-              parentCommitish,
-              file.status.kind !== AppFileStatusKind.New &&
-                file.status.kind !== AppFileStatusKind.Untracked
-            ),
-            new: getBlobOrEmptyDifftSource(
-              file.path,
-              commitish,
-              file.status.kind !== AppFileStatusKind.Deleted
-            ),
-          })
-      : undefined
-  )
+  return buildDiff(stdout, repository, file, commitish, commitish)
 }
 
 /**
@@ -212,8 +157,7 @@ export async function getBranchMergeBaseDiff(
   baseBranchName: string,
   comparisonBranchName: string,
   hideWhitespaceInDiff: boolean = false,
-  latestCommit: string,
-  preferDifftastic: boolean = false
+  latestCommit: string
 ): Promise<IDiff> {
   const args = [
     'diff',
@@ -239,41 +183,7 @@ export async function getBranchMergeBaseDiff(
     encoding: 'buffer',
   })
 
-  return buildDiff(
-    result.stdout,
-    repository,
-    file,
-    latestCommit,
-    latestCommit,
-    undefined,
-    preferDifftastic && !hideWhitespaceInDiff
-      ? async () => {
-          const mergeBaseCommit = await getMergeBase(
-            repository,
-            baseBranchName,
-            comparisonBranchName
-          )
-
-          if (mergeBaseCommit === null) {
-            return null
-          }
-
-          return loadDifftTextSnapshot(repository, {
-            old: getBlobOrEmptyDifftSource(
-              getOldPathOrDefault(file),
-              mergeBaseCommit,
-              file.status.kind !== AppFileStatusKind.New &&
-                file.status.kind !== AppFileStatusKind.Untracked
-            ),
-            new: getBlobOrEmptyDifftSource(
-              file.path,
-              latestCommit,
-              file.status.kind !== AppFileStatusKind.Deleted
-            ),
-          })
-        }
-      : undefined
-  )
+  return buildDiff(result.stdout, repository, file, latestCommit, latestCommit)
 }
 
 /**
@@ -285,8 +195,7 @@ export async function getCommitRangeDiff(
   file: FileChange,
   commits: ReadonlyArray<string>,
   hideWhitespaceInDiff: boolean = false,
-  useNullTreeSHA: boolean = false,
-  preferDifftastic: boolean = false
+  useNullTreeSHA: boolean = false
 ): Promise<IDiff> {
   if (commits.length === 0) {
     throw new Error('No commits to diff...')
@@ -329,36 +238,11 @@ export async function getCommitRangeDiff(
       file,
       commits,
       hideWhitespaceInDiff,
-      true,
-      preferDifftastic
+      true
     )
   }
 
-  return buildDiff(
-    result.stdout,
-    repository,
-    file,
-    latestCommit,
-    oldestCommit,
-    undefined,
-    preferDifftastic && !hideWhitespaceInDiff
-      ? () =>
-          loadDifftTextSnapshot(repository, {
-            old: getBlobOrEmptyDifftSource(
-              getOldPathOrDefault(file),
-              oldestCommitRef,
-              oldestCommitRef !== NullTreeSHA &&
-                file.status.kind !== AppFileStatusKind.New &&
-                file.status.kind !== AppFileStatusKind.Untracked
-            ),
-            new: getBlobOrEmptyDifftSource(
-              file.path,
-              latestCommit,
-              file.status.kind !== AppFileStatusKind.Deleted
-            ),
-          })
-      : undefined
-  )
+  return buildDiff(result.stdout, repository, file, latestCommit, oldestCommit)
 }
 
 /**
@@ -458,8 +342,7 @@ export async function getCommitRangeChangedFiles(
 export async function getWorkingDirectoryDiff(
   repository: Repository,
   file: WorkingDirectoryFileChange,
-  hideWhitespaceInDiff: boolean = false,
-  preferDifftastic: boolean = false
+  hideWhitespaceInDiff: boolean = false
 ): Promise<IDiff> {
   // `--no-ext-diff` should be provided wherever we invoke `git diff` so that any
   // diff.external program configured by the user is ignored
@@ -514,29 +397,7 @@ export async function getWorkingDirectoryDiff(
   )
   const lineEndingsChange = parseLineEndingsWarning(stderr)
 
-  return buildDiff(
-    stdout,
-    repository,
-    file,
-    'HEAD',
-    'HEAD',
-    lineEndingsChange,
-    preferDifftastic && !hideWhitespaceInDiff
-      ? () =>
-          loadDifftTextSnapshot(repository, {
-            old: getBlobOrEmptyDifftSource(
-              getOldPathOrDefault(file),
-              'HEAD',
-              file.status.kind !== AppFileStatusKind.New &&
-                file.status.kind !== AppFileStatusKind.Untracked
-            ),
-            new:
-              file.status.kind === AppFileStatusKind.Deleted
-                ? { kind: 'empty', path: file.path }
-                : { kind: 'working-directory', path: file.path },
-          })
-      : undefined
-  )
+  return buildDiff(stdout, repository, file, 'HEAD', 'HEAD', lineEndingsChange)
 }
 
 /**
@@ -851,9 +712,6 @@ export async function convertDiff(
     lineEndingsChange,
     maxLineNumber: diff.maxLineNumber,
     hasHiddenBidiChars: diff.hasHiddenBidiChars,
-    renderedByDifft: false,
-    renderedByDifftLanguage: null,
-    difftRenderFailure: null,
   }
 }
 
@@ -947,8 +805,8 @@ async function buildSubmoduleDiff(
   const fullPath = Path.join(repository.path, path)
   const url = await getConfigValue(repository, `submodule.${path}.url`, true)
 
-  let oldSHA: string | null = null
-  let newSHA: string | null = null
+  let oldSHA = null
+  let newSHA = null
 
   if (
     status.commitChanged ||
@@ -989,8 +847,7 @@ async function buildDiff(
   file: FileChange,
   newestCommitish: string,
   oldestCommitish: string,
-  lineEndingsChange?: LineEndingsChange,
-  loadDifftTextSnapshot?: DifftTextSnapshotLoader
+  lineEndingsChange?: LineEndingsChange
 ): Promise<IDiff> {
   if (file.status.submoduleStatus !== undefined) {
     return buildSubmoduleDiff(
@@ -1019,15 +876,12 @@ async function buildDiff(
       lineEndingsChange,
       maxLineNumber: diff.maxLineNumber,
       hasHiddenBidiChars: diff.hasHiddenBidiChars,
-      renderedByDifft: false,
-      renderedByDifftLanguage: null,
-      difftRenderFailure: null,
     }
 
     return largeTextDiff
   }
 
-  const convertedDiff = await convertDiff(
+  return convertDiff(
     repository,
     file,
     diff,
@@ -1035,101 +889,6 @@ async function buildDiff(
     oldestCommitish,
     lineEndingsChange
   )
-
-  if (
-    convertedDiff.kind !== DiffType.Text ||
-    loadDifftTextSnapshot === undefined
-  ) {
-    return convertedDiff
-  }
-
-  const difftTextSnapshot = await loadDifftTextSnapshot().catch(() => null)
-  if (difftTextSnapshot === null) {
-    return convertedDiff
-  }
-
-  const difftResult = await invokeDifft(difftTextSnapshot)
-  if (difftResult.kind === 'failure') {
-    return { ...convertedDiff, difftRenderFailure: difftResult.message }
-  }
-
-  const projected = projectDifftTextDiff({
-    payload: difftResult.payload,
-    oldText: difftTextSnapshot.oldText,
-    newText: difftTextSnapshot.newText,
-  })
-
-  if (projected.kind === 'failure') {
-    return { ...convertedDiff, difftRenderFailure: projected.message }
-  }
-
-  if (
-    projected.metadata.languageKind === 'plain-text' ||
-    projected.metadata.languageKind === 'plain-text-fallback' ||
-    projected.metadata.status === 'created' ||
-    projected.metadata.status === 'deleted'
-  ) {
-    return {
-      ...convertedDiff,
-      difftRenderFailure: projected.metadata.fallbackReason,
-    }
-  }
-
-  return {
-    ...projected.diff,
-    lineEndingsChange,
-    renderedByDifft: true,
-    renderedByDifftLanguage: projected.metadata.language,
-    difftRenderFailure: null,
-  }
-}
-
-function getBlobOrEmptyDifftSource(
-  path: string,
-  ref: string,
-  exists: boolean
-): DifftTextSource {
-  return exists ? { kind: 'blob', path, ref } : { kind: 'empty', path }
-}
-
-async function loadDifftTextSnapshot(
-  repository: Repository,
-  source: {
-    readonly old: DifftTextSource
-    readonly new: DifftTextSource
-  }
-): Promise<IDifftTextSnapshot | null> {
-  try {
-    const [oldText, newText] = await Promise.all([
-      readDifftTextSource(repository, source.old),
-      readDifftTextSource(repository, source.new),
-    ])
-
-    return {
-      oldPath: source.old.path,
-      newPath: source.new.path,
-      oldText,
-      newText,
-    }
-  } catch {
-    return null
-  }
-}
-
-async function readDifftTextSource(
-  repository: Repository,
-  source: DifftTextSource
-): Promise<string> {
-  switch (source.kind) {
-    case 'blob':
-      return (
-        await getBlobContents(repository, source.ref, source.path)
-      ).toString('utf8')
-    case 'empty':
-      return ''
-    case 'working-directory':
-      return readFile(Path.join(repository.path, source.path), 'utf8')
-  }
 }
 
 /**
@@ -1221,7 +980,7 @@ const binaryListRegex = /-\t-\t(?:\0.+\0)?([^\0]*)/gi
 async function getFilesUsingBinaryMergeDriver(
   repository: Repository,
   files: ReadonlyArray<IStatusEntry>
-): Promise<ReadonlyArray<string>> {
+) {
   const { stdout } = await git(
     ['check-attr', '--stdin', '-z', 'merge'],
     repository.path,
@@ -1231,15 +990,8 @@ async function getFilesUsingBinaryMergeDriver(
     }
   )
 
-  const entries = createLogParser({ path: '', attr: '', value: '' }).parse(
-    stdout
-  ) as ReadonlyArray<{
-    readonly path: string
-    readonly attr: string
-    readonly value: string
-  }>
-
-  return entries
+  return createLogParser({ path: '', attr: '', value: '' })
+    .parse(stdout)
     .filter(x => x.attr === 'merge' && x.value === 'binary')
     .map(x => x.path)
 }

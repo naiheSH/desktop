@@ -131,7 +131,6 @@ export class StashDiffViewer extends React.PureComponent<IStashDiffViewerProps> 
           stashEntry={stashEntry}
           repository={repository}
           dispatcher={dispatcher}
-          diff={stashedFileDiff}
           askForConfirmationOnDiscardStash={
             this.props.askForConfirmationOnDiscardStash
           }
@@ -143,7 +142,7 @@ export class StashDiffViewer extends React.PureComponent<IStashDiffViewerProps> 
             maximumWidth={fileListWidth.max}
             onResize={this.onResize}
             onReset={this.onReset}
-            description="暂存文件列表"
+            description="Stash file list"
           >
             <FileList
               files={files}

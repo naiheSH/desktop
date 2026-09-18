@@ -63,8 +63,6 @@ interface ISelectedCommitsProps {
   readonly onViewCommitOnGitHub: (SHA: string, filePath?: string) => void
   readonly hideWhitespaceInDiff: boolean
 
-  readonly enableDifftastic: boolean
-
   /** Whether we should display side by side diffs. */
   readonly showSideBySideDiff: boolean
 
@@ -148,7 +146,7 @@ export class SelectedCommits extends React.Component<
     if (file == null) {
       // don't show both 'empty' messages
       const message =
-        this.props.changesetData.files.length === 0 ? '' : '未选择文件'
+        this.props.changesetData.files.length === 0 ? '' : 'No file selected'
 
       return (
         <div className="panel blankslate" id="diff">
@@ -195,8 +193,6 @@ export class SelectedCommits extends React.Component<
         onShowSideBySideDiffChanged={this.onShowSideBySideDiffChanged}
         hideWhitespaceInDiff={this.props.hideWhitespaceInDiff}
         onHideWhitespaceInDiffChanged={this.onHideWhitespaceInDiffChanged}
-        enableDifftastic={this.props.enableDifftastic}
-        onEnableDifftasticChanged={this.onEnableDifftasticChanged}
         onDiffOptionsOpened={this.props.onDiffOptionsOpened}
       />
     )
@@ -246,13 +242,6 @@ export class SelectedCommits extends React.Component<
     this.props.dispatcher.onShowSideBySideDiffChanged(showSideBySideDiff)
   }
 
-  private onEnableDifftasticChanged = (enableDifftastic: boolean) => {
-    return this.props.dispatcher.setEnableDifftastic(
-      enableDifftastic,
-      this.props.repository
-    )
-  }
-
   private onCommitSummaryReset = () => {
     this.props.dispatcher.resetCommitSummaryWidth()
   }
@@ -264,7 +253,7 @@ export class SelectedCommits extends React.Component<
   private renderFileList() {
     const files = this.props.changesetData.files
     if (files.length === 0) {
-      return <div className="fill-window">提交中没有文件</div>
+      return <div className="fill-window">No files in commit</div>
     }
 
     // -1 for right hand side border
@@ -287,10 +276,10 @@ export class SelectedCommits extends React.Component<
 
   private renderFileHeader() {
     const fileCount = this.props.changesetData.files.length
-    const filesPlural = fileCount === 1 ? '文件' : '文件'
+    const filesPlural = fileCount === 1 ? 'file' : 'files'
     return (
       <div className="file-list-header">
-        {fileCount}个{filesPlural}有改动
+        {fileCount} changed {filesPlural}
       </div>
     )
   }
@@ -329,7 +318,7 @@ export class SelectedCommits extends React.Component<
             maximumWidth={commitSummaryWidth.max}
             onResize={this.onCommitSummaryResize}
             onReset={this.onCommitSummaryReset}
-            description="所选提交文件列表"
+            description="Selected commit file list"
           >
             {this.renderFileList()}
           </Resizable>
@@ -359,13 +348,18 @@ export class SelectedCommits extends React.Component<
         <div className="panel blankslate">
           <img src={BlankSlateImage} className="blankslate-image" alt="" />
           <div>
-            <p>对于多个不连续的提交，无法显示差异。</p>
-            <div>您可以：</div>
+            <p>
+              Unable to display diff when multiple non-consecutive selected.
+            </p>
+            <div>You can:</div>
             <ul>
-              <li>选中一个提交或多个连续的提交来查看差异。</li>
-              <li>把提交拖到分支列表中来进行摘取。</li>
-              <li>拖动提交来进行压缩和排序。</li>
-              <li>右键查看更多操作。</li>
+              <li>
+                Select a single commit or a range of consecutive commits to view
+                a diff.
+              </li>
+              <li>Drag the commits to the branch menu to cherry-pick them.</li>
+              <li>Drag the commits to squash or reorder them.</li>
+              <li>Right click on multiple commits to see options.</li>
             </ul>
           </div>
         </div>
@@ -392,7 +386,9 @@ export class SelectedCommits extends React.Component<
     if (!fileExistsOnDisk) {
       showContextualMenu([
         {
-          label: __DARWIN__ ? '文件不存在' : '文件不存在',
+          label: __DARWIN__
+            ? 'File Does Not Exist on Disk'
+            : 'File does not exist on disk',
           enabled: false,
         },
       ])
@@ -403,8 +399,7 @@ export class SelectedCommits extends React.Component<
 
     const isSafeExtension = isSafeFileExtension(extension)
     const openInExternalEditor = externalEditorLabel
-      ? `打开 ${externalEditorLabel}` // 去除中文间多余空格
-          .replace(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, '$1$2')
+      ? `Open in ${externalEditorLabel}`
       : DefaultEditorLabel
 
     const items: IMenuItem[] = [
@@ -435,14 +430,14 @@ export class SelectedCommits extends React.Component<
       { type: 'separator' },
     ]
 
-    let viewOnGitHubLabel = '打开 GitHub 查看'
+    let viewOnGitHubLabel = 'View on GitHub'
     const gitHubRepository = repository.gitHubRepository
 
     if (
       gitHubRepository &&
       gitHubRepository.endpoint !== getDotComAPIEndpoint()
     ) {
-      viewOnGitHubLabel = '打开 GitHub 企业版查看'
+      viewOnGitHubLabel = 'View on GitHub Enterprise'
     }
 
     items.push({
@@ -472,7 +467,7 @@ function NoCommitSelected() {
   return (
     <div className="panel blankslate">
       <img src={BlankSlateImage} className="blankslate-image" alt="" />
-      未选择提交
+      No commit selected
     </div>
   )
 }

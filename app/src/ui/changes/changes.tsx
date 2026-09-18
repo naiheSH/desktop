@@ -23,8 +23,6 @@ interface IChangesProps {
   readonly isCommitting: boolean
   readonly hideWhitespaceInDiff: boolean
 
-  readonly enableDifftastic: boolean
-
   /**
    * Called when the user requests to open a binary file in an the
    * system-assigned application for said file type.
@@ -112,8 +110,6 @@ export class Changes extends React.Component<IChangesProps, {}> {
           onShowSideBySideDiffChanged={this.onShowSideBySideDiffChanged}
           hideWhitespaceInDiff={this.props.hideWhitespaceInDiff}
           onHideWhitespaceInDiffChanged={this.onHideWhitespaceInDiffChanged}
-          enableDifftastic={this.props.enableDifftastic}
-          onEnableDifftasticChanged={this.onEnableDifftasticChanged}
           onDiffOptionsOpened={this.props.onDiffOptionsOpened}
         />
 
@@ -147,13 +143,6 @@ export class Changes extends React.Component<IChangesProps, {}> {
   private onHideWhitespaceInDiffChanged = (hideWhitespaceInDiff: boolean) => {
     return this.props.dispatcher.onHideWhitespaceInChangesDiffChanged(
       hideWhitespaceInDiff,
-      this.props.repository
-    )
-  }
-
-  private onEnableDifftasticChanged = (enableDifftastic: boolean) => {
-    return this.props.dispatcher.setEnableDifftastic(
-      enableDifftastic,
       this.props.repository
     )
   }
