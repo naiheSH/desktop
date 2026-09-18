@@ -1,4 +1,4 @@
-name: Check Official Upstream
+name: Check Official Upstreams
 
 on:
   schedule:
@@ -10,10 +10,10 @@ permissions:
   issues: write
 
 jobs:
-  check-release:
+  check-stable:
     runs-on: ubuntu-latest
     steps:
-      - name: Check the latest official GitHub Desktop release
+      - name: Check the latest official stable release
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
@@ -24,11 +24,38 @@ jobs:
             exit 0
           fi
 
-          title="Upstream GitHub Desktop release detected: $upstream_tag"
+          title="Stable upstream release detected: $upstream_tag"
           existing=$(gh issue list --repo "$REPOSITORY" --state open --search "in:title \"$title\"" --json number --jq '.[0].number')
           if [ -n "$existing" ]; then
             echo "Issue #$existing already tracks $upstream_tag."
             exit 0
           fi
 
-          gh issue create --repo "$REPOSITORY" --title "$title" --body "The official repository published [$upstream_tag](https://github.com/desktop/desktop/releases/tag/$upstream_tag). Sync it into \\`l10n\\`, resolve localization conflicts, build the artifacts, then run the metadata release workflow."
+          gh issue create --repo "$REPOSITORY" --title "$title" --body "The official repository published the stable release [$upstream_tag](https://github.com/desktop/desktop/releases/tag/$upstream_tag). Sync it into \\`l10n\\`, resolve localization conflicts, build production artifacts, then run the metadata release workflow."
+
+  check-beta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the latest official beta release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          upstream_tag=$(gh api 'repos/desktop/desktop/releases?per_page=30' --jq '[.[] | select(.prerelease == true)][0].tag_name')
+          if [ -z "$upstream_tag" ] || [ "$upstream_tag" = "null" ]; then
+            echo "No official beta release found."
+            exit 0
+          fi
+          if gh release view "$upstream_tag" --repo "$REPOSITORY" >/dev/null 2>&1; then
+            echo "Official beta $upstream_tag is already published here."
+            exit 0
+          fi
+
+          title="Beta upstream release detected: $upstream_tag"
+          existing=$(gh issue list --repo "$REPOSITORY" --state open --search "in:title \\\"$title\\\"" --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            echo "Issue #$existing already tracks $upstream_tag."
+            exit 0
+          fi
+
+          gh issue create --repo "$REPOSITORY" --title "$title" --body "The official repository published the beta release [$upstream_tag](https://github.com/desktop/desktop/releases/tag/$upstream_tag). Sync it into \\`l10n-beta\\` from the official \\`development\\` line, resolve localization conflicts, build beta artifacts, then run the metadata release workflow."
