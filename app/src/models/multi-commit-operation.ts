@@ -12,10 +12,10 @@ import { IDetachedHead, IUnbornRepository, IValidBranch } from './tip'
  */
 export const enum MultiCommitOperationKind {
   Rebase = '变基',
-  CherryPick = '摘取',
-  Squash = '压缩',
+  CherryPick = '拣选',
+  Squash = '挤压',
   Merge = '合并',
-  Reorder = '重排',
+  Reorder = '重新排序',
 }
 
 /** Type guard which narrows a string to a MultiCommitOperationKind */

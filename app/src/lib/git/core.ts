@@ -489,19 +489,19 @@ export function getDescriptionForError(
     case DugiteError.DefaultBranchDeletionFailed:
       return `此分支是仓库的默认分支，不可以删除。`
     case DugiteError.RevertConflicts:
-      return '请先合并和提交改动，然后才能完成逆转提交。'
+      return '请先合并和提交更改，然后才能完成还原提交。'
     case DugiteError.EmptyRebasePatch:
-      return '没有可应用的改动。'
+      return '没有可应用的更改。'
     case DugiteError.NoMatchingRemoteBranch:
       return '当前分支没有对应的远程分支。'
     case DugiteError.NothingToCommit:
-      return '没有可提交的改动。'
+      return '没有可提交的更改。'
     case DugiteError.NoSubmoduleMapping:
-      return '子模块已从 .gitmodules 移除，但它的文件夹尚未删除，请删除文件夹，提交改动，然后重试。'
+      return '子模组已从 .gitmodules 移除，但它的文件夹尚未删除，请删除文件夹，提交更改，然后重试。'
     case DugiteError.SubmoduleRepositoryDoesNotExist:
-      return '子模块指向一个不存在的位置。'
+      return '子模组指向一个不存在的位置。'
     case DugiteError.InvalidSubmoduleSHA:
-      return '子模块指向一个不存在的提交。'
+      return '子模组指向一个不存在的提交。'
     case DugiteError.LocalPermissionDenied:
       return '没有访问权限。'
     case DugiteError.InvalidMerge:
@@ -511,7 +511,7 @@ export function getDescriptionForError(
     case DugiteError.NonFastForwardMergeIntoEmptyHead:
       return '该合并不是快进合并，无法在空分支上执行。'
     case DugiteError.PatchDoesNotApply:
-      return '该改动与仓库中的文件冲突。'
+      return '该更改与仓库中的文件冲突。'
     case DugiteError.BranchAlreadyExists:
       return '同名分支已存在。'
     case DugiteError.BadRevision:
@@ -521,7 +521,7 @@ export function getDescriptionForError(
     case DugiteError.ProtectedBranchForcePush:
       return '该分支受保护，不允许强制推送。'
     case DugiteError.ProtectedBranchRequiresReview:
-      return '该分支受保护，任何改动都需要审核批准，你需要为此创建拉取请求。'
+      return '该分支受保护，任何更改都需要审核批准，你需要为此创建拉取请求。'
     case DugiteError.PushWithFileSizeExceedingLimit:
       return '推送包含了大小超过 100MB 的文件，超过 GitHub 文件大小限制，请从历史记录中删除过大的文件后重试。'
     case DugiteError.HexBranchNameRejected:
@@ -555,7 +555,7 @@ export function getDescriptionForError(
     case DugiteError.NoExistingRemoteBranch:
       return '远程分支不存在。'
     case DugiteError.LocalChangesOverwritten:
-      return '当前有未提交的文件改动，如果切换分支会被覆盖导致丢失，因此请先提交或暂存这些改动。'
+      return '当前有未提交的文件更改，如果切换分支会被覆盖导致丢失，因此请先提交或储藏这些更改。'
     case DugiteError.UnresolvedConflicts:
       return '当前仍有冲突未解决。'
     case DugiteError.ConfigLockFileAlreadyExists:

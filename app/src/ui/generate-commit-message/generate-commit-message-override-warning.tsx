@@ -47,7 +47,7 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<
 
     return (
       <Dialog
-        title="覆盖提交消息"
+        title="覆盖提交说明"
         id="generate-commit-message-override-warning"
         type="warning"
         onDismissed={this.props.onDismissed}
@@ -57,7 +57,7 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<
       >
         <DialogContent>
           <Row id="generate-commit-message-override-warning-body">
-            用 AI 生成的提交消息覆盖现有消息内容。
+            用 AI 生成的提交说明覆盖现有消息内容。
           </Row>
           {this.props.showCopilotInstructionsTip ? (
             <Row>
@@ -66,7 +66,7 @@ export class GenerateCommitMessageOverrideWarning extends React.Component<
                 <LinkButton uri="https://docs.github.com/zh/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions">
                   Copilot 指令
                 </LinkButton>{' '}
-                来调整提交消息的风格。
+                来调整提交说明的风格。
               </p>
             </Row>
           ) : null}

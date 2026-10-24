@@ -54,7 +54,7 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
         <div className="content">
           <div className="interstitial-header">
             <div className="text">
-              <h1>子模块改动</h1>
+              <h1>子模组更改</h1>
             </div>
           </div>
           {this.renderSubmoduleInfo()}
@@ -84,7 +84,7 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
     return this.renderSubmoduleDiffItem(
       { octicon: octicons.info, className: 'info-icon' },
       <>
-        该子模块基于仓库{' '}
+        该子模组基于仓库{' '}
         <LinkButton
           uri={`https://${repoIdentifier.hostname}/${repoIdentifier.owner}/${repoIdentifier.name}`}
         >
@@ -101,13 +101,13 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
     const { oldSHA, newSHA } = diff
 
     const verb = readOnly ? '' : ''
-    const suffix = readOnly ? '。' : '，该改动可以提交到父仓库。'
+    const suffix = readOnly ? '。' : '，该更改可以提交到父仓库。'
 
     if (oldSHA !== null && newSHA !== null) {
       return this.renderSubmoduleDiffItem(
         { octicon: octicons.diffModified, className: 'modified-icon' },
         <>
-          子模块已从提交 {this.renderCommitSHA(oldSHA, '旧')} 更新到{' '}
+          子模组已从提交 {this.renderCommitSHA(oldSHA, '旧')} 更新到{' '}
           {this.renderCommitSHA(newSHA, '新')}
           {suffix}
         </>
@@ -116,14 +116,14 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
       return this.renderSubmoduleDiffItem(
         { octicon: octicons.diffAdded, className: 'added-icon' },
         <>
-          {verb}新增指向提交 {this.renderCommitSHA(newSHA)} 的子模块{suffix}
+          {verb}新增指向提交 {this.renderCommitSHA(newSHA)} 的子模组{suffix}
         </>
       )
     } else if (oldSHA !== null && newSHA === null) {
       return this.renderSubmoduleDiffItem(
         { octicon: octicons.diffRemoved, className: 'removed-icon' },
         <>
-          {verb}移除指向提交 {this.renderCommitSHA(oldSHA)} 的子模块{suffix}
+          {verb}移除指向提交 {this.renderCommitSHA(oldSHA)} 的子模组{suffix}
         </>
       )
     }
@@ -154,16 +154,16 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
 
     const changes =
       diff.status.untrackedChanges && diff.status.modifiedChanges
-        ? '改动和未跟踪的变化'
+        ? '更改和未跟踪的变化'
         : diff.status.untrackedChanges
         ? '未跟踪的变化'
-        : '改动'
+        : '更改'
 
     return this.renderSubmoduleDiffItem(
       { octicon: octicons.fileDiff, className: 'untracked-icon' },
       <>
-        子模块有{changes}
-        。这些改动需要先在子仓库中提交，然后才可以保存到当前的父仓库中。
+        子模组有{changes}
+        。这些更改需要先在子仓库中提交，然后才可以保存到当前的父仓库中。
       </>
     )
   }
@@ -192,7 +192,7 @@ export class SubmoduleDiff extends React.Component<ISubmoduleDiffProps> {
       <span>
         <SuggestedAction
           title="在 Github Desktop 中打开子仓库"
-          description="您可以直接打开子模块的仓库，像往常一样进行修改和提交。"
+          description="您可以直接打开子模组的仓库，像往常一样进行修改和提交。"
           buttonText={__DARWIN__ ? '打开子仓库' : '打开子仓库'}
           type="primary"
           onClick={this.onOpenSubmoduleClick}

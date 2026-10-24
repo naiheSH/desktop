@@ -28,12 +28,12 @@ export function generateWorktreeContextMenuItems(
   }
 
   items.push({
-    label: '复制工作树名称',
+    label: '复制工作区名称',
     action: () => clipboard.writeText(name),
   })
 
   items.push({
-    label: '复制工作树路径',
+    label: '复制工作区路径',
     action: () => clipboard.writeText(path),
   })
 

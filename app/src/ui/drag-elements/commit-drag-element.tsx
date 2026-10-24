@@ -86,7 +86,7 @@ export class CommitDragElement extends React.Component<
           <>
             {copyToPlus}
             <span>
-              <span className="copy-to">摘取到</span>
+              <span className="copy-to">拣选到</span>
               <span className="branch-name">
                 {currentDropTarget.branchName}
               </span>
@@ -99,7 +99,7 @@ export class CommitDragElement extends React.Component<
         const commitsBeingSquashedCount = this.props.selectedCommits.length + 1
         toolTipContents = (
           <>
-            <span>压缩这{commitsBeingSquashedCount}个提交</span>
+            <span>挤压这{commitsBeingSquashedCount}个提交</span>
           </>
         )
         break

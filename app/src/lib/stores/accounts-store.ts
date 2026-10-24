@@ -42,12 +42,7 @@ interface IEmail {
 
 function isKeyChainError(e: any) {
   const error = e as Error
-  return (
-    error.message &&
-    error.message.startsWith(
-      'The user name or passphrase you entered is not correct'
-    )
-  )
+  return error.message && error.message.startsWith('输入的用户名或口令不正确')
 }
 
 /** The data-only interface for storage. */

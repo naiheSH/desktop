@@ -90,7 +90,7 @@ export class WorktreeList extends React.Component<IWorktreeListProps> {
   }
 
   private getGroupLabel(identifier: WorktreeGroupIdentifier) {
-    return identifier === 'main' ? '主工作树' : '关联工作树'
+    return identifier === 'main' ? '主工作区' : '关联工作区'
   }
 
   private getGroupAriaLabel = (group: number) => {
@@ -122,13 +122,13 @@ export class WorktreeList extends React.Component<IWorktreeListProps> {
         className="new-worktree-button"
         onClick={this.props.onCreateNewWorktree}
       >
-        新建工作树
+        新建工作区
       </Button>
     )
   }
 
   private onRenderNoItems = () => {
-    return <div className="no-items-found">未找到工作树</div>
+    return <div className="no-items-found">未找到工作区</div>
   }
 
   private onItemClick = (item: IWorktreeListItem, source: ClickSource) => {

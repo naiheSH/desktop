@@ -208,9 +208,6 @@ export class Diff extends React.Component<IDiffProps, IDiffState> {
       lineEndingsChange: diff.lineEndingsChange,
       maxLineNumber: diff.maxLineNumber,
       hasHiddenBidiChars: diff.hasHiddenBidiChars,
-      renderedByDifft: diff.renderedByDifft,
-      renderedByDifftLanguage: diff.renderedByDifftLanguage,
-      difftRenderFailure: diff.difftRenderFailure,
     }
 
     return this.renderTextDiff(textDiff)
@@ -231,11 +228,11 @@ export class Diff extends React.Component<IDiffProps, IDiffState> {
           return (
             <div className="panel renamed">
               <Octicon symbol={OcticonSymbol.alert} />
-              文件重命名，内容也有改动
+              文件重命名，内容也有更改
             </div>
           )
         }
-        return <div className="panel renamed">文件重命名，内容未改动</div>
+        return <div className="panel renamed">文件重命名，内容未更改</div>
       }
 
       if (
@@ -245,11 +242,11 @@ export class Diff extends React.Component<IDiffProps, IDiffState> {
         return <div className="panel empty">文件存在冲突，必须去命令行解决</div>
       }
 
-      if (this.props.hideWhitespaceInDiff || diff.renderedByDifft) {
-        return <div className="panel empty">只有空白字符改动</div>
+      if (this.props.hideWhitespaceInDiff) {
+        return <div className="panel empty">只有空白字符更改</div>
       }
 
-      return <div className="panel empty">内容未改动</div>
+      return <div className="panel empty">内容未更改</div>
     }
 
     return this.renderTextDiff(diff)

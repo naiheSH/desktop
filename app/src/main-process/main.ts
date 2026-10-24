@@ -641,11 +641,11 @@ app.on('ready', () => {
     const window = BrowserWindow.fromWebContents(event.sender)
     const options: Electron.MessageBoxOptions = {
       type: 'warning',
-      title: 'Reveal Repository in Finder?',
-      message: 'This repository might be an application.',
+      title: '在 Finder 中显示仓库？',
+      message: '此仓库可能是一个应用程序。',
       detail:
-        'Opening it directly could run software. You can reveal and select it in Finder without opening it.',
-      buttons: ['Reveal in Finder', 'Cancel'],
+        '直接打开它可能会运行软件。你可以在 Finder 中显示并选中它，而不打开它。',
+      buttons: ['在 Finder 中显示', '取消'],
       defaultId: 1,
       cancelId: 1,
       noLink: true,

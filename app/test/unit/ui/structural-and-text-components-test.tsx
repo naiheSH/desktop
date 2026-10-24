@@ -87,7 +87,7 @@ describe('structural and text components', () => {
 
     assert.deepEqual(
       attributions.map(attribution => attribution.textContent),
-      ['Mona', 'Mona, Hubot', '3 people']
+      ['Mona', 'Mona, Hubot', '3 位参与者']
     )
 
     const authorNames = Array.from(

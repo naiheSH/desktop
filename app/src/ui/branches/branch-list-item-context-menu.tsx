@@ -53,7 +53,7 @@ export function generateBranchContextMenuItems(
 
   if (onCheckoutInNewWorktree !== undefined) {
     items.push({
-      label: '在新工作树中检出…',
+      label: '在新工作区中检出…',
       action: () => onCheckoutInNewWorktree(branch),
     })
   }

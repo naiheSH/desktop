@@ -62,7 +62,7 @@ export abstract class CherryPick extends BaseMultiCommitOperation {
   }
 
   protected onConflictsDialogDismissed = () => {
-    this.onInvokeConflictsDialogDismissed('摘取到')
+    this.onInvokeConflictsDialogDismissed('拣选到')
   }
 
   protected renderChooseBranch = (): JSX.Element | null => {
@@ -121,9 +121,9 @@ export abstract class CherryPick extends BaseMultiCommitOperation {
       targetBranchName,
     } = step
 
-    const okButtonText = __DARWIN__ ? '新建分支并摘取' : '新建分支并摘取'
+    const okButtonText = __DARWIN__ ? '新建分支并拣选' : '新建分支并拣选'
 
-    const headerText = __DARWIN__ ? '摘取到新分支' : '摘取到新分支'
+    const headerText = __DARWIN__ ? '拣选到新分支' : '拣选到新分支'
 
     return (
       <CreateBranch

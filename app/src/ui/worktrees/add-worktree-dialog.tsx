@@ -119,7 +119,7 @@ export class AddWorktreeDialog extends React.Component<
     const worktree = worktrees.find(wt => wt.path === fullPath)
 
     if (!worktree) {
-      this.props.dispatcher.postError(new Error('找不到刚创建的工作树'))
+      this.props.dispatcher.postError(new Error('找不到刚创建的工作区'))
       this.setState({ creating: false })
       return
     }
@@ -169,7 +169,7 @@ export class AddWorktreeDialog extends React.Component<
 
     return (
       <div id="add-worktree-path-msg">
-        工作树将创建于 <Ref>{fullPath}</Ref>。
+        工作区将创建于 <Ref>{fullPath}</Ref>。
       </div>
     )
   }
@@ -184,7 +184,7 @@ export class AddWorktreeDialog extends React.Component<
     return (
       <Dialog
         id="add-worktree"
-        title="添加工作树"
+        title="添加工作区"
         loading={this.state.creating}
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
@@ -196,9 +196,9 @@ export class AddWorktreeDialog extends React.Component<
             }
             onFullPathChanged={this.onFullPathChanged}
             onNameChanged={this.onWorktreeNameChanged}
-            nameLabel="工作树名称"
-            namePlaceholder="工作树名称"
-            pathPlaceholder="工作树路径"
+            nameLabel="工作区名称"
+            namePlaceholder="工作区名称"
+            pathPlaceholder="工作区路径"
           />
 
           <Row>
@@ -218,7 +218,7 @@ export class AddWorktreeDialog extends React.Component<
         <DialogFooter>
           {this.renderPathMessage()}
           <OkCancelButtonGroup
-            okButtonText="创建工作树"
+            okButtonText="创建工作区"
             okButtonDisabled={disabled}
           />
         </DialogFooter>

@@ -183,13 +183,13 @@ export async function addGlobalConfigValue(
  */
 export async function addSafeDirectory(path: string) {
   if (!isAbsolute(path)) {
-    throw new Error('A directory exception requires an absolute path.')
+    throw new Error('目录例外必须使用绝对路径。')
   }
 
   path = await realpath(path)
   path = __WIN32__ ? path.replaceAll('\\', '/') : path
   if (path.endsWith('/*')) {
-    throw new Error('A directory exception must refer to a single directory.')
+    throw new Error('目录例外必须指向单个目录。')
   }
 
   // UNC-paths on Windows need to be prefixed with `%(prefix)/`, see

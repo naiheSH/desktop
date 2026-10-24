@@ -159,7 +159,7 @@ const renderChangesIndicator = () => {
   return (
     <TooltippedContent
       className="change-indicator-wrapper"
-      tooltip="该仓库中有未提交的改动"
+      tooltip="该仓库中有未提交的更改"
       disabled={enableAccessibleListToolTips()}
     >
       <Octicon symbol={octicons.dotFill} />

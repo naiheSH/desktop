@@ -49,7 +49,7 @@ describe('gitignore', () => {
 
       await assert.rejects(
         readGitIgnoreAtRoot(repo),
-        /Cannot use a symbolic link as the root .gitignore file/
+        /不能使用符号链接作为根 .gitignore 文件/
       )
     })
 
@@ -61,7 +61,7 @@ describe('gitignore', () => {
 
       await assert.rejects(
         readGitIgnoreAtRoot(repo),
-        /Cannot use a symbolic link as the root .gitignore file/
+        /不能使用符号链接作为根 .gitignore 文件/
       )
     })
 
@@ -136,7 +136,7 @@ describe('gitignore', () => {
 
       await assert.rejects(
         saveGitIgnore(repo, 'node_modules\n'),
-        /Cannot use a symbolic link as the root .gitignore file/
+        /不能使用符号链接作为根 .gitignore 文件/
       )
       assert.equal(await readFile(targetPath, 'utf8'), 'target contents')
     })
@@ -149,7 +149,7 @@ describe('gitignore', () => {
 
       await assert.rejects(
         saveGitIgnore(repo, 'node_modules\n'),
-        /Cannot use a symbolic link as the root .gitignore file/
+        /不能使用符号链接作为根 .gitignore 文件/
       )
     })
 

@@ -265,7 +265,7 @@ export class MergeCallToActionWithConflicts extends React.Component<
       return (
         <div className="merge-message">
           以 <strong>{branch.name}</strong> 为基础，添加{' '}
-          <strong>{currentBranch.name}</strong> 所改动的
+          <strong>{currentBranch.name}</strong> 所更改的
           <strong>{`${this.commitCount}个${pluralized}`}</strong>
         </div>
       )

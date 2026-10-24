@@ -233,7 +233,7 @@ describe('SideBySideDiffRow', () => {
     const { lineNumberChanges } = renderSideBySideDiffRow()
 
     const checkbox = screen.getByRole('checkbox', {
-      name: /Line 10 added/,
+      name: /行 10 已添加/,
     })
 
     fireEvent.click(checkbox)
@@ -257,7 +257,7 @@ describe('SideBySideDiffRow', () => {
     })
 
     fireEvent.click(
-      screen.getByRole('checkbox', { name: /Lines 10 to 11 added/ })
+      screen.getByRole('checkbox', { name: /行 10 至 11 已添加/ })
     )
 
     assert.deepEqual(hunkClicks, [{ hunkStartLine: 1, select: true }])
@@ -270,7 +270,7 @@ describe('SideBySideDiffRow', () => {
     })
 
     fireEvent.click(
-      screen.getByRole('checkbox', { name: /Lines 10 to 11 added/ })
+      screen.getByRole('checkbox', { name: /行 10 至 11 已添加/ })
     )
 
     assert.deepEqual(hunkClicks, [{ hunkStartLine: 1, select: false }])
@@ -282,8 +282,8 @@ describe('SideBySideDiffRow', () => {
     })
 
     fireEvent.contextMenu(
-      screen.getByText(/Lines 10 to 11 added/).closest('.hunk-handle') ??
-        screen.getByText(/Lines 10 to 11 added/)
+      screen.getByText(/行 10 至 11 已添加/).closest('.hunk-handle') ??
+        screen.getByText(/行 10 至 11 已添加/)
     )
 
     assert.deepEqual(contextMenuHunks, [1])
@@ -299,7 +299,7 @@ describe('SideBySideDiffRow', () => {
       },
     })
 
-    fireEvent.click(screen.getByRole('button', { name: 'Expand Up' }))
+    fireEvent.click(screen.getByRole('button', { name: '向上展开' }))
 
     assert.deepEqual(hunkExpansions, [
       { hunkIndex: 2, expansionType: DiffHunkExpansionType.Up },

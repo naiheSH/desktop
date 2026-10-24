@@ -85,7 +85,7 @@ function createNewSymlink(asAdmin: boolean) {
     fsAdmin.symlink(PackagedPath, InstalledCLIPath, error => {
       if (error !== null) {
         reject(
-          new Error(`Failed to symlink ${PackagedPath} to ${InstalledCLIPath}`)
+          new Error(`Failed to symlink ${PackagedPath}至${InstalledCLIPath}`)
         )
         return
       }

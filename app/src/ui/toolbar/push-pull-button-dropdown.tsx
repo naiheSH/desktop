@@ -72,7 +72,7 @@ export class PushPullButtonDropDown extends React.Component<IPushPullButtonDropD
       case DropdownItemType.Fetch:
         return {
           title: `获取 ${remoteName}`,
-          description: `获取来自 ${remoteName} 的最新改动`,
+          description: `获取来自 ${remoteName} 的最新更改`,
           action: this.props.fetch,
           icon: syncClockwise,
         }

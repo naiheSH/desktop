@@ -50,9 +50,7 @@ export class ContinueRebase extends React.Component<IContinueRebaseProps, {}> {
     const loading = this.props.isCommitting ? <Loading /> : undefined
 
     const warnAboutUntrackedFiles = this.props.hasUntrackedChanges ? (
-      <div className="warning-untracked-files">
-        Untracked files will be excluded
-      </div>
+      <div className="warning-untracked-files">未跟踪的文件将被排除</div>
     ) : undefined
 
     return (

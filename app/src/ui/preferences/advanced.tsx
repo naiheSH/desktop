@@ -100,7 +100,7 @@ export class Advanced extends React.Component<
           />
           <div id="periodic-fetch-description" className="settings-description">
             <p>
-              这些小图标显示仓库是否有本地和远程的改动，它需要定期获取所有仓库。
+              这些小图标显示仓库是否有本地和远程的更改，它需要定期获取所有仓库。
             </p>
             <p>
               关闭后，就只会定期获取当前选中的仓库。如果您有很多仓库，关掉它可以提升性能。

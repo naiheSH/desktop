@@ -207,20 +207,20 @@ export class OpenPullRequestDialog extends React.Component<IOpenPullRequestDialo
     const hasMergeBase = mergeStatus?.kind !== ComputedAction.Invalid
     const message = hasMergeBase ? (
       <>
-        <Ref>{baseBranch.name}</Ref> is up to date with all commits from{' '}
+        <Ref>{baseBranch.name}</Ref> 已包含所有提交，来源{' '}
         <Ref>{currentBranch.name}</Ref>.
       </>
     ) : (
       <>
-        <Ref>{baseBranch.name}</Ref> and <Ref>{currentBranch.name}</Ref> are
-        entirely different commit histories.
+        <Ref>{baseBranch.name}</Ref> 与 <Ref>{currentBranch.name}</Ref>{' '}
+        的提交历史完全不同。
       </>
     )
     return (
       <div className="open-pull-request-message">
         <div>
           <Octicon symbol={octicons.gitPullRequest} />
-          <h3>There are no changes.</h3>
+          <h3>没有更改。</h3>
           {message}
         </div>
       </div>
@@ -238,8 +238,8 @@ export class OpenPullRequestDialog extends React.Component<IOpenPullRequestDialo
       <div className="open-pull-request-message">
         <div>
           <Octicon symbol={octicons.gitPullRequest} />
-          <h3>Could not find a default branch to compare against.</h3>
-          Select a base branch above.
+          <h3>找不到用于比较的默认分支。</h3>
+          请在上方选择基分支。
         </div>
       </div>
     )
@@ -253,8 +253,8 @@ export class OpenPullRequestDialog extends React.Component<IOpenPullRequestDialo
     const isEnterprise =
       gitHubRepository && gitHubRepository.endpoint !== getDotComAPIEndpoint()
 
-    const viewCreate = currentBranchHasPullRequest ? 'View' : ' Create'
-    const buttonTitle = `${viewCreate} pull request on GitHub${
+    const viewCreate = currentBranchHasPullRequest ? '查看' : '创建'
+    const buttonTitle = `${viewCreate}拉取请求，在 GitHub${
       isEnterprise ? ' Enterprise' : ''
     }.`
 
@@ -263,9 +263,7 @@ export class OpenPullRequestDialog extends React.Component<IOpenPullRequestDialo
         {currentBranchHasPullRequest && (
           <Octicon symbol={octicons.linkExternal} />
         )}
-        {__DARWIN__
-          ? `${viewCreate} Pull Request`
-          : `${viewCreate} pull request`}
+        {__DARWIN__ ? `${viewCreate}拉取请求` : `${viewCreate}拉取请求`}
       </>
     )
 
@@ -276,7 +274,7 @@ export class OpenPullRequestDialog extends React.Component<IOpenPullRequestDialo
         <OkCancelButtonGroup
           okButtonText={okButton}
           okButtonTitle={buttonTitle}
-          cancelButtonText="Cancel"
+          cancelButtonText="取消"
           okButtonDisabled={commitSHAs === null || commitSHAs.length === 0}
         />
       </DialogFooter>

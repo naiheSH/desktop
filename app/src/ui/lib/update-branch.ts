@@ -16,13 +16,13 @@ export function getMergeOptions(): ReadonlyArray<IDropdownSelectButtonOption> {
       id: MultiCommitOperationKind.Merge,
     },
     {
-      label: '压缩并合并',
-      description: '将所选分支的新提交，压缩进一个提交里，添加到当前分支上。',
+      label: '挤压并合并',
+      description: '将所选分支的新提交，挤压进一个提交里，添加到当前分支上。',
       id: MultiCommitOperationKind.Squash,
     },
     {
       label: '变基',
-      description: '以所选分支为基础，把当前分支的改动在它之上重新应用一遍。',
+      description: '以所选分支为基础，把当前分支的更改在它之上重新应用一遍。',
       id: MultiCommitOperationKind.Rebase,
     },
   ]

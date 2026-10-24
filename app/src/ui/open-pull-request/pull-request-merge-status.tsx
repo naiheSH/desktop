@@ -40,7 +40,7 @@ export class PullRequestMergeStatus extends React.Component<IPullRequestMergeSta
             <strong>
               <Octicon symbol={octicons.check} /> 没有冲突。
             </strong>
-            这些改动可以被自动合并。
+            这些更改可以被自动合并。
           </span>
         )
       case ComputedAction.Conflicts:

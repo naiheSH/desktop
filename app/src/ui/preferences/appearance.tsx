@@ -290,7 +290,7 @@ export class Appearance extends React.Component<
 
         <Checkbox
           className="always-show-worktree-list"
-          label="始终显示工作树列表"
+          label="始终显示工作区列表"
           value={
             this.props.alwaysShowWorktreeList
               ? CheckboxValue.On

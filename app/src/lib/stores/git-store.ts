@@ -700,7 +700,7 @@ export class GitStore extends BaseStore {
     // Now that we have the working directory changes, as well the restored
     // deleted files, we can remove the HEAD ref to make the current branch
     // disappear
-    await deleteRef(repository, 'HEAD', 'Reverting first commit')
+    await deleteRef(repository, 'HEAD', '正在还原首次提交')
 
     // Finally, ensure any changes in the index are unstaged. This ensures all
     // files in the repository will be untracked.

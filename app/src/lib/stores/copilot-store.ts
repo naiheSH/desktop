@@ -437,9 +437,7 @@ export type ReasoningEffort = typeof ReasoningEffortOrder[number]
 
 /** Formats a reasoning effort for display, e.g. 'xhigh' → 'Extra high'. */
 export function formatReasoningEffort(effort: ReasoningEffort): string {
-  return effort === 'xhigh'
-    ? 'Extra high'
-    : effort.charAt(0).toUpperCase() + effort.slice(1)
+  return { low: '低', medium: '中', high: '高', xhigh: '极高' }[effort]
 }
 
 /**
@@ -691,7 +689,7 @@ export async function runConflictResolutionTurn(
       }
 
       const timer = setTimeout(() => {
-        finish(() => reject(new Error('Copilot conflict resolution timed out')))
+        finish(() => reject(new Error('Copilot 解决冲突超时')))
       }, timeoutMs)
 
       // If the signal already aborted before we got here, tear down now. The
@@ -733,7 +731,7 @@ export async function runConflictResolutionTurn(
         session.on('assistant.message', event => {
           const content = event.data.content
           if (!content) {
-            finish(() => reject(new Error('No response from Copilot')))
+            finish(() => reject(new Error('Copilot 未返回响应')))
           } else {
             finish(() => resolve(content))
           }
@@ -1144,7 +1142,7 @@ export class CopilotStore extends BaseStore {
       throwIfCancelled()
 
       if (!response || !response.data.content) {
-        throw new Error('No response from Copilot')
+        throw new Error('Copilot 未返回响应')
       }
 
       return parseCopilotCommitMessage(response.data.content)
@@ -1510,7 +1508,7 @@ export class CopilotStore extends BaseStore {
 
     log.warn('CopilotStore: Failed to resolve conflicts after retry', lastError)
     throw new CopilotConflictResolutionError(
-      lastError ?? new Error('Conflict resolution failed'),
+      lastError ?? new Error('解决冲突失败'),
       lastStage,
       retriedValidation ? 'failed-after-validation-retry' : 'not-retried'
     )

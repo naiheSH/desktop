@@ -203,7 +203,7 @@ export class TutorialPanel extends React.Component<
             )}
           </TutorialStepInstructions>
           <TutorialStepInstructions
-            summaryText="提交改动"
+            summaryText="提交更改"
             isComplete={this.isStepComplete}
             isNextStepTodo={this.isStepNextTodo}
             sectionId={TutorialStep.MakeCommit}
@@ -212,7 +212,7 @@ export class TutorialPanel extends React.Component<
           >
             <p className="description">
               一次提交代表对代码的一次小修改。在左下角的 "摘要"
-              一栏简单描述改动事项，然后点击蓝色的提交按钮完成提交。
+              一栏简单描述更改事项，然后点击蓝色的提交按钮完成提交。
             </p>
           </TutorialStepInstructions>
           <TutorialStepInstructions
@@ -245,7 +245,7 @@ export class TutorialPanel extends React.Component<
               拉取请求，就是给某个项目提出的一份改进提案。要是给别人的仓库发起拉取请求，他们就能审核并决定是否接受您的改进。
               <br />
               接下去您可以在 GitHub
-              上继续操作，打开拉取请求，合并刚才的改动。教程演示仓库是私有的，这个拉取请求也不会公开。
+              上继续操作，打开拉取请求，合并刚才的更改。教程演示仓库是私有的，这个拉取请求也不会公开。
             </p>
             <div className="action">
               <Button onClick={this.openPullRequest} role="link">

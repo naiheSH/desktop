@@ -180,9 +180,9 @@ export class Prompts extends React.Component<
       case UncommittedChangesStrategy.AskForConfirmation:
         return '询问怎么办'
       case UncommittedChangesStrategy.MoveToNewBranch:
-        return '将改动带去新的分支'
+        return '将更改带去新的分支'
       case UncommittedChangesStrategy.StashOnCurrentBranch:
-        return '将改动暂存在当前分支'
+        return '将更改储藏在当前分支'
       default:
         return assertNever(key, `Unknown uncommitted changes strategy: ${key}`)
     }
@@ -201,7 +201,7 @@ export class Prompts extends React.Component<
 
     return (
       <div className="advanced-section">
-        <h2 id="switch-branch-heading">有未提交的改动时切换分支...</h2>
+        <h2 id="switch-branch-heading">有未提交的更改时切换分支...</h2>
 
         <RadioGroup<UncommittedChangesStrategy>
           ariaLabelledBy="switch-branch-heading"
@@ -217,7 +217,7 @@ export class Prompts extends React.Component<
   private renderCommittingFilteredChangesPrompt = () => {
     return (
       <Checkbox
-        label="提交隐藏改动"
+        label="提交隐藏更改"
         value={
           this.state.askForConfirmationOnCommitFilteredChanges
             ? CheckboxValue.On
@@ -244,7 +244,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmRepositoryRemovalChanged}
             />
             <Checkbox
-              label="放弃改动"
+              label="放弃更改"
               value={
                 this.state.confirmDiscardChanges
                   ? CheckboxValue.On
@@ -253,7 +253,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmDiscardChangesChanged}
             />
             <Checkbox
-              label="永久放弃改动"
+              label="永久放弃更改"
               value={
                 this.state.confirmDiscardChangesPermanently
                   ? CheckboxValue.On
@@ -262,7 +262,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmDiscardChangesPermanentlyChanged}
             />
             <Checkbox
-              label="放弃暂存区"
+              label="放弃储藏区"
               value={
                 this.state.confirmDiscardStash
                   ? CheckboxValue.On
@@ -298,7 +298,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmUndoCommitChanged}
             />
             <Checkbox
-              label="生成提交消息覆盖现有消息内容"
+              label="生成提交说明覆盖现有消息内容"
               value={
                 this.state.confirmCommitMessageOverride
                   ? CheckboxValue.On
@@ -307,7 +307,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmCommitMessageOverrideChanged}
             />
             <Checkbox
-              label="删除工作树"
+              label="删除工作区"
               value={
                 this.state.confirmWorktreeRemoval
                   ? CheckboxValue.On

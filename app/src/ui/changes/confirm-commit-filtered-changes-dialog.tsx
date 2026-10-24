@@ -33,7 +33,7 @@ export class ConfirmCommitFilteredChanges extends React.Component<
       <Dialog
         id="hidden-changes"
         type="warning"
-        title={__DARWIN__ ? '提交隐藏改动？' : '提交隐藏改动？'}
+        title={__DARWIN__ ? '提交隐藏更改？' : '提交隐藏更改？'}
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
         role="alertdialog"

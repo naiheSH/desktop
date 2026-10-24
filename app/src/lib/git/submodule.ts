@@ -59,7 +59,7 @@ export async function updateSubmodulesAfterOperation<T extends Progress>(
   progressCallback({
     kind: progressKind,
     title,
-    description: 'Updating submodules',
+    description: '正在更新子模组',
     value: 0,
     // Add the target or remote field based on the progress kind
     ...(progressKind === 'checkout'
@@ -116,7 +116,7 @@ export async function updateSubmodulesAfterOperation<T extends Progress>(
   progressCallback({
     kind: progressKind,
     title,
-    description: 'Submodules updated',
+    description: '子模组已更新',
     value: 1,
     ...(progressKind === 'checkout'
       ? { target: targetOrRemote }

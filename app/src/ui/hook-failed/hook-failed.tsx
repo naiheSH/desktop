@@ -41,7 +41,7 @@ export class HookFailed extends React.Component<IHookFailedProps> {
       >
         <DialogContent>
           <p id="hook-failure-message">
-            挂钩 {this.props.hookName} 运行失败了，如何处置？
+            钩子 {this.props.hookName} 运行失败了，如何处置？
           </p>
           <Terminal
             terminalOutput={this.props.terminalOutput}

@@ -125,7 +125,7 @@ function createState(
 
 function getCommitSummary(selectedCommits: ReadonlyArray<Commit>) {
   return selectedCommits[0].summary.length === 0
-    ? '空白的提交信息'
+    ? '空白的提交说明'
     : selectedCommits[0].summary
 }
 
@@ -486,7 +486,7 @@ export class ExpandableCommitSummary extends React.Component<
             {numInDiff}个{commitsPluralized}
           </>
         )}
-        的改动
+        的更改
       </>
     )
   }

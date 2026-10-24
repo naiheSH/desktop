@@ -3560,7 +3560,7 @@ export class Dispatcher {
       result,
       commitsToReorder.length,
       tip.branch.name,
-      `${MultiCommitOperationKind.Reorder.toLowerCase()} commit`
+      `${MultiCommitOperationKind.Reorder.toLowerCase()}个提交`
     )
   }
 
@@ -3669,7 +3669,7 @@ export class Dispatcher {
       result,
       toSquash.length + 1,
       tip.branch.name,
-      `${MultiCommitOperationKind.Squash.toLowerCase()} commit`
+      `${MultiCommitOperationKind.Squash.toLowerCase()}个提交`
     )
   }
 

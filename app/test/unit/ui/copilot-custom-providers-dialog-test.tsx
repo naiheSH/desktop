@@ -48,17 +48,17 @@ describe('CopilotCustomProvidersDialog', () => {
     )
 
     assert.ok(screen.getByText('Ollama'))
-    assert.ok(screen.getByText('OpenAI-compatible · 2 models'))
-    assert.ok(screen.getByText('Local'))
+    assert.ok(screen.getByText('OpenAI-compatible · 2个模型'))
+    assert.ok(screen.getByText('本地'))
 
     fireEvent.click(
-      screen.getByRole('button', { name: /Add provider…/i, hidden: true })
+      screen.getByRole('button', { name: /添加提供商…/i, hidden: true })
     )
     fireEvent.click(
-      screen.getByRole('button', { name: 'Edit Ollama', hidden: true })
+      screen.getByRole('button', { name: '编辑Ollama', hidden: true })
     )
     fireEvent.click(
-      screen.getByRole('button', { name: 'Remove Ollama', hidden: true })
+      screen.getByRole('button', { name: '移除Ollama', hidden: true })
     )
 
     assert.deepStrictEqual(actions, ['add', 'edit', 'delete'])
@@ -75,8 +75,6 @@ describe('CopilotCustomProvidersDialog', () => {
       />
     )
 
-    assert.ok(
-      screen.getByText(/Add a custom provider to use your own API keys/)
-    )
+    assert.ok(screen.getByText(/添加自定义提供商，以便使用自己的 API 密钥/))
   })
 })

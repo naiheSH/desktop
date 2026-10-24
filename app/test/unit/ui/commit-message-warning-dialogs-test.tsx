@@ -185,7 +185,7 @@ describe('commit message warning dialogs', () => {
     assert.notEqual(tipLink, null)
     assert.notEqual(overrideButton, null)
     assert.equal(dialog?.getAttribute('role'), 'alertdialog')
-    assert.ok(screen.getByText('覆盖提交消息'))
+    assert.ok(screen.getByText('覆盖提交说明'))
     assertAnnouncementIncludes(
       dialog!,
       'generate-commit-message-override-warning-body'

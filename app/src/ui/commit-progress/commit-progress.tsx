@@ -37,7 +37,7 @@ export class CommitProgress extends React.Component<ICommitProgressProps> {
     return (
       <Dialog
         id="commit-progress-dialog"
-        title={`正在提交改动`}
+        title={`正在提交更改`}
         onDismissed={this.onDismissed}
         onSubmit={this.onDismissed}
       >

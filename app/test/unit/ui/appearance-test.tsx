@@ -39,7 +39,7 @@ describe('Appearance preferences', () => {
     const heading = screen.getByRole('heading', { name: '其他' })
     const tabSize = screen.getByRole('combobox', { name: '差异对比制表符宽度' })
     const checkbox = screen.getByRole('checkbox', {
-      name: '始终显示工作树列表',
+      name: '始终显示工作区列表',
     })
 
     assert.strictEqual(
@@ -61,7 +61,7 @@ describe('Appearance preferences', () => {
   it('reports enabling and disabling the preference and reflects updated props', () => {
     const { rerender, props, changes } = renderAppearance()
     const checkbox = screen.getByRole('checkbox', {
-      name: '始终显示工作树列表',
+      name: '始终显示工作区列表',
     })
     fireEvent.click(checkbox)
     assert.deepStrictEqual(changes, [true])

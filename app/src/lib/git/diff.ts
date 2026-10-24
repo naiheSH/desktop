@@ -601,7 +601,7 @@ export async function getFilesDiffText(
 
   // No more than 10MB
   if (stdout.length > 10 * 1024 * 1024) {
-    throw new Error('Diff is too large to render')
+    throw new Error('差异过大，无法显示')
   }
 
   // `.toString()` in a promise in case its a large buffer

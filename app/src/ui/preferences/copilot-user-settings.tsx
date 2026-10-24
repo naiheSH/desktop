@@ -88,20 +88,20 @@ export class CopilotUserSettings extends React.Component<ICopilotUserSettingsPro
     const { copilotModels, byokProviders } = this.props
 
     if (copilotModels === null) {
-      return <p>Loading available models…</p>
+      return <p>正在加载可用模型…</p>
     }
 
     if (!hasCopilotModelPickerItems(copilotModels, byokProviders)) {
-      return <p>No Copilot models available.</p>
+      return <p>没有可用的 Copilot 模型。</p>
     }
 
     return (
       <>
         <Row className="copilot-feature-hint">
           <p>
-            Tailor how Copilot behaves by using{' '}
+            自定义 Copilot 的行为，使用{' '}
             <LinkButton uri="https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions">
-              custom instructions
+              自定义指令
             </LinkButton>
             .
           </p>
@@ -109,15 +109,13 @@ export class CopilotUserSettings extends React.Component<ICopilotUserSettingsPro
         {this.renderFeatureModelPicker(
           copilotModels,
           'commit-message-generation',
-          __DARWIN__
-            ? 'Commit Message Generation'
-            : 'Commit message generation',
+          __DARWIN__ ? '生成提交说明' : '生成提交说明',
           this.onCommitMessageModelChanged,
           350
         )}
         <p className="settings-description">
           <LinkButton uri="https://docs.github.com/en/desktop/making-changes-in-a-branch/committing-and-reviewing-changes-to-your-project-in-github-desktop#write-a-commit-message-and-push-your-changes">
-            Learn more about generating commit messages.
+            了解如何生成提交说明。
           </LinkButton>
         </p>
         {enableCopilotConflictResolution() && (
@@ -125,18 +123,18 @@ export class CopilotUserSettings extends React.Component<ICopilotUserSettingsPro
             {this.renderFeatureModelPicker(
               copilotModels,
               'conflict-resolution',
-              __DARWIN__ ? 'Conflict Resolution' : 'Conflict resolution',
+              __DARWIN__ ? '解决冲突' : '解决冲突',
               this.onConflictResolutionModelChanged,
               280
             )}
             <p className="settings-description">
-              Model changes apply to future conflict resolutions.
+              模型更改将应用于之后的冲突解决操作。
             </p>
             <Checkbox
               label={
                 __DARWIN__
-                  ? 'Always Use Copilot When Conflicts Are Detected'
-                  : 'Always use Copilot when conflicts are detected'
+                  ? '检测到冲突时始终使用 Copilot'
+                  : '检测到冲突时始终使用 Copilot'
               }
               value={
                 this.props.alwaysUseCopilotForConflictResolution
@@ -238,7 +236,7 @@ export class CopilotUserSettings extends React.Component<ICopilotUserSettingsPro
       // This should not happen because we check for this case earlier, but let's
       // make that assumption explicit and crash if it is violated rather than
       // returning null.
-      throw new Error('No models available')
+      throw new Error('没有可用模型')
     }
 
     const preferredCopilotModel = copilotModels.find(
@@ -260,7 +258,7 @@ export class CopilotUserSettings extends React.Component<ICopilotUserSettingsPro
 
     if (firstProvider === undefined) {
       // This should not happen because we check for selectable models earlier.
-      throw new Error('No models available')
+      throw new Error('没有可用模型')
     }
 
     const firstByokModel = firstProvider.models[0]

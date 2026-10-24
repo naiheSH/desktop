@@ -741,7 +741,7 @@ describe('git/commit', () => {
         const status = await getStatusOrThrow(repository)
         await assert.rejects(
           () => createMergeCommit(repository, status.workingDirectory.files),
-          /没有可提交的改动。/
+          /没有可提交的更改。/
         )
       })
     })

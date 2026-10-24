@@ -30,11 +30,11 @@ interface ISnapshotDefinition {
 }
 
 const snapshotDefinitions: ReadonlyArray<ISnapshotDefinition> = [
-  { key: 'chat', label: 'Chat messages' },
-  { key: 'completions', label: 'Code completions' },
+  { key: 'chat', label: '聊天消息' },
+  { key: 'completions', label: '代码补全' },
   { key: 'premium_interactions', label: 'Premium requests / AI credits' },
-  { key: 'session', label: 'Session limits' },
-  { key: 'weekly', label: 'Weekly limits' },
+  { key: 'session', label: '会话限额' },
+  { key: 'weekly', label: '每周限额' },
 ]
 
 interface IEditableSnapshot {
@@ -198,7 +198,7 @@ export class TestCopilotSnapshotCardDialog extends React.Component<
               Rate limit preset
             </Button>
           </div>
-          <OkCancelButtonGroup okButtonText="Done" />
+          <OkCancelButtonGroup okButtonText="完成" />
         </DialogFooter>
       </Dialog>
     )
@@ -246,7 +246,7 @@ export class TestCopilotSnapshotCardDialog extends React.Component<
             autoFocus={true}
           />
           <TextBox
-            label="Name"
+            label="名称"
             value={this.state.name}
             onValueChanged={this.onNameChanged}
           />

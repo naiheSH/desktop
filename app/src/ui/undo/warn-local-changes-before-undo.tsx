@@ -67,7 +67,7 @@ export class WarnLocalChangesBeforeUndo extends React.Component<
     return (
       <DialogContent>
         <Row id="undo-warning-message">
-          当前仍有未提交的改动，撤回提交可能导致这些改动丢失。确定要继续吗？
+          当前仍有未提交的更改，撤回提交可能导致这些更改丢失。确定要继续吗？
         </Row>
         <Row>
           <Checkbox
@@ -95,7 +95,7 @@ export class WarnLocalChangesBeforeUndo extends React.Component<
     }
     return (
       <DialogContent>
-        <p>当前仍有未提交的改动，撤回提交可能导致这些改动丢失。</p>
+        <p>当前仍有未提交的更改，撤回提交可能导致这些更改丢失。</p>
         <p>{this.getMergeCommitUndoWarningText()}</p>
         <p>确定要继续吗？</p>
       </DialogContent>

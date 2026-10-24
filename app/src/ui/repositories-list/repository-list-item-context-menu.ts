@@ -126,14 +126,14 @@ const buildWorktreeMenuItems = (
 
   if (onShowWorktrees !== undefined) {
     items.push({
-      label: '显示工作树',
+      label: '显示工作区',
       action: () => onShowWorktrees(repository),
     })
   }
 
   if (onCreateWorktree !== undefined) {
     items.push({
-      label: '新建工作树…',
+      label: '新建工作区…',
       action: () => onCreateWorktree(repository),
     })
   }

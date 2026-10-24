@@ -32,7 +32,7 @@ export class DiscardChangesRetryDialog extends React.Component<
 
     return (
       <Dialog
-        title={__DARWIN__ ? '放弃改动无法恢复' : '放弃改动无法恢复'}
+        title={__DARWIN__ ? '放弃更改无法恢复' : '放弃更改无法恢复'}
         id="discard-changes-retry"
         loading={retrying}
         disabled={retrying}
@@ -41,7 +41,7 @@ export class DiscardChangesRetryDialog extends React.Component<
         type="error"
       >
         <DialogContent>
-          <p>无法放弃改动，文件放不进{TrashNameLabel}。</p>
+          <p>无法放弃更改，文件放不进{TrashNameLabel}。</p>
           <div>
             通常原因如下：
             <ul>
@@ -49,7 +49,7 @@ export class DiscardChangesRetryDialog extends React.Component<
               <li>没有文件移动权限。</li>
             </ul>
           </div>
-          <p>这些改动将会无法从{TrashNameLabel}恢复。</p>
+          <p>这些更改将会无法从{TrashNameLabel}恢复。</p>
           {this.renderConfirmDiscardChanges()}
         </DialogContent>
         {this.renderFooter()}
@@ -76,7 +76,7 @@ export class DiscardChangesRetryDialog extends React.Component<
       <DialogFooter>
         <OkCancelButtonGroup
           okButtonText={__DARWIN__ ? '永久删除' : '永久删除'}
-          okButtonTitle={`文件会被永久删除，这些改动将无法恢复`}
+          okButtonTitle={`文件会被永久删除，这些更改将无法恢复`}
           cancelButtonText="取消"
           destructive={true}
         />

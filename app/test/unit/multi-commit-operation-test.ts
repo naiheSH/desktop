@@ -19,11 +19,11 @@ describe('multi-commit-operation', () => {
     })
 
     it('returns true for Cherry-pick', () => {
-      assert.equal(isIdMultiCommitOperation('摘取'), true)
+      assert.equal(isIdMultiCommitOperation('拣选'), true)
     })
 
     it('returns true for Squash', () => {
-      assert.equal(isIdMultiCommitOperation('压缩'), true)
+      assert.equal(isIdMultiCommitOperation('挤压'), true)
     })
 
     it('returns true for Merge', () => {
@@ -31,7 +31,7 @@ describe('multi-commit-operation', () => {
     })
 
     it('returns true for Reorder', () => {
-      assert.equal(isIdMultiCommitOperation('重排'), true)
+      assert.equal(isIdMultiCommitOperation('重新排序'), true)
     })
 
     it('returns false for unknown operations', () => {

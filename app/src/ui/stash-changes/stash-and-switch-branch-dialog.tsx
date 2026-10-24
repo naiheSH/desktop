@@ -89,7 +89,7 @@ export class StashAndSwitchBranch extends React.Component<
     return (
       <Row>
         <Octicon symbol={octicons.alert} />{' '}
-        当前暂存区已经存了一些改动，如果还要暂存，之前暂存的改动会被覆盖
+        当前储藏区已经存了一些更改，如果还要储藏，之前储藏的更改会被覆盖
       </Row>
     )
   }
@@ -98,13 +98,13 @@ export class StashAndSwitchBranch extends React.Component<
     const { branchToCheckout } = this.props
     const items = [
       {
-        title: `把改动留在 ${this.state.currentBranchName} 分支`,
-        description: '这些改动将会保存在当前分支的暂存区，等你回来',
+        title: `把更改留在 ${this.state.currentBranchName} 分支`,
+        description: '这些更改将会保存在当前分支的储藏区，等你回来',
         key: StashAction.StashOnCurrentBranch,
       },
       {
-        title: `把改动带到 ${branchToCheckout.name} 分支`,
-        description: '这些改动将会转移到新的分支，在那里继续',
+        title: `把更改带到 ${branchToCheckout.name} 分支`,
+        description: '这些更改将会转移到新的分支，在那里继续',
         key: StashAction.MoveToNewBranch,
       },
     ]
@@ -112,7 +112,7 @@ export class StashAndSwitchBranch extends React.Component<
     return (
       <Row>
         <VerticalSegmentedControl
-          label="当前分支仍有未提交的改动，如何处置？"
+          label="当前分支仍有未提交的更改，如何处置？"
           items={items}
           selectedKey={this.state.selectedStashAction}
           onSelectionChanged={this.onSelectionChanged}

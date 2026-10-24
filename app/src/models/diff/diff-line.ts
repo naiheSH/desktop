@@ -16,14 +16,7 @@ export class DiffLine {
     public readonly originalLineNumber: number | null,
     public readonly oldLineNumber: number | null,
     public readonly newLineNumber: number | null,
-    public readonly noTrailingNewLine: boolean = false,
-    /**
-     * Pre-computed inline changed character ranges from difftastic.
-     * Each tuple is [characterOffset, length] within the line content.
-     */
-    public readonly inlineChangedRanges?: ReadonlyArray<
-      readonly [number, number]
-    >
+    public readonly noTrailingNewLine: boolean = false
   ) {}
 
   public withNoTrailingNewLine(noTrailingNewLine: boolean): DiffLine {
@@ -33,8 +26,7 @@ export class DiffLine {
       this.originalLineNumber,
       this.oldLineNumber,
       this.newLineNumber,
-      noTrailingNewLine,
-      this.inlineChangedRanges
+      noTrailingNewLine
     )
   }
 
@@ -54,13 +46,7 @@ export class DiffLine {
       this.originalLineNumber === other.originalLineNumber &&
       this.oldLineNumber === other.oldLineNumber &&
       this.newLineNumber === other.newLineNumber &&
-      this.noTrailingNewLine === other.noTrailingNewLine &&
-      this.inlineChangedRanges?.length === other.inlineChangedRanges?.length &&
-      this.inlineChangedRanges?.every(
-        ([offset, length], index) =>
-          offset === other.inlineChangedRanges?.[index]?.[0] &&
-          length === other.inlineChangedRanges?.[index]?.[1]
-      ) !== false
+      this.noTrailingNewLine === other.noTrailingNewLine
     )
   }
 }

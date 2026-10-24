@@ -150,11 +150,11 @@ export class ChooseTargetBranchDialog extends React.Component<
     const { selectedBranch, isCreateBranchState } = this.state
 
     if (isCreateBranchState) {
-      return __DARWIN__ ? '摘取到新分支' : '摘取到新分支'
+      return __DARWIN__ ? '拣选到新分支' : '拣选到新分支'
     }
 
     const pluralize = this.props.commitCount > 1 ? '个提交' : '个提交'
-    const okButtonText = `摘取${this.props.commitCount}${pluralize}`
+    const okButtonText = `拣选${this.props.commitCount}${pluralize}`
 
     if (selectedBranch !== null) {
       return (
@@ -178,7 +178,7 @@ export class ChooseTargetBranchDialog extends React.Component<
 
   public render() {
     const tooltip = this.selectedBranchIsCurrentBranch()
-      ? '无法摘取到同一个分支'
+      ? '无法拣选到同一个分支'
       : undefined
 
     const pluralize = this.props.commitCount > 1 ? '个提交' : '个提交'
@@ -189,7 +189,7 @@ export class ChooseTargetBranchDialog extends React.Component<
         onSubmit={this.onSubmit}
         title={
           <strong>
-            摘取{this.props.commitCount}
+            拣选{this.props.commitCount}
             {pluralize}到分支
           </strong>
         }

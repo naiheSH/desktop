@@ -21,9 +21,9 @@ const defaultBranchNameValue = __DARWIN__ ? '默认分支' : '默认分支'
 const confirmRepositoryRemovalLabel = __DARWIN__ ? '移除…' : '移除(&R)…'
 const repositoryRemovalLabel = __DARWIN__ ? '移除' : '移除(&R)'
 const confirmStashAllChangesLabel = __DARWIN__
-  ? '暂存所有改动…'
-  : '暂存所有改动(&S)…'
-const stashAllChangesLabel = __DARWIN__ ? '暂存所有改动' : '暂存所有改动(&S)'
+  ? '储藏所有更改…'
+  : '储藏所有更改(&S)…'
+const stashAllChangesLabel = __DARWIN__ ? '储藏所有更改' : '储藏所有更改(&S)'
 
 enum ZoomDirection {
   Reset,
@@ -91,14 +91,15 @@ export function buildDefaultMenuTemplate({
         separator,
         {
           role: 'services',
+          label: '服务',
           submenu: [],
         },
         separator,
-        { role: 'hide' },
-        { role: 'hideOthers' },
-        { role: 'unhide' },
+        { role: 'hide', label: '隐藏 GitHub Desktop' },
+        { role: 'hideOthers', label: '隐藏其他' },
+        { role: 'unhide', label: '显示全部' },
         separator,
-        { role: 'quit' },
+        { role: 'quit', label: '退出 GitHub Desktop' },
       ],
     })
   }
@@ -179,7 +180,7 @@ export function buildDefaultMenuTemplate({
     label: __DARWIN__ ? '视图' : '视图(&V)',
     submenu: [
       {
-        label: __DARWIN__ ? '显示文件改动' : '文件改动(&C)',
+        label: __DARWIN__ ? '显示文件更改' : '文件更改(&C)',
         id: 'show-changes',
         accelerator: 'CmdOrCtrl+1',
         click: emit('show-changes'),
@@ -203,7 +204,7 @@ export function buildDefaultMenuTemplate({
         click: emit('show-branches'),
       },
       {
-        label: __DARWIN__ ? '显示工作树列表' : '工作树列表(&K)',
+        label: __DARWIN__ ? '显示工作区列表' : '工作区列表(&K)',
         id: 'show-worktrees-list',
         accelerator: 'CmdOrCtrl+Alt+W',
         click: emit('show-worktrees'),
@@ -226,8 +227,8 @@ export function buildDefaultMenuTemplate({
       },
       {
         label: __DARWIN__
-          ? `${isChangesFilterVisible ? '隐藏' : '显示'}改动筛选器`
-          : `${isChangesFilterVisible ? '隐藏' : '显示'}改动筛选器(&G)`,
+          ? `${isChangesFilterVisible ? '隐藏' : '显示'}更改筛选器`
+          : `${isChangesFilterVisible ? '隐藏' : '显示'}更改筛选器(&G)`,
         id: 'toggle-changes-filter',
         accelerator: 'CmdOrCtrl+L',
         click: emit('toggle-changes-filter'),
@@ -391,7 +392,7 @@ export function buildDefaultMenuTemplate({
       separator,
       {
         id: 'create-worktree',
-        label: __DARWIN__ ? '新建工作树…' : '新建工作树(&T)…',
+        label: __DARWIN__ ? '新建工作区…' : '新建工作区(&T)…',
         click: emit('create-worktree'),
         accelerator: 'CmdOrCtrl+Shift+W',
         visible: enableWorktreeSupport(),
@@ -426,7 +427,7 @@ export function buildDefaultMenuTemplate({
     },
     separator,
     {
-      label: __DARWIN__ ? '丢弃所有改动…' : '丢弃所有改动…',
+      label: __DARWIN__ ? '丢弃所有更改…' : '丢弃所有更改…',
       id: 'discard-all-changes',
       accelerator: 'CmdOrCtrl+Shift+Backspace',
       click: emit('discard-all-changes'),
@@ -461,7 +462,7 @@ export function buildDefaultMenuTemplate({
       click: emit('merge-branch'),
     },
     {
-      label: __DARWIN__ ? '压缩并合并到当前分支…' : '压缩并合并到当前分支(&H)…',
+      label: __DARWIN__ ? '挤压并合并到当前分支…' : '挤压并合并到当前分支(&H)…',
       id: 'squash-and-merge-branch',
       accelerator: 'CmdOrCtrl+Shift+H',
       click: emit('squash-and-merge-branch'),
@@ -510,12 +511,13 @@ export function buildDefaultMenuTemplate({
   if (__DARWIN__) {
     template.push({
       role: 'window',
+      label: '窗口',
       submenu: [
-        { role: 'minimize' },
-        { role: 'zoom' },
-        { role: 'close' },
+        { role: 'minimize', label: '最小化' },
+        { role: 'zoom', label: '缩放' },
+        { role: 'close', label: '关闭' },
         separator,
-        { role: 'front' },
+        { role: 'front', label: '全部置于前台' },
       ],
     })
   }
@@ -589,6 +591,7 @@ export function buildDefaultMenuTemplate({
   if (__DARWIN__) {
     template.push({
       role: 'help',
+      label: '帮助',
       submenu: helpItems,
     })
   } else {
@@ -628,10 +631,10 @@ function getPushLabel(
 
 function getStashedChangesLabel(isStashedChangesVisible: boolean): string {
   if (isStashedChangesVisible) {
-    return __DARWIN__ ? '隐藏暂存改动' : '隐藏暂存改动(&I)'
+    return __DARWIN__ ? '隐藏储藏更改' : '隐藏储藏更改(&I)'
   }
 
-  return __DARWIN__ ? '显示暂存改动' : '显示暂存改动(&W)'
+  return __DARWIN__ ? '显示储藏更改' : '显示储藏更改(&W)'
 }
 
 type ClickHandler = (

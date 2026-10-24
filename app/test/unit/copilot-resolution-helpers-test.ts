@@ -152,8 +152,8 @@ describe('getDeleteConflictLabels', () => {
       'main',
       'feature'
     )
-    assert.equal(oursLabel, 'Delete file on main')
-    assert.equal(theirsLabel, 'Keep file from feature')
+    assert.equal(oursLabel, '删除文件（在 main 上已删除）')
+    assert.equal(theirsLabel, '保留文件（来自 feature）')
   })
 
   it('labels correctly when theirs deleted the file', () => {
@@ -162,16 +162,16 @@ describe('getDeleteConflictLabels', () => {
       'main',
       'feature'
     )
-    assert.equal(oursLabel, 'Keep file from main')
-    assert.equal(theirsLabel, 'Delete file on feature')
+    assert.equal(oursLabel, '保留文件（来自 main）')
+    assert.equal(theirsLabel, '删除文件（在 feature 上已删除）')
   })
 
   it('omits branch names when not provided', () => {
     const { oursLabel, theirsLabel } = getDeleteConflictLabels(
       makeDeletedByUs()
     )
-    assert.equal(oursLabel, 'Delete file')
-    assert.equal(theirsLabel, 'Keep file')
+    assert.equal(oursLabel, '删除文件')
+    assert.equal(theirsLabel, '保留文件')
   })
 })
 
@@ -190,28 +190,28 @@ describe('getDeleteConflictChoiceLabel', () => {
   it('returns "Delete file" for ours when ours deleted', () => {
     assert.equal(
       getDeleteConflictChoiceLabel('ours', makeDeletedByUs()),
-      'Delete file'
+      '删除文件'
     )
   })
 
   it('returns "Keep file" for theirs when ours deleted', () => {
     assert.equal(
       getDeleteConflictChoiceLabel('theirs', makeDeletedByUs()),
-      'Keep file'
+      '保留文件'
     )
   })
 
   it('returns "Keep file" for ours when theirs deleted', () => {
     assert.equal(
       getDeleteConflictChoiceLabel('ours', makeDeletedByThem()),
-      'Keep file'
+      '保留文件'
     )
   })
 
   it('returns "Delete file" for theirs when theirs deleted', () => {
     assert.equal(
       getDeleteConflictChoiceLabel('theirs', makeDeletedByThem()),
-      'Delete file'
+      '删除文件'
     )
   })
 })
@@ -227,8 +227,8 @@ describe('getOursTheirsLabels', () => {
       'main',
       'feature'
     )
-    assert.equal(oursLabel, 'Delete file on main')
-    assert.equal(theirsLabel, 'Keep file from feature')
+    assert.equal(oursLabel, '删除文件（在 main 上已删除）')
+    assert.equal(theirsLabel, '保留文件（来自 feature）')
   })
 
   it('returns text conflict labels for a non-delete conflict', () => {
@@ -237,8 +237,8 @@ describe('getOursTheirsLabels', () => {
       'main',
       'feature'
     )
-    assert.equal(oursLabel, 'Use current file from main')
-    assert.equal(theirsLabel, 'Use incoming file from feature')
+    assert.equal(oursLabel, '使用当前文件，来源：main')
+    assert.equal(theirsLabel, '使用传入文件，来源：feature')
   })
 
   it('returns text conflict labels when status is undefined', () => {
@@ -247,13 +247,13 @@ describe('getOursTheirsLabels', () => {
       'main',
       'feature'
     )
-    assert.equal(oursLabel, 'Use current file from main')
-    assert.equal(theirsLabel, 'Use incoming file from feature')
+    assert.equal(oursLabel, '使用当前文件，来源：main')
+    assert.equal(theirsLabel, '使用传入文件，来源：feature')
   })
 
   it('omits branch names when not provided', () => {
     const { oursLabel, theirsLabel } = getOursTheirsLabels(undefined)
-    assert.equal(oursLabel, 'Use current file')
-    assert.equal(theirsLabel, 'Use incoming file')
+    assert.equal(oursLabel, '使用当前文件')
+    assert.equal(theirsLabel, '使用传入文件')
   })
 })

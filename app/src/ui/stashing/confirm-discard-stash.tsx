@@ -36,7 +36,7 @@ export class ConfirmDiscardStashDialog extends React.Component<
   }
 
   public render() {
-    const title = __DARWIN__ ? '放弃暂存区？' : '放弃暂存区？'
+    const title = __DARWIN__ ? '放弃储藏区？' : '放弃储藏区？'
 
     return (
       <Dialog
@@ -52,7 +52,7 @@ export class ConfirmDiscardStashDialog extends React.Component<
       >
         <DialogContent>
           <Row id="discard-stash-warning-message">
-            确定要放弃这些暂存的改动吗？
+            确定要放弃这些储藏的更改吗？
           </Row>
           <Row>
             <Checkbox

@@ -235,23 +235,23 @@ export class CopilotPreferences extends React.Component<ICopilotPreferencesProps
     switch (accessState) {
       case 'signed-out':
         return this.renderAccessCallToAction(
-          'Sign in to an account with a Copilot license to configure Copilot settings.',
-          'Sign In',
+          '请登录拥有 Copilot 许可证的账户，以配置 Copilot 设置。',
+          '登录',
           this.props.onSignIn,
           DialogPreferredFocusClassName
         )
       case 'checking':
-        return <p>Checking Copilot access…</p>
+        return <p>正在检查 Copilot 访问权限…</p>
       case 'no-license':
         return this.renderAccessCallToAction(
-          'Copilot features in GitHub Desktop require a GitHub Copilot license.',
-          'View Copilot plans',
+          'GitHub Desktop 中的 Copilot 功能需要 GitHub Copilot 许可证。',
+          '查看 Copilot 计划',
           this.props.onOpenCopilotPlans
         )
       case 'desktop-disabled':
         return this.renderAccessCallToAction(
-          'A Copilot license is available for your account, but "Copilot in GitHub Desktop" is disabled in your Copilot feature settings.',
-          'Open Copilot feature settings',
+          '你的账户拥有 Copilot 许可证，但 Copilot 功能设置中的“Copilot in GitHub Desktop”已禁用。',
+          '打开 Copilot 功能设置',
           this.props.onOpenCopilotFeatureSettings
         )
     }

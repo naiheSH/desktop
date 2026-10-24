@@ -197,7 +197,7 @@ export class RepositoriesList extends React.Component<
     const realName = gitHubRepo ? gitHubRepo.fullName : repository.name
     const aheadBehindTooltip = this.getAheadBehindTooltip(aheadBehind)
     const hasChanges = changedFilesCount > 0
-    const uncommittedChangesTooltip = hasChanges ? `有未提交的改动。` : null
+    const uncommittedChangesTooltip = hasChanges ? `有未提交的更改。` : null
 
     const ahead = aheadBehind?.ahead ?? 0
     const behind = aheadBehind?.behind ?? 0

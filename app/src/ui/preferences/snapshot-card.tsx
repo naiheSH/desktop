@@ -15,15 +15,15 @@ import { formatNumber } from '../../lib/format-number'
 import { getNumberFormatPreference } from '../../models/formatting-preferences'
 
 const snapshotDisplayNames: Record<string, string> = {
-  chat: 'Chat messages',
-  completions: 'Code completions',
-  premium_interactions: 'Premium requests',
-  session: 'Session limits',
-  weekly: 'Weekly limits',
+  chat: '聊天消息',
+  completions: '代码补全',
+  premium_interactions: '高级请求',
+  session: '会话限额',
+  weekly: '每周限额',
 }
 
 const tokenBasedSnapshotDisplayNames: Record<string, string> = {
-  premium_interactions: 'AI credits',
+  premium_interactions: 'AI 点数',
 }
 
 const quotaKeys = ['chat', 'completions', 'premium_interactions']
@@ -123,10 +123,10 @@ function formatUsageTooltip(
     return undefined
   }
 
-  if (displayName === 'AI credits') {
+  if (displayName === 'AI 点数') {
     return `${formatAiCreditValue(
       snapshot.usedRequests
-    )} / ${formatAiCreditValue(snapshot.entitlementRequests)} AI credits used`
+    )} / ${formatAiCreditValue(snapshot.entitlementRequests)}AI 点数已使用`
   }
 
   const formatRequests = (value: number) =>
@@ -137,7 +137,7 @@ function formatUsageTooltip(
 
   return `${formatRequests(snapshot.usedRequests)} / ${formatRequests(
     snapshot.entitlementRequests
-  )} ${displayName.toLowerCase()} used`
+  )} ${displayName.toLowerCase()}已使用`
 }
 
 function isFutureResetDate(resetDate: string | undefined): boolean {
@@ -148,8 +148,8 @@ function isFutureResetDate(resetDate: string | undefined): boolean {
   return new Date(resetDate).getTime() > Date.now()
 }
 
-function pluralize(value: number, singular: string): string {
-  return value === 1 ? singular : `${singular}s`
+function pluralize(_value: number, singular: string): string {
+  return singular
 }
 
 function formatResetText(resetDate: string): string | null {
@@ -160,16 +160,16 @@ function formatResetText(resetDate: string): string | null {
 
   const minutes = Math.ceil(millisecondsUntilReset / (60 * 1000))
   if (minutes < 60) {
-    return `resets in ${minutes} ${pluralize(minutes, 'minute')}`
+    return `${minutes} ${pluralize(minutes, '分钟')}后重置`
   }
 
   const hours = Math.ceil(minutes / 60)
   if (hours < 24) {
-    return `resets in ${hours} ${pluralize(hours, 'hour')}`
+    return `${hours} ${pluralize(hours, '小时')}后重置`
   }
 
   const days = Math.ceil(hours / 24)
-  return `resets in ${days} ${pluralize(days, 'day')}`
+  return `${days} ${pluralize(days, '天')}后重置`
 }
 
 function isQuotaVisible(snapshot: ICopilotQuotaSnapshot): boolean {
@@ -248,8 +248,8 @@ function QuotaProgressBar({ snapshot }: IQuotaProgressBarProps) {
       aria-valuenow={usedPercentage}
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-valuetext={disabled ? 'No usage limit' : undefined}
-      aria-label={disabled ? 'No usage limit' : `${usedPercentage}% quota used`}
+      aria-valuetext={disabled ? '无使用上限' : undefined}
+      aria-label={disabled ? '无使用上限' : `${usedPercentage}% 配额已使用`}
     >
       <div
         className="copilot-snapshot-progress-value"
@@ -265,7 +265,7 @@ function SnapshotUsageItem({
 }: ISnapshotUsageItemProps) {
   const { snapshot, displayName } = item
   const usageLabel = snapshot.isUnlimitedEntitlement
-    ? 'No usage limit'
+    ? '无使用上限'
     : formatUsedPercentage(snapshot)
   const usageTooltip = formatUsageTooltip(snapshot, displayName)
   const resetText =
@@ -286,7 +286,7 @@ function SnapshotUsageItem({
           {!snapshot.isUnlimitedEntitlement && resetText !== null ? (
             <span className="copilot-snapshot-reset">({resetText})</span>
           ) : showMonthlyResetFallback ? (
-            <span className="copilot-snapshot-reset">(resets monthly)</span>
+            <span className="copilot-snapshot-reset">（每月重置）</span>
           ) : null}
         </span>
         <TooltippedContent
@@ -336,7 +336,7 @@ export class SnapshotCard extends React.Component<ISnapshotCardProps> {
             </div>
           </div>
           {onConfigureModels !== undefined && (
-            <Button onClick={this.onConfigureModelsClick}>Configure…</Button>
+            <Button onClick={this.onConfigureModelsClick}>配置…</Button>
           )}
         </div>
         {snapshots === null
@@ -352,7 +352,7 @@ export class SnapshotCard extends React.Component<ISnapshotCardProps> {
 }
 
 function renderLoadingSnapshots(): JSX.Element {
-  return <p className="copilot-usage-empty">Loading Copilot usage…</p>
+  return <p className="copilot-usage-empty">正在加载 Copilot 用量…</p>
 }
 
 function renderSnapshots(snapshots: CopilotQuotaSnapshots): JSX.Element {
@@ -361,11 +361,7 @@ function renderSnapshots(snapshots: CopilotQuotaSnapshots): JSX.Element {
   const quotas = getVisibleQuotaSnapshots(snapshots, tokenBasedBilling)
 
   if (rateLimits.length === 0 && quotas.length === 0) {
-    return (
-      <p className="copilot-usage-empty">
-        No Copilot usage data available yet.
-      </p>
-    )
+    return <p className="copilot-usage-empty">暂无 Copilot 用量数据。</p>
   }
 
   return (

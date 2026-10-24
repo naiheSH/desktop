@@ -19,7 +19,7 @@ export class SuccessfulSquash extends React.Component<
     return (
       <SuccessBanner timeout={15000} onDismissed={onDismissed} onUndo={onUndo}>
         <span>
-          成功压缩了{count}个{pluralized}。
+          成功挤压了{count}个{pluralized}。
         </span>
       </SuccessBanner>
     )

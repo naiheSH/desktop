@@ -354,7 +354,7 @@ export function parse(line: string): IGitProgressInfo | null {
 }
 
 export function translateLn(line: string): string {
-  line = line.replace('Cloning into bare repository', '正在克隆到裸仓库')
+  line = line.replace('Cloning into bare repository', '正在克隆到纯仓库')
   line = line.replace('remote: ', '远程端: ')
   line = line.replace('Cloning into', '正在克隆到')
   line = line.replace('Enumerating objects', '正在枚举对象')
@@ -371,8 +371,8 @@ export function translateLn(line: string): string {
   line = line.replace('Checking out LFS objects', '正在检出 LFS 对象')
   line = line.replace('Filtering content', '正在过滤内容')
   line = line.replace('Updating files', '正在更新文件')
-  line = line.replace('Submodule path', '子模块路径')
-  line = line.replace('Submodule', '子模块')
+  line = line.replace('Submodule path', '子模组路径')
+  line = line.replace('Submodule', '子模组')
   line = line.replace('registered for path', '已注册至路径')
   line = line.replace(': checked out ', ': 已检出 ')
   line = line.replace(', done.', ', 完成.')

@@ -167,7 +167,7 @@ export class CompareSidebar extends React.Component<
       <div id="compare-view" role="tabpanel" aria-labelledby="history-tab">
         <div className="compare-form">
           <FancyTextBox
-            ariaLabel="Branch filter"
+            ariaLabel="分支筛选"
             symbol={octicons.gitBranch}
             displayClearButton={true}
             placeholder={placeholderText}
@@ -220,19 +220,19 @@ export class CompareSidebar extends React.Component<
 
     let emptyListMessage: string | JSX.Element
     if (formState.kind === HistoryTabMode.History) {
-      emptyListMessage = 'No history'
+      emptyListMessage = '没有历史记录'
     } else {
       const currentlyComparedBranchName = formState.comparisonBranch.name
 
       emptyListMessage =
         formState.comparisonMode === ComparisonMode.Ahead ? (
           <p>
-            The compared branch (<Ref>{currentlyComparedBranchName}</Ref>) is up
-            to date with your branch
+            比较的分支（<Ref>{currentlyComparedBranchName}</Ref>
+            ）已包含当前分支的所有提交
           </p>
         ) : (
           <p>
-            Your branch is up to date with the compared branch (
+            当前分支已包含比较分支的所有提交（
             <Ref>{currentlyComparedBranchName}</Ref>)
           </p>
         )
@@ -310,7 +310,7 @@ export class CompareSidebar extends React.Component<
     ) {
       defaultErrorHandler(
         new Error(
-          `Unable to reorder. Reordering replays all commits up to the last one required for the reorder. A merge commit cannot exist among those commits.`
+          `无法重新排序。重新排序会重放截至最后一个所需提交的所有提交，其中不能包含合并提交。`
         ),
         this.props.dispatcher
       )
@@ -690,7 +690,7 @@ export class CompareSidebar extends React.Component<
     ) {
       defaultErrorHandler(
         new Error(
-          `Unable to squash. Squashing replays all commits up to the last one required for the squash. A merge commit cannot exist among those commits.`
+          `无法挤压。挤压会重放截至最后一个所需提交的所有提交，其中不能包含合并提交。`
         ),
         this.props.dispatcher
       )
@@ -709,8 +709,8 @@ export class CompareSidebar extends React.Component<
         description: squashedDescription,
         timestamp: Date.now(),
       },
-      dialogTitle: `Squash ${allCommitsInSquash.length} Commits`,
-      dialogButtonText: `Squash ${allCommitsInSquash.length} Commits`,
+      dialogTitle: `挤压 ${allCommitsInSquash.length}个提交`,
+      dialogButtonText: `挤压 ${allCommitsInSquash.length}个提交`,
       prepopulateCommitSummary: true,
       onSubmitCommitMessage: async (context: ICommitContext) => {
         this.props.dispatcher.closePopup(PopupType.CommitMessage)
@@ -732,11 +732,9 @@ function getPlaceholderText(state: ICompareState) {
   const { branches, formState } = state
 
   if (!branches.some(b => !b.isDesktopForkRemoteBranch)) {
-    return __DARWIN__ ? 'No Branches to Compare' : 'No branches to compare'
+    return __DARWIN__ ? '没有可比较的分支' : '没有可比较的分支'
   } else if (formState.kind === HistoryTabMode.History) {
-    return __DARWIN__
-      ? 'Select Branch to Compare…'
-      : 'Select branch to compare…'
+    return __DARWIN__ ? '选择要比较的分支…' : '选择要比较的分支…'
   } else {
     return undefined
   }

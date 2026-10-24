@@ -20,5 +20,4 @@ export function gitAuthorNameIsValid(name: string): boolean {
   return !crudCharactersRe.test(name)
 }
 
-export const InvalidGitAuthorNameMessage =
-  'Name is invalid, it consists only of disallowed characters.'
+export const InvalidGitAuthorNameMessage = '名称无效，仅包含不允许的字符。'

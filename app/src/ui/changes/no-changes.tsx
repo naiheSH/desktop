@@ -416,12 +416,12 @@ export class NoChanges extends React.Component<
     const numChanges = stashEntry.files.files.length
     const description = (
       <>
-        您在暂存区内有{numChanges}个未提交的{numChanges === 1 ? '改动' : '改动'}
+        您在储藏区内有{numChanges}个未提交的{numChanges === 1 ? '更改' : '更改'}
         。
       </>
     )
     const discoverabilityContent = (
-      <>如果有改动暂存，在左侧文件改动栏下面可以打开暂存区。</>
+      <>如果有更改储藏，在左侧文件更改栏下面可以打开储藏区。</>
     )
     const itemId: MenuIDs = 'toggle-stashed-changes'
     const menuItem = this.getMenuItemInfo(itemId)
@@ -433,11 +433,11 @@ export class NoChanges extends React.Component<
     return (
       <MenuBackedSuggestedAction
         key="view-stash-action"
-        title="改动已暂存"
+        title="更改已储藏"
         menuItemId={itemId}
         description={description}
         discoverabilityContent={discoverabilityContent}
-        buttonText="查看暂存区"
+        buttonText="查看储藏区"
         type="primary"
         disabled={menuItem !== null && !menuItem.enabled}
         onClick={this.onViewStashClicked}
@@ -760,8 +760,8 @@ export class NoChanges extends React.Component<
         <div className="content">
           <div className="interstitial-header">
             <div className="text">
-              <h1>无本地改动</h1>
-              <p>仓库中没有待提交的改动，以下是一些后续操作的建议。</p>
+              <h1>无本地更改</h1>
+              <p>仓库中没有待提交的更改，以下是一些后续操作的建议。</p>
             </div>
             <img src={PaperStackImage} className="blankslate-image" alt="" />
           </div>

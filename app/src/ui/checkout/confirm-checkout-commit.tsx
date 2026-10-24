@@ -54,7 +54,7 @@ export class ConfirmCheckoutCommitDialog extends React.Component<
           <Row id="checking-out-commit-confirmation">
             检出该提交后，代表 "当前跟踪分支" 的 HEAD
             指针将会直接指向这个提交（即出现了 HEAD
-            指针分离）。这意味着，如果接着提交，后续的改动将不会连接到任何分支上。确定要检出吗？
+            指针分离）。这意味着，如果接着提交，后续的更改将不会连接到任何分支上。确定要检出吗？
           </Row>
           <Row>
             <Checkbox

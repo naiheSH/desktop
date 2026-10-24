@@ -144,7 +144,7 @@ export class UnreachableCommitsDialog extends React.Component<
         {this.state.selectedTab === UnreachableCommitsTab.Unreachable
           ? '不'
           : ''}
-        会看到以下{commitsPluralized}的改动，因为{pronounPluralized}
+        会看到以下{commitsPluralized}的更改，因为{pronounPluralized}
         {this.state.selectedTab === UnreachableCommitsTab.Unreachable
           ? '不'
           : ''}

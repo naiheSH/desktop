@@ -634,7 +634,7 @@ export class CommitList extends React.Component<
     }
 
     const containerWidth = this.containerRef.current?.clientWidth ?? 0
-    const reorderCommitsHintTitle = __DARWIN__ ? '重排顺序' : '重排顺序'
+    const reorderCommitsHintTitle = __DARWIN__ ? '重新排序顺序' : '重新排序顺序'
 
     return (
       <Popover
@@ -786,7 +786,7 @@ export class CommitList extends React.Component<
     })
 
     items.push({
-      label: __DARWIN__ ? '重排提交' : '重排提交',
+      label: __DARWIN__ ? '重新排序提交' : '重新排序提交',
       action: () => {
         this.props.onKeyboardReorder?.([commit])
       },
@@ -795,7 +795,7 @@ export class CommitList extends React.Component<
 
     items.push(
       {
-        label: __DARWIN__ ? '创建逆转提交' : '创建逆转提交',
+        label: __DARWIN__ ? '创建还原提交' : '创建还原提交',
         action: () => {
           if (this.props.onRevertCommit) {
             this.props.onRevertCommit(commit)
@@ -833,7 +833,7 @@ export class CommitList extends React.Component<
     const windowTagsLabel = commit.tags.length > 1 ? '复制标签' : '复制标签'
     items.push(
       {
-        label: __DARWIN__ ? '摘取提交…' : '摘取提交…',
+        label: __DARWIN__ ? '拣选提交…' : '拣选提交…',
         action: () => this.props.onCherryPick?.(this.selectedCommits),
         enabled: this.canCherryPick(),
       },
@@ -921,17 +921,19 @@ export class CommitList extends React.Component<
 
     return [
       {
-        label: __DARWIN__ ? `摘取${count}个提交…` : `摘取${count}个提交…`,
+        label: __DARWIN__ ? `拣选${count}个提交…` : `拣选${count}个提交…`,
         action: () => this.props.onCherryPick?.(this.selectedCommits),
         enabled: this.canCherryPick(),
       },
       {
-        label: __DARWIN__ ? `压缩${count}个提交…` : `压缩${count}个提交…`,
+        label: __DARWIN__ ? `挤压${count}个提交…` : `挤压${count}个提交…`,
         action: () => this.onSquash(this.selectedCommits, commit, true),
         enabled: this.canSquash(),
       },
       {
-        label: __DARWIN__ ? `重排${count}个提交…` : `重排${count}个提交…`,
+        label: __DARWIN__
+          ? `重新排序${count}个提交…`
+          : `重新排序${count}个提交…`,
         action: () => this.props.onKeyboardReorder?.(this.selectedCommits),
         enabled: this.canReorder(),
       },

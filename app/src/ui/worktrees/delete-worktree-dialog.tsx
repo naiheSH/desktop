@@ -43,7 +43,7 @@ export class DeleteWorktreeDialog extends React.Component<
     return (
       <Dialog
         id="delete-worktree"
-        title="删除工作树"
+        title="删除工作区"
         type="warning"
         onSubmit={this.onSubmit}
         onDismissed={this.props.onDismissed}
@@ -54,7 +54,7 @@ export class DeleteWorktreeDialog extends React.Component<
       >
         <DialogContent>
           <p id="delete-worktree-confirmation">
-            确定要删除工作树 <Ref>{name}</Ref> 吗？
+            确定要删除工作区 <Ref>{name}</Ref> 吗？
           </p>
           <Checkbox
             label="不再显示此提示"

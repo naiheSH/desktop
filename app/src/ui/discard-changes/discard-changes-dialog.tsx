@@ -57,16 +57,16 @@ export class DiscardChanges extends React.Component<
 
   private getOkButtonLabel() {
     if (this.props.discardingAllChanges) {
-      return __DARWIN__ ? '放弃所有改动' : '放弃所有改动'
+      return __DARWIN__ ? '放弃所有更改' : '放弃所有更改'
     }
-    return __DARWIN__ ? '放弃改动' : '放弃改动'
+    return __DARWIN__ ? '放弃更改' : '放弃更改'
   }
 
   private getDialogTitle() {
     if (this.props.discardingAllChanges) {
-      return __DARWIN__ ? '放弃所有改动' : '放弃所有改动'
+      return __DARWIN__ ? '放弃所有更改' : '放弃所有更改'
     }
-    return __DARWIN__ ? '放弃改动' : '放弃改动'
+    return __DARWIN__ ? '放弃更改' : '放弃更改'
   }
 
   public render() {
@@ -88,7 +88,7 @@ export class DiscardChanges extends React.Component<
         <DialogContent>
           {this.renderFileList()}
           <p id="discard-changes-confirmation-message">
-            改动可以从{TrashNameLabel}恢复。
+            更改可以从{TrashNameLabel}恢复。
           </p>
           {this.renderConfirmDiscardChanges()}
         </DialogContent>
@@ -130,13 +130,13 @@ export class DiscardChanges extends React.Component<
     if (this.props.files.length > MaxFilesToList) {
       return (
         <p id="discard-changes-confirmation-file-list">
-          您确定要放弃对全部{this.props.files.length}个文件的改动吗？
+          您确定要放弃对全部{this.props.files.length}个文件的更改吗？
         </p>
       )
     } else {
       return (
         <div id="discard-changes-confirmation-file-list">
-          <p>您确定要放弃对以下文件的改动吗：</p>
+          <p>您确定要放弃对以下文件的更改吗：</p>
           <div className="file-list">
             <ul>
               {this.props.files.map(p => (

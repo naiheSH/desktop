@@ -5199,11 +5199,11 @@ export class AppStore extends TypedBaseStore<IAppState> {
     const { tip } = state.branchesState
 
     if (tip.kind === TipState.Unborn) {
-      throw new Error('The current branch is unborn.')
+      throw new Error('当前分支尚无提交。')
     }
 
     if (tip.kind === TipState.Detached) {
-      throw new Error('The current repository is in a detached HEAD state.')
+      throw new Error('当前仓库处于分离头指针状态。')
     }
 
     if (tip.kind === TipState.Valid) {
@@ -5302,7 +5302,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       if (safeRemote.name !== remote.name) {
         sendNonFatalException(
           'remoteNameMismatch',
-          new Error('The current remote name differs from the branch remote')
+          new Error('当前远程仓库名称与分支的远程仓库不一致')
         )
       }
 
@@ -5342,15 +5342,13 @@ export class AppStore extends TypedBaseStore<IAppState> {
             })
           })
 
-          const refreshTitle = __DARWIN__
-            ? 'Refreshing Repository'
-            : 'Refreshing repository'
+          const refreshTitle = __DARWIN__ ? '正在刷新仓库' : '正在刷新仓库'
           const refreshStartProgress = pushWeight + fetchWeight
 
           this.updatePushPullFetchProgress(repository, {
             kind: 'generic',
             title: refreshTitle,
-            description: 'Fast-forwarding branches',
+            description: '正在快进分支',
             value: refreshStartProgress,
           })
 
@@ -5487,18 +5485,18 @@ export class AppStore extends TypedBaseStore<IAppState> {
       const remote = gitStore.currentRemote
 
       if (!remote) {
-        throw new Error('The repository has no remotes.')
+        throw new Error('仓库没有远程仓库。')
       }
 
       const state = this.repositoryStateCache.get(repository)
       const tip = state.branchesState.tip
 
       if (tip.kind === TipState.Unborn) {
-        throw new Error('The current branch is unborn.')
+        throw new Error('当前分支尚无提交。')
       }
 
       if (tip.kind === TipState.Detached) {
-        throw new Error('The current repository is in a detached HEAD state.')
+        throw new Error('当前仓库处于分离头指针状态。')
       }
 
       if (tip.kind === TipState.Valid) {
@@ -5601,14 +5599,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
           }
 
           const refreshStartProgress = pullWeight + fetchWeight
-          const refreshTitle = __DARWIN__
-            ? 'Refreshing Repository'
-            : 'Refreshing repository'
+          const refreshTitle = __DARWIN__ ? '正在刷新仓库' : '正在刷新仓库'
 
           this.updatePushPullFetchProgress(repository, {
             kind: 'generic',
             title: refreshTitle,
-            description: 'Fast-forwarding branches',
+            description: '正在快进分支',
             value: refreshStartProgress,
           })
 
@@ -5976,14 +5972,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
           )
         }
 
-        const refreshTitle = __DARWIN__
-          ? 'Refreshing Repository'
-          : 'Refreshing repository'
+        const refreshTitle = __DARWIN__ ? '正在刷新仓库' : '正在刷新仓库'
 
         this.updatePushPullFetchProgress(repository, {
           kind: 'generic',
           title: refreshTitle,
-          description: 'Fast-forwarding branches',
+          description: '正在快进分支',
           value: fetchWeight,
         })
 
@@ -7707,10 +7701,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
           ? this.copilotAppPath
           : (await findCopilotApp()) ?? undefined
       if (appPath === undefined) {
-        throw new CopilotAppError(
-          'not-found',
-          'GitHub Copilot could not be found.'
-        )
+        throw new CopilotAppError('not-found', '找不到 GitHub Copilot。')
       }
 
       await openInCopilotApp(appPath, repositoryPath)

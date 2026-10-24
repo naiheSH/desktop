@@ -63,7 +63,7 @@ function errorDetail(error: unknown): string {
     }
     return error.message
   }
-  return 'The command could not be completed.'
+  return '无法完成此命令。'
 }
 
 function isMissingExecutable(error: unknown): boolean {
@@ -92,16 +92,10 @@ export function createCopilotAppIntegration(deps: ICopilotAppDependencies) {
   ): Promise<void> {
     const executable = deps.getExecutable(appPath)
     if (executable === null || !(await deps.pathExists(executable))) {
-      throw new CopilotAppError(
-        'not-found',
-        'GitHub Copilot could not be found.'
-      )
+      throw new CopilotAppError('not-found', '找不到 GitHub Copilot。')
     }
     if (!deps.isAbsolutePath(repositoryPath) || repositoryPath.includes('\0')) {
-      throw new CopilotAppError(
-        'launch-failed',
-        'The repository path must be absolute.'
-      )
+      throw new CopilotAppError('launch-failed', '仓库路径必须是绝对路径。')
     }
 
     try {

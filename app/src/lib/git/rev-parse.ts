@@ -73,9 +73,7 @@ export async function getRepositoryType(path: string): Promise<RepositoryType> {
 
         const parent = dirname(candidate)
         if (parent === candidate) {
-          throw new Error(
-            'Unable to determine the repository directory for the ownership exception.'
-          )
+          throw new Error('无法确定要添加所有权例外的仓库目录。')
         }
         candidate = parent
       }

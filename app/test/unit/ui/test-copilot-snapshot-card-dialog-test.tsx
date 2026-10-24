@@ -49,8 +49,8 @@ describe('TestCopilotSnapshotCardDialog', () => {
 
     assert.ok(within(preview).getByText('Mona Lisa'))
     assert.ok(within(preview).getByText('@mona'))
-    assert.ok(within(preview).getByText('Chat messages'))
-    assert.ok(within(preview).getByText('Premium requests'))
+    assert.ok(within(preview).getByText('聊天消息'))
+    assert.ok(within(preview).getByText('高级请求'))
   })
 
   it('keeps the preview separate from the scrollable controls', () => {
@@ -84,8 +84,8 @@ describe('TestCopilotSnapshotCardDialog', () => {
     assert.ok(
       screen.getByDisplayValue('https://avatars.githubusercontent.com/u/2')
     )
-    assert.ok(within(preview).getByText('Chat messages'))
-    assert.ok(within(preview).getByText('Premium requests'))
+    assert.ok(within(preview).getByText('聊天消息'))
+    assert.ok(within(preview).getByText('高级请求'))
   })
 
   it('updates the fake account displayed in the preview', () => {
@@ -111,9 +111,9 @@ describe('TestCopilotSnapshotCardDialog', () => {
 
     fireEvent.click(screen.getByText('AI credits preset'))
 
-    assert.ok(within(preview).getByText('AI credits'))
-    assert.ok(within(preview).getByText('(resets monthly)'))
-    assert.strictEqual(within(preview).queryByText('Chat messages'), null)
+    assert.ok(within(preview).getByText('AI 点数'))
+    assert.ok(within(preview).getByText('（每月重置）'))
+    assert.strictEqual(within(preview).queryByText('聊天消息'), null)
   })
 
   it('previews rate limit data', () => {
@@ -125,7 +125,7 @@ describe('TestCopilotSnapshotCardDialog', () => {
 
     fireEvent.click(screen.getByText('Rate limit preset'))
 
-    assert.ok(within(preview).getByText('Session limits'))
-    assert.ok(within(preview).getByText('Weekly limits'))
+    assert.ok(within(preview).getByText('会话限额'))
+    assert.ok(within(preview).getByText('每周限额'))
   })
 })

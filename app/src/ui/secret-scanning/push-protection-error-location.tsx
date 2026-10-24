@@ -54,7 +54,7 @@ export class PushProtectionErrorLocation extends React.Component<
               path={location.path}
               availableWidth={isFirst ? 200 : 275}
             />
-            at line {location.lineNumber}
+            位于行 {location.lineNumber}
           </span>
         </span>
       </span>

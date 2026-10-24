@@ -302,12 +302,12 @@ export function getHunkSkipReason(
       totalContent += side.length
       for (const line of side.split('\n')) {
         if (line.length > MAX_CONFLICT_LINE_LENGTH) {
-          return 'Conflict contains lines too long to resolve automatically'
+          return '冲突包含过长的行，无法自动解决'
         }
       }
     }
     if (totalContent > MAX_CONFLICT_CONTENT_SIZE) {
-      return 'Conflict region too large to resolve automatically'
+      return '冲突区域过大，无法自动解决'
     }
   }
 
@@ -395,14 +395,14 @@ export async function buildConflictContext(
         return {
           path: file.path,
           hunks: [],
-          skippedReason: 'File path could not be resolved safely',
+          skippedReason: '无法安全地解析文件路径',
         }
       }
       if (absolutePath === null) {
         return {
           path: file.path,
           hunks: [],
-          skippedReason: 'File path is outside the repository',
+          skippedReason: '文件路径位于仓库之外',
         }
       }
 
@@ -415,14 +415,14 @@ export async function buildConflictContext(
           return {
             path: file.path,
             hunks: [],
-            skippedReason: 'File too large to resolve automatically',
+            skippedReason: '文件过大，无法自动解决',
           }
         }
       } catch {
         return {
           path: file.path,
           hunks: [],
-          skippedReason: 'File could not be read',
+          skippedReason: '无法读取文件',
         }
       }
 
@@ -433,7 +433,7 @@ export async function buildConflictContext(
         return {
           path: file.path,
           hunks: [],
-          skippedReason: 'File could not be read',
+          skippedReason: '无法读取文件',
         }
       }
 
@@ -442,7 +442,7 @@ export async function buildConflictContext(
         return {
           path: file.path,
           hunks: [],
-          skippedReason: 'No conflict markers found',
+          skippedReason: '未找到冲突标记',
         }
       }
 

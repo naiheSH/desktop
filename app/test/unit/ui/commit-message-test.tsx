@@ -193,7 +193,7 @@ describe('CommitMessage', () => {
 
     const buttonProps = getCopilotButtonProps(component)
 
-    assert.equal(buttonProps.ariaLabel, 'Generating commit details…')
+    assert.equal(buttonProps.ariaLabel, '正在生成提交详情…')
     assert.equal(buttonProps.disabled, true)
 
     await clickCopilotButton(component)
@@ -217,7 +217,7 @@ describe('CommitMessage', () => {
 
     const buttonProps = getCopilotButtonProps(component)
 
-    assert.equal(buttonProps.ariaLabel, 'Cancel generating commit details')
+    assert.equal(buttonProps.ariaLabel, '取消生成提交详情')
     assert.equal(buttonProps.disabled, false)
 
     await clickCopilotButton(component)

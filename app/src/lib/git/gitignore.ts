@@ -5,8 +5,7 @@ import { getConfigValue } from './config'
 import { lstat, open, type FileHandle } from 'fs/promises'
 import { isErrnoException } from '../errno-exception'
 
-const symbolicLinkErrorMessage =
-  'Cannot use a symbolic link as the root .gitignore file'
+const symbolicLinkErrorMessage = '不能使用符号链接作为根 .gitignore 文件'
 
 function createSymbolicLinkError(): Error {
   return new Error(symbolicLinkErrorMessage)

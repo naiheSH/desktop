@@ -24,12 +24,12 @@ export function parseCopilotCommitMessage(
   }
 
   if (!isRecord(parsed)) {
-    throw new Error('Copilot 返回了无效的提交消息载荷: 类型需要为 object')
+    throw new Error('Copilot 返回了无效的提交说明载荷: 类型需要为 object')
   }
 
   const title = parsed.title
   if (typeof title !== 'string' || title.trim().length === 0) {
-    throw new Error('Copilot 返回了无效的提交消息载荷: "title" 字符串不得为空')
+    throw new Error('Copilot 返回了无效的提交说明载荷: "title" 字符串不得为空')
   }
 
   const description = parsed.description
@@ -42,7 +42,7 @@ export function parseCopilotCommitMessage(
 
   if (typeof description !== 'string') {
     throw new Error(
-      'Copilot 返回了无效的提交消息载荷: "description" 必须是字符串'
+      'Copilot 返回了无效的提交说明载荷: "description" 必须是字符串'
     )
   }
 

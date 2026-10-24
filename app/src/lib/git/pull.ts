@@ -44,7 +44,7 @@ export async function pull(
   // separator. Reject leading dashes here even though direct fetch and push
   // can handle them with a separator.
   if (remote.name.startsWith('-')) {
-    throw new Error("Cannot pull from a remote whose name starts with '-'.")
+    throw new Error("无法从名称以 '-' 开头的远程仓库拉取。")
   }
 
   let opts: IGitStringExecutionOptions = {

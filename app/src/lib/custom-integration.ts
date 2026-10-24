@@ -44,9 +44,7 @@ async function getAppBundleID(path: string) {
   try {
     // Ensure the path ends with `.app` for applications
     if (!path.endsWith('.app')) {
-      throw new Error(
-        'The provided path does not point to a macOS application.'
-      )
+      throw new Error('提供的路径未指向 macOS 应用程序。')
     }
 
     // Use mdls to query the kMDItemCFBundleIdentifier attribute

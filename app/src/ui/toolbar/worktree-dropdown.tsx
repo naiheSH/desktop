@@ -102,7 +102,7 @@ export class WorktreeDropdown extends React.Component<
     })
 
     const newWorktreeItem: IMenuItem = {
-      label: '新建工作树…',
+      label: '新建工作区…',
       action: this.onCreateNewWorktree,
     }
 
@@ -150,7 +150,7 @@ export class WorktreeDropdown extends React.Component<
     const title = currentWorktree
       ? Path.basename(currentWorktree.path)
       : this.props.repository.name
-    const description = '当前工作树'
+    const description = '当前工作区'
 
     const toolbarDropdown = (
       <ToolbarDropdown
@@ -158,7 +158,7 @@ export class WorktreeDropdown extends React.Component<
         icon={octicons.fileDirectory}
         title={title}
         description={description}
-        tooltip={isOpen ? undefined : `当前工作树为 ${title}`}
+        tooltip={isOpen ? undefined : `当前工作区为 ${title}`}
         onDropdownStateChanged={this.props.onDropDownStateChanged}
         onContextMenu={this.onContextMenu}
         dropdownContentRenderer={this.renderWorktreeFoldout}
@@ -188,7 +188,7 @@ export class WorktreeDropdown extends React.Component<
         onResize={this.onResize}
         maximumWidth={this.props.worktreeDropdownWidth.max}
         minimumWidth={this.props.worktreeDropdownWidth.min}
-        description="当前工作树下拉按钮"
+        description="当前工作区下拉按钮"
       >
         {toolbarDropdown}
       </Resizable>

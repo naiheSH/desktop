@@ -59,7 +59,7 @@ export class DiscardSelection extends React.Component<
   }
 
   private getOkButtonLabel() {
-    return __DARWIN__ ? '放弃改动' : '放弃改动'
+    return __DARWIN__ ? '放弃更改' : '放弃更改'
   }
 
   public render() {
@@ -68,7 +68,7 @@ export class DiscardSelection extends React.Component<
     return (
       <Dialog
         id="discard-changes"
-        title={__DARWIN__ ? '放弃改动' : '放弃改动'}
+        title={__DARWIN__ ? '放弃更改' : '放弃更改'}
         onDismissed={this.props.onDismissed}
         onSubmit={this.discard}
         dismissDisabled={isDiscardingChanges}
@@ -77,7 +77,7 @@ export class DiscardSelection extends React.Component<
         type="warning"
       >
         <DialogContent>
-          <p>您确定要放弃对以下文件的改动吗：</p>
+          <p>您确定要放弃对以下文件的更改吗：</p>
 
           <ul>
             <li>

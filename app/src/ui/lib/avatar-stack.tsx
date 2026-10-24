@@ -33,7 +33,7 @@ export class AvatarStack extends React.Component<IAvatarStackProps, {}> {
         users.length > MaxDisplayedAvatars + 1 &&
         i === MaxDisplayedAvatars - 1
       ) {
-        elems.push(<div key="more" className="avatar-more avatar" />)
+        elems.push(<div key="更多" className="avatar-more avatar" />)
       }
 
       elems.push(

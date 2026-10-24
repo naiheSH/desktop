@@ -47,7 +47,7 @@ export class WarningBeforeReset extends React.Component<
       >
         <DialogContent>
           <Row id="reset-warning-message">
-            当前仍有未提交的改动，重置到一个更早的提交可能导致这些改动丢失。确定要继续吗？
+            当前仍有未提交的更改，重置到一个更早的提交可能导致这些更改丢失。确定要继续吗？
           </Row>
         </DialogContent>
         <DialogFooter>

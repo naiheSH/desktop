@@ -509,7 +509,7 @@ describe('git/remote operations', () => {
         pull(repository, remote, { progressCallback: progress }),
         {
           name: 'Error',
-          message: "Cannot pull from a remote whose name starts with '-'.",
+          message: "无法从名称以 '-' 开头的远程仓库拉取。",
         }
       )
 

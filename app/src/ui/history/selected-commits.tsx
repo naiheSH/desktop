@@ -146,7 +146,7 @@ export class SelectedCommits extends React.Component<
     if (file == null) {
       // don't show both 'empty' messages
       const message =
-        this.props.changesetData.files.length === 0 ? '' : 'No file selected'
+        this.props.changesetData.files.length === 0 ? '' : '未选择文件'
 
       return (
         <div className="panel blankslate" id="diff">
@@ -253,7 +253,7 @@ export class SelectedCommits extends React.Component<
   private renderFileList() {
     const files = this.props.changesetData.files
     if (files.length === 0) {
-      return <div className="fill-window">No files in commit</div>
+      return <div className="fill-window">提交中没有文件</div>
     }
 
     // -1 for right hand side border
@@ -276,10 +276,10 @@ export class SelectedCommits extends React.Component<
 
   private renderFileHeader() {
     const fileCount = this.props.changesetData.files.length
-    const filesPlural = fileCount === 1 ? 'file' : 'files'
+    const filesPlural = fileCount === 1 ? '个文件' : '个文件'
     return (
       <div className="file-list-header">
-        {fileCount} changed {filesPlural}
+        {fileCount} 已更改 {filesPlural}
       </div>
     )
   }
@@ -318,7 +318,7 @@ export class SelectedCommits extends React.Component<
             maximumWidth={commitSummaryWidth.max}
             onResize={this.onCommitSummaryResize}
             onReset={this.onCommitSummaryReset}
-            description="Selected commit file list"
+            description="所选提交的文件列表"
           >
             {this.renderFileList()}
           </Resizable>
@@ -348,18 +348,13 @@ export class SelectedCommits extends React.Component<
         <div className="panel blankslate">
           <img src={BlankSlateImage} className="blankslate-image" alt="" />
           <div>
-            <p>
-              Unable to display diff when multiple non-consecutive selected.
-            </p>
-            <div>You can:</div>
+            <p>无法显示多个不连续提交的差异。</p>
+            <div>你可以：</div>
             <ul>
-              <li>
-                Select a single commit or a range of consecutive commits to view
-                a diff.
-              </li>
-              <li>Drag the commits to the branch menu to cherry-pick them.</li>
-              <li>Drag the commits to squash or reorder them.</li>
-              <li>Right click on multiple commits to see options.</li>
+              <li>选择单个提交或一组连续提交以查看差异。</li>
+              <li>将提交拖动到分支菜单进行拣选。</li>
+              <li>拖动提交以挤压或重新排序。</li>
+              <li>右键点击多个提交以查看选项。</li>
             </ul>
           </div>
         </div>
@@ -386,9 +381,7 @@ export class SelectedCommits extends React.Component<
     if (!fileExistsOnDisk) {
       showContextualMenu([
         {
-          label: __DARWIN__
-            ? 'File Does Not Exist on Disk'
-            : 'File does not exist on disk',
+          label: __DARWIN__ ? '磁盘上不存在此文件' : '磁盘上不存在此文件',
           enabled: false,
         },
       ])
@@ -399,7 +392,7 @@ export class SelectedCommits extends React.Component<
 
     const isSafeExtension = isSafeFileExtension(extension)
     const openInExternalEditor = externalEditorLabel
-      ? `Open in ${externalEditorLabel}`
+      ? `打开${externalEditorLabel}`
       : DefaultEditorLabel
 
     const items: IMenuItem[] = [
@@ -430,14 +423,14 @@ export class SelectedCommits extends React.Component<
       { type: 'separator' },
     ]
 
-    let viewOnGitHubLabel = 'View on GitHub'
+    let viewOnGitHubLabel = '在 GitHub 上查看'
     const gitHubRepository = repository.gitHubRepository
 
     if (
       gitHubRepository &&
       gitHubRepository.endpoint !== getDotComAPIEndpoint()
     ) {
-      viewOnGitHubLabel = 'View on GitHub Enterprise'
+      viewOnGitHubLabel = '在 GitHub Enterprise 上查看'
     }
 
     items.push({
@@ -467,7 +460,7 @@ function NoCommitSelected() {
   return (
     <div className="panel blankslate">
       <img src={BlankSlateImage} className="blankslate-image" alt="" />
-      No commit selected
+      未选择提交
     </div>
   )
 }

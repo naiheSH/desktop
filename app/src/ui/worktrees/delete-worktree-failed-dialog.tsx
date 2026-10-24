@@ -48,7 +48,7 @@ export class DeleteWorktreeFailedDialog extends React.Component<
     return (
       <Dialog
         id="delete-worktree-failed"
-        title="删除工作树失败"
+        title="删除工作区失败"
         type="error"
         onSubmit={this.onSubmit}
         onDismissed={this.onDismissed}
@@ -60,11 +60,11 @@ export class DeleteWorktreeFailedDialog extends React.Component<
         <DialogContent>
           <div id="delete-worktree-failed-message">
             <p>
-              无法删除工作树 <Ref>{name}</Ref>。
+              无法删除工作区 <Ref>{name}</Ref>。
             </p>
             {this.renderErrorMessage()}
             <p>
-              是否强制删除工作树 <Ref>{name}</Ref>？
+              是否强制删除工作区 <Ref>{name}</Ref>？
             </p>
           </div>
         </DialogContent>

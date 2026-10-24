@@ -574,8 +574,8 @@ export abstract class AutocompletingTextInput<
 
     const suggestionsMessage =
       autoCompleteItems.length === 1
-        ? '1 suggestion'
-        : `${autoCompleteItems.length} suggestions`
+        ? '1 条建议'
+        : `${autoCompleteItems.length}条建议`
 
     return (
       <div className={className}>

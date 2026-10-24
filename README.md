@@ -34,28 +34,15 @@
 
 \* Linux 可以试试这些英文版：[shiftkey/desktop](https://github.com/shiftkey/desktop)、[pol-rivero/github-desktop-plus](https://github.com/pol-rivero/github-desktop-plus)
 
-## 特色
+## 汉化原则
 
-更彻底的汉化，深入到
-- 日期时间
-- 报错内容
-- 文档链接（改为官方中文版）
-- 图片素材
-- 无障碍读屏文本
-- Git 命令行输出替换
-- Electron 右键菜单替换
-- 命令行工具汉化和 UTF8 编码问题修复
+以官方 GitHub Desktop 3.6.7 稳定版为基线，保留官方功能、界面结构和 Git 行为。修改集中在界面文案、无障碍文本、日期时间及中文版必要的构建与更新适配。
 
-增强特性
-- 可模糊搜索历史提交记录
-- GitHub Copilot
-  - 参考最近提交内容
-  - 自定义提示词
-  - 限制最大读取字数
-- 可以接入 Difftastic
-- 基于 GitHub Pages 的自动更新渠道
-- CI 自动构建
-- macOS 版本修改了 Squirrel 来支持自动更新
+Git 术语优先参考 [Git 官方简体中文词表](https://github.com/git/git/blob/master/po/zh_CN.po)：变基、拣选、还原、挤压、储藏、工作区。储藏（stash）与暂存（stage）分别表达。
+
+此分支不保留 Difftastic 等额外功能。用户输入、提交内容、分支和文件名称、产品名、命令参数、协议字段、模型标识、Copilot 提示词及底层诊断原文不做强制翻译。
+
+汉化包含常规界面、设置、菜单、提示和错误处理；外部服务返回的内容、Git 原始输出及英文法律条款可能仍显示原文。源码扫描和自动测试用于发现遗漏，不代表已经人工覆盖所有平台和异常场景。
 
 ## 自动更新
 

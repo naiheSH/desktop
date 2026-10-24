@@ -115,7 +115,7 @@ export class PushBranchCommits extends React.Component<
       <DialogContent>
         <p id="push-branch-commits-title">您有{localCommits}尚未推送到远程。</p>
         <p id="push-branch-commits-message">
-          在创建拉取请求前需要先把改动推送到 <Ref>{this.props.branch.name}</Ref>{' '}
+          在创建拉取请求前需要先把更改推送到 <Ref>{this.props.branch.name}</Ref>{' '}
           吗？
         </p>
       </DialogContent>
@@ -127,7 +127,7 @@ export class PushBranchCommits extends React.Component<
       return __DARWIN__ ? '发布分支？' : '发布分支？'
     }
 
-    return __DARWIN__ ? `推送本地改动？` : `推送本地改动？`
+    return __DARWIN__ ? `推送本地更改？` : `推送本地更改？`
   }
 
   private renderButtonGroup() {

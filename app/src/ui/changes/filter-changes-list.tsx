@@ -454,9 +454,9 @@ export class FilterChangesList extends React.Component<
       isCommitting || rebaseConflictState !== null || isUncommittableSubmodule
 
     const checkboxTooltip = isUncommittableSubmodule
-      ? 'This submodule change cannot be added to a commit in this repository because it contains changes that have not been committed.'
+      ? '无法将此子模组的更改添加到当前仓库的提交中，因为子模组包含尚未提交的更改。'
       : isPartiallyCommittableSubmodule
-      ? 'Only changes that have been committed within the submodule will be added to this repository. You need to commit any other modified or untracked changes in the submodule before including them in this repository.'
+      ? '只有子模组内已经提交的更改才能添加到当前仓库。要在当前仓库中包含其他已修改或未跟踪的更改，需要先在子模组中提交这些更改。'
       : undefined
 
     return (
@@ -523,11 +523,11 @@ export class FilterChangesList extends React.Component<
     const label =
       files.length === 1
         ? __DARWIN__
-          ? `Discard Changes`
-          : `Discard changes`
+          ? `丢弃更改`
+          : `丢弃更改`
         : __DARWIN__
-        ? `Discard ${files.length} Selected Changes`
-        : `Discard ${files.length} selected changes`
+        ? `丢弃 ${files.length}处所选更改`
+        : `丢弃 ${files.length}处所选更改`
 
     return this.props.askForConfirmationOnDiscardChanges ? `${label}…` : label
   }
@@ -546,16 +546,14 @@ export class FilterChangesList extends React.Component<
       this.props.conflictState !== null ||
       hasConflictedFiles(this.props.workingDirectory)
 
-    const stashAllChangesLabel = __DARWIN__
-      ? 'Stash All Changes'
-      : 'Stash all changes'
+    const stashAllChangesLabel = __DARWIN__ ? '储藏所有更改' : '储藏所有更改'
     const confirmStashAllChangesLabel = __DARWIN__
-      ? 'Stash All Changes…'
-      : 'Stash all changes…'
+      ? '储藏所有更改…'
+      : '储藏所有更改…'
 
     const items: IMenuItem[] = [
       {
-        label: __DARWIN__ ? 'Discard All Changes…' : 'Discard all changes…',
+        label: __DARWIN__ ? '丢弃所有更改…' : '丢弃所有更改…',
         action: this.onDiscardAllChanges,
         enabled: hasLocalChanges,
       },
@@ -642,7 +640,7 @@ export class FilterChangesList extends React.Component<
     const { externalEditorLabel } = this.props
 
     const openInExternalEditor = externalEditorLabel
-      ? `Open in ${externalEditorLabel}`
+      ? `打开${externalEditorLabel}`
       : DefaultEditorLabel
 
     return {
@@ -699,8 +697,8 @@ export class FilterChangesList extends React.Component<
       const enabled = Path.basename(path) !== GitIgnoreFileName
       items.push({
         label: __DARWIN__
-          ? 'Ignore File (Add to .gitignore)'
-          : 'Ignore file (add to .gitignore)',
+          ? '忽略文件（添加到 .gitignore）'
+          : '忽略文件（添加到 .gitignore）',
         action: () => this.props.onIgnoreFile(path),
         enabled,
       })
@@ -721,8 +719,8 @@ export class FilterChangesList extends React.Component<
 
         items.push({
           label: __DARWIN__
-            ? 'Ignore Folder (Add to .gitignore)'
-            : 'Ignore folder (add to .gitignore)',
+            ? '忽略文件夹（添加到 .gitignore）'
+            : '忽略文件夹（添加到 .gitignore）',
           submenu,
           enabled,
         })
@@ -730,8 +728,8 @@ export class FilterChangesList extends React.Component<
     } else if (paths.length > 1) {
       items.push({
         label: __DARWIN__
-          ? `Ignore ${paths.length} Selected Files (Add to .gitignore)`
-          : `Ignore ${paths.length} selected files (add to .gitignore)`,
+          ? `忽略${paths.length}个所选文件（添加到 .gitignore）`
+          : `忽略${paths.length}个所选文件（添加到 .gitignore）`,
         action: () => {
           // Filter out any .gitignores that happens to be selected, ignoring
           // those doesn't make sense.
@@ -750,8 +748,8 @@ export class FilterChangesList extends React.Component<
       .forEach(extension => {
         items.push({
           label: __DARWIN__
-            ? `Ignore All ${extension} Files (Add to .gitignore)`
-            : `Ignore all ${extension} files (add to .gitignore)`,
+            ? `忽略所有${extension}文件（添加到 .gitignore）`
+            : `忽略所有${extension}文件（添加到 .gitignore）`,
           action: () => this.props.onIgnorePattern(`*${extension}`),
         })
       })
@@ -760,17 +758,13 @@ export class FilterChangesList extends React.Component<
       items.push(
         { type: 'separator' },
         {
-          label: __DARWIN__
-            ? 'Include Selected Files'
-            : 'Include selected files',
+          label: __DARWIN__ ? '包含所选文件' : '包含所选文件',
           action: () => {
             selectedFiles.map(file => this.props.onIncludeChanged(file, true))
           },
         },
         {
-          label: __DARWIN__
-            ? 'Exclude Selected Files'
-            : 'Exclude selected files',
+          label: __DARWIN__ ? '排除所选文件' : '排除所选文件',
           action: () => {
             selectedFiles.map(file => this.props.onIncludeChanged(file, false))
           },
@@ -861,7 +855,7 @@ export class FilterChangesList extends React.Component<
     prepopulateCommitSummary: boolean
   ) {
     if (!prepopulateCommitSummary) {
-      return 'Summary (required)'
+      return '摘要（必填）'
     }
 
     const firstFile = files[0]
@@ -1123,7 +1117,7 @@ export class FilterChangesList extends React.Component<
         }
       >
         <Octicon className="stack-icon" symbol={StashIcon} />
-        <div className="text">Stashed Changes</div>
+        <div className="text">储藏的更改</div>
         <Octicon symbol={octicons.chevronRight} />
       </button>
     )
@@ -1261,9 +1255,9 @@ export class FilterChangesList extends React.Component<
       files.length === 0 || isCommitting || rebaseConflictState !== null
 
     const checkAllLabel = `${
-      visibleFiles !== files.length ? `${formatNumber(visibleFiles)} of ` : ''
+      visibleFiles !== files.length ? `${formatNumber(visibleFiles)}，共` : ''
     }
-    ${formatNumber(files.length)} changed file${plural(files.length)}`
+    ${formatNumber(files.length)}个更改的文件${plural(files.length)}`
 
     return (
       <div className="checkbox-container">
@@ -1303,7 +1297,7 @@ export class FilterChangesList extends React.Component<
         <TextBox
           ref={this.onTextBoxRef}
           displayClearButton={true}
-          placeholder={'Filter'}
+          placeholder={'筛选'}
           className="filter-list-filter-field"
           onValueChanged={this.onFilterTextChanged}
           onKeyDown={this.onFilterKeyDown}
@@ -1323,7 +1317,7 @@ export class FilterChangesList extends React.Component<
 
   private getListAriaLabel = () => {
     const { files } = this.props.workingDirectory
-    return `${formatNumber(files.length)} changed file${plural(files.length)}`
+    return `${formatNumber(files.length)}个更改的文件${plural(files.length)}`
   }
 
   public render() {
@@ -1411,11 +1405,10 @@ export class FilterChangesList extends React.Component<
     return (
       <div className="hidden-changes-warning" id="hidden-changes-warning">
         <Octicon symbol={octicons.alert} />
-        <span className="sr-only">Warning:</span>
-        <span>Hidden changes will be committed. </span>
+        <span className="sr-only">警告：</span>
+        <span>隐藏的更改也将被提交。 </span>
         <LinkButton onClick={this.showFilesToBeCommitted}>
-          Adjust the filters to see all {formatNumber(filesSelected.length)}{' '}
-          changes
+          调整筛选条件以查看所有 {formatNumber(filesSelected.length)} 更改
         </LinkButton>
       </div>
     )
@@ -1438,7 +1431,7 @@ export class FilterChangesList extends React.Component<
       <div className="no-changes-filtered">
         <img src={BlankSlateImage} className="blankslate-image" alt="" />
 
-        <div className="title">No files match your current filters</div>
+        <div className="title">没有文件符合当前筛选条件</div>
 
         <div className="subtitle">
           {getNoResultsMessage(this.props.fileListFilter)}
@@ -1449,7 +1442,7 @@ export class FilterChangesList extends React.Component<
             className="clear-filters-button"
             onClick={this.onClearAllFilters}
           >
-            Clear filters
+            清除筛选条件
           </Button>
         )}
       </div>

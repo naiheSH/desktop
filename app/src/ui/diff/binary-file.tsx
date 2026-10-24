@@ -25,7 +25,7 @@ export class BinaryFile extends React.Component<IBinaryFileProps, {}> {
   public render() {
     return (
       <div className="panel binary" id="diff">
-        <div className="image-header">该二进制文件有改动。</div>
+        <div className="image-header">该二进制文件有更改。</div>
         <div className="image-header">
           <LinkButton onClick={this.open}>用默认查看软件打开。</LinkButton>
         </div>

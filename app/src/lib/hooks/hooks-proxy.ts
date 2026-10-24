@@ -160,7 +160,7 @@ export const createHooksProxy = (
     const abort = () => abortController.abort()
     conn.on('close', abort)
 
-    await writeline(conn.stderr, `正在运行挂钩 ${hookName}...`)
+    await writeline(conn.stderr, `正在运行钩子 ${hookName}...`)
     onHookProgress?.({ hookName, status: 'started', abort })
 
     // GIT_ vars are considered safe to pass to hooks unless explicitly excluded
@@ -177,7 +177,7 @@ export const createHooksProxy = (
 
     if (abortController.signal.aborted) {
       debug(`${hookName}: aborted before execution`)
-      await exitWithError(conn, `挂钩 ${hookName} 已终止`)
+      await exitWithError(conn, `钩子 ${hookName} 已终止`)
       return
     }
 
@@ -206,7 +206,7 @@ export const createHooksProxy = (
     const shellEnv = await ensureGitExecPathEnv(await getShellEnv(proxyCwd))
 
     if (shellEnv.kind === 'failure') {
-      let errMsg = `无法加载挂钩 ${hookName} 的 shell 环境。`
+      let errMsg = `无法加载钩子 ${hookName} 的 shell 环境。`
       debug(errMsg)
 
       if (shellEnv.shellKind) {
@@ -218,7 +218,7 @@ export const createHooksProxy = (
         }
       }
 
-      errMsg += '\n\n前往 设置 > Git > 挂钩 来选择要使用的 shell。'
+      errMsg += '\n\n前往 设置 > Git > 钩子 来选择要使用的 shell。'
 
       return exitWithError(conn, errMsg)
     }
@@ -264,7 +264,7 @@ export const createHooksProxy = (
     })
 
     const dur = `经过 ${((Date.now() - startTime) / 1000).toFixed(2)} 秒后`
-    const prefix = `挂钩 ${hookName} `
+    const prefix = `钩子 ${hookName} `
     const terminationMessage = signal
       ? `${prefix}${dur}收到 ${signal} 信号而终止`
       : `${prefix}${dur}${code ? `以代号 ${code} 失败` : '完成'}`
@@ -294,7 +294,7 @@ export const createHooksProxy = (
     await writeline(conn.stderr, terminationMessage)
 
     if (ignoreError) {
-      await writeline(conn.stderr, `已忽略挂钩 ${hookName} 的失败`)
+      await writeline(conn.stderr, `已忽略钩子 ${hookName} 的失败`)
     }
 
     const exitCode = ignoreError ? 0 : code ?? 1

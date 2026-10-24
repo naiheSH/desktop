@@ -128,7 +128,7 @@ export function renderBanner(
           timeout={5000}
           onDismissed={onDismissed}
         >
-          已撤销了{banner.commitsCount}个{pluralized}的压缩。
+          已撤销了{banner.commitsCount}个{pluralized}的挤压。
         </SuccessBanner>
       )
     }
@@ -143,7 +143,7 @@ export function renderBanner(
           onUndo={banner.onUndo}
         >
           <span>
-            成功重排了{banner.count}个{pluralized}。
+            成功重新排序了{banner.count}个{pluralized}。
           </span>
         </SuccessBanner>
       )
@@ -156,7 +156,7 @@ export function renderBanner(
           timeout={5000}
           onDismissed={onDismissed}
         >
-          已撤消了{banner.commitsCount}个{pluralized}的重排。
+          已撤消了{banner.commitsCount}个{pluralized}的重新排序。
         </SuccessBanner>
       )
     }

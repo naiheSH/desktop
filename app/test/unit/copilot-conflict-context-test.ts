@@ -1008,7 +1008,7 @@ describe('copilot-conflict-context', () => {
       const hunks = [makeHunk(`${longLine}\n`, 'their change\n')]
       assert.strictEqual(
         getHunkSkipReason(hunks),
-        'Conflict contains lines too long to resolve automatically'
+        '冲突包含过长的行，无法自动解决'
       )
     })
 
@@ -1023,7 +1023,7 @@ describe('copilot-conflict-context', () => {
       const hunks = [makeHunk('our change\n', `${longLine}\n`)]
       assert.strictEqual(
         getHunkSkipReason(hunks),
-        'Conflict contains lines too long to resolve automatically'
+        '冲突包含过长的行，无法自动解决'
       )
     })
 
@@ -1032,7 +1032,7 @@ describe('copilot-conflict-context', () => {
       const hunks = [makeHunk('ours\n', 'theirs\n', `${longLine}\n`)]
       assert.strictEqual(
         getHunkSkipReason(hunks),
-        'Conflict contains lines too long to resolve automatically'
+        '冲突包含过长的行，无法自动解决'
       )
     })
 
@@ -1042,20 +1042,14 @@ describe('copilot-conflict-context', () => {
       const line = 'x'.repeat(100) + '\n'
       const bigSide = line.repeat(3000) // ~300KB
       const hunks = [makeHunk(bigSide, 'their change\n')]
-      assert.strictEqual(
-        getHunkSkipReason(hunks),
-        'Conflict region too large to resolve automatically'
-      )
+      assert.strictEqual(getHunkSkipReason(hunks), '冲突区域过大，无法自动解决')
     })
 
     it('accumulates content across multiple hunks', () => {
       const line = 'y'.repeat(100) + '\n'
       const chunk = line.repeat(1000) // ~100KB per side
       const hunks = [makeHunk(chunk, chunk), makeHunk(chunk, chunk)]
-      assert.strictEqual(
-        getHunkSkipReason(hunks),
-        'Conflict region too large to resolve automatically'
-      )
+      assert.strictEqual(getHunkSkipReason(hunks), '冲突区域过大，无法自动解决')
     })
   })
 })

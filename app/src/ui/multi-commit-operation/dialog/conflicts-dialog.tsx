@@ -289,12 +289,12 @@ export class ConflictsDialog extends React.Component<
         disabled={this.state.isAborting}
         tooltip={
           this.state.isAborting
-            ? 'Cannot resolve while operation is being aborted'
-            : 'Use Copilot to suggest resolutions for conflicted files'
+            ? '正在中止操作时无法解决冲突'
+            : '使用 Copilot 为冲突文件建议解决方案'
         }
       >
         <Octicon symbol={octicons.copilot} />
-        {' Resolve with Copilot'}
+        {'使用 Copilot 解决冲突'}
       </Button>
     )
 
@@ -304,7 +304,7 @@ export class ConflictsDialog extends React.Component<
 
     return (
       <div className="copilot-resolve-button-with-call-out">
-        <span className="call-to-action-bubble">New</span>
+        <span className="call-to-action-bubble">新功能</span>
         {button}
       </div>
     )
@@ -356,7 +356,7 @@ export class ConflictsDialog extends React.Component<
     )
 
     const tooltipString =
-      conflictedFiles.length > 0 ? '请先解决所有改动产生的冲突' : undefined
+      conflictedFiles.length > 0 ? '请先解决所有更改产生的冲突' : undefined
 
     return (
       <Dialog
