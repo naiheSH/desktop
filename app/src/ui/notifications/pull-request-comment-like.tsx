@@ -177,7 +177,7 @@ export abstract class PullRequestCommentLike extends React.Component<IPullReques
         onMarkdownLinkClicked={this.onMarkdownLinkClicked}
         markdownContext={'PullRequestComment'}
         underlineLinks={this.props.underlineLinks}
-        ariaLabel="拉取请求 Markdown 评论"
+        title="拉取请求 Markdown 评论"
       />
     )
   }

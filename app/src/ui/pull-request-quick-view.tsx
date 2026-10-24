@@ -220,7 +220,7 @@ export class PullRequestQuickView extends React.Component<
           onMarkdownLinkClicked={this.onMarkdownLinkClicked}
           onMarkdownParsed={this.onMarkdownParsed}
           underlineLinks={this.props.underlineLinks}
-          ariaLabel="拉取请求的 markdown 内容"
+          title="拉取请求的 Markdown 内容"
         />
       </div>
     )

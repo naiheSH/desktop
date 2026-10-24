@@ -28,6 +28,8 @@ interface IAppearanceProps {
   readonly onSelectedThemeChanged: (theme: ApplicationTheme) => void
   readonly selectedTabSize: number
   readonly onSelectedTabSizeChanged: (tabSize: number) => void
+  readonly alwaysShowWorktreeList: boolean
+  readonly onAlwaysShowWorktreeListChanged: (value: boolean) => void
   readonly selectedDateFormat: DateFormat
   readonly onSelectedDateFormatChanged: (format: DateFormat) => void
   readonly selectedTimeFormat: TimeFormat
@@ -129,6 +131,12 @@ export class Appearance extends React.Component<
     event: React.FormEvent<HTMLInputElement>
   ) => {
     this.props.onPreferAbsoluteDatesChanged(event.currentTarget.checked)
+  }
+
+  private onAlwaysShowWorktreeListChanged = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    this.props.onAlwaysShowWorktreeListChanged(event.currentTarget.checked)
   }
 
   public renderThemeSwatch = (theme: ApplicationTheme) => {
@@ -261,16 +269,16 @@ export class Appearance extends React.Component<
     )
   }
 
-  private renderSelectedTabSize() {
+  private renderMiscellaneous() {
     const availableTabSizes: number[] = [1, 2, 3, 4, 5, 6, 8, 10, 12]
 
     return (
       <div className="appearance-section">
-        <h2 id="diff-heading">差异对比</h2>
+        <h2 id="miscellaneous-heading">其他</h2>
 
         <Select
           value={this.state.selectedTabSize.toString()}
-          label={__DARWIN__ ? '制表符宽度' : '制表符宽度'}
+          label="差异对比制表符宽度"
           onChange={this.onSelectedTabSizeChanged}
         >
           {availableTabSizes.map(n => (
@@ -279,6 +287,17 @@ export class Appearance extends React.Component<
             </option>
           ))}
         </Select>
+
+        <Checkbox
+          className="always-show-worktree-list"
+          label="始终显示工作树列表"
+          value={
+            this.props.alwaysShowWorktreeList
+              ? CheckboxValue.On
+              : CheckboxValue.Off
+          }
+          onChange={this.onAlwaysShowWorktreeListChanged}
+        />
       </div>
     )
   }
@@ -288,7 +307,7 @@ export class Appearance extends React.Component<
       <DialogContent>
         {this.renderSelectedTheme()}
         {this.renderFormatting()}
-        {this.renderSelectedTabSize()}
+        {this.renderMiscellaneous()}
       </DialogContent>
     )
   }
