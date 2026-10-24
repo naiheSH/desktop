@@ -282,7 +282,7 @@ export class MergeCallToActionWithConflicts extends React.Component<
 
   private renderInvalidMessage() {
     if (this.state.selectedOperation === MultiCommitOperationKind.Rebase) {
-      return <div className="merge-message">无法重构，该分支不能作为基础。</div>
+      return <div className="merge-message">无法变基，该分支不能作为基础。</div>
     }
 
     return (

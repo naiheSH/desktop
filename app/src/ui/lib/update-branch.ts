@@ -21,7 +21,7 @@ export function getMergeOptions(): ReadonlyArray<IDropdownSelectButtonOption> {
       id: MultiCommitOperationKind.Squash,
     },
     {
-      label: '重构',
+      label: '变基',
       description: '以所选分支为基础，把当前分支的改动在它之上重新应用一遍。',
       id: MultiCommitOperationKind.Rebase,
     },

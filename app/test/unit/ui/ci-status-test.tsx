@@ -45,15 +45,15 @@ describe('CIStatus', () => {
   afterEach(() => resetTestTimers())
 
   const cases: ReadonlyArray<readonly [APICheckConclusion | null, string]> = [
-    [APICheckConclusion.Success, 'Successful'],
-    [APICheckConclusion.Failure, 'Failed'],
-    [APICheckConclusion.Neutral, 'Neutral'],
-    [APICheckConclusion.Canceled, 'Canceled'],
-    [APICheckConclusion.TimedOut, 'Timed out'],
-    [APICheckConclusion.ActionRequired, 'Action required'],
-    [APICheckConclusion.Skipped, 'Skipped'],
-    [APICheckConclusion.Stale, 'Marked as stale'],
-    [null, 'In progress'],
+    [APICheckConclusion.Success, '已通过'],
+    [APICheckConclusion.Failure, '未通过'],
+    [APICheckConclusion.Neutral, '无结果'],
+    [APICheckConclusion.Canceled, '被取消'],
+    [APICheckConclusion.TimedOut, '已超时'],
+    [APICheckConclusion.ActionRequired, '待干预'],
+    [APICheckConclusion.Skipped, '已跳过'],
+    [APICheckConclusion.Stale, '已过时'],
+    [null, '运行中'],
   ]
 
   for (const [conclusion, description] of cases) {
@@ -82,7 +82,7 @@ describe('CIStatus', () => {
       assert.ok(icon)
       assert.strictEqual(
         icon.getAttribute('aria-label'),
-        `Checks: ${description}`
+        `检查：${description}`
       )
       assert.strictEqual(icon.getAttribute('aria-hidden'), null)
       assert.strictEqual(icon.getAttribute('tabindex'), '-1')
@@ -91,7 +91,7 @@ describe('CIStatus', () => {
       advanceTimersBy(400)
 
       const tooltip = screen.getByRole('tooltip', { hidden: true })
-      assert.strictEqual(tooltip.textContent, `Checks: ${description}`)
+      assert.strictEqual(tooltip.textContent, `检查：${description}`)
       assert.notStrictEqual(tooltip.style.visibility, 'hidden')
       assert.strictEqual(icon.getAttribute('aria-describedby'), null)
     })

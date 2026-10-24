@@ -476,7 +476,7 @@ export function getDescriptionForError(
     case DugiteError.HostDown:
       return '服务器不可用，请检查网络连接并重试。'
     case DugiteError.RebaseConflicts:
-      return '重构出现冲突，请先解决冲突再继续。'
+      return '变基出现冲突，请先解决冲突再继续。'
     case DugiteError.MergeConflicts:
       return '合并出现冲突，请先解决冲突并提交。'
     case DugiteError.HTTPSRepositoryNotFound:
@@ -507,7 +507,7 @@ export function getDescriptionForError(
     case DugiteError.InvalidMerge:
       return '该内容不能合并。'
     case DugiteError.InvalidRebase:
-      return '该内容不能重构。'
+      return '该内容不能变基。'
     case DugiteError.NonFastForwardMergeIntoEmptyHead:
       return '该合并不是快进合并，无法在空分支上执行。'
     case DugiteError.PatchDoesNotApply:

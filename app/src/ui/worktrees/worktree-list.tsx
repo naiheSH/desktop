@@ -90,8 +90,7 @@ export class WorktreeList extends React.Component<IWorktreeListProps> {
   }
 
   private getGroupLabel(identifier: WorktreeGroupIdentifier) {
-    const worktree = __DARWIN__ ? 'Worktree' : 'worktree'
-    return identifier === 'main' ? `Main ${worktree}` : `Linked ${worktree}s`
+    return identifier === 'main' ? '主工作树' : '关联工作树'
   }
 
   private getGroupAriaLabel = (group: number) => {
@@ -123,13 +122,13 @@ export class WorktreeList extends React.Component<IWorktreeListProps> {
         className="new-worktree-button"
         onClick={this.props.onCreateNewWorktree}
       >
-        {__DARWIN__ ? 'New Worktree' : 'New worktree'}
+        新建工作树
       </Button>
     )
   }
 
   private onRenderNoItems = () => {
-    return <div className="no-items-found">No worktrees found</div>
+    return <div className="no-items-found">未找到工作树</div>
   }
 
   private onItemClick = (item: IWorktreeListItem, source: ClickSource) => {

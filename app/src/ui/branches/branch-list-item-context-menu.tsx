@@ -26,36 +26,34 @@ export function generateBranchContextMenuItems(
 
   if (onRenameBranch !== undefined) {
     items.push({
-      label: 'Rename…',
+      label: '重命名…',
       action: () => onRenameBranch(branch.name),
       enabled: branch.type === BranchType.Local,
     })
   }
 
   items.push({
-    label: __DARWIN__ ? 'Copy Branch Name' : 'Copy branch name',
+    label: '复制分支名称',
     action: () => clipboard.writeText(branch.name),
   })
 
   if (onViewBranchOnGitHub !== undefined) {
     items.push({
-      label: 'View Branch on GitHub',
+      label: '在 GitHub 上查看分支',
       action: () => onViewBranchOnGitHub(),
     })
   }
 
   if (onViewPullRequestOnGitHub !== undefined) {
     items.push({
-      label: 'View Pull Request on GitHub',
+      label: '在 GitHub 上查看拉取请求',
       action: () => onViewPullRequestOnGitHub(),
     })
   }
 
   if (onCheckoutInNewWorktree !== undefined) {
     items.push({
-      label: __DARWIN__
-        ? 'Checkout in New Worktree…'
-        : 'Checkout in new worktree…',
+      label: '在新工作树中检出…',
       action: () => onCheckoutInNewWorktree(branch),
     })
   }
@@ -64,7 +62,7 @@ export function generateBranchContextMenuItems(
 
   if (onDeleteBranch !== undefined) {
     items.push({
-      label: 'Delete…',
+      label: '删除…',
       action: () => onDeleteBranch(branch.name),
     })
   }

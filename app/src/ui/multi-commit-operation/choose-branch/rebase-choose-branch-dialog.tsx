@@ -95,7 +95,7 @@ export class RebaseChooseBranchDialog extends React.Component<
         : false
 
     return selectedBranchIsCurrentBranch
-      ? '无法将该分支重构在自己身上。'
+      ? '无法将该分支变基在自己身上。'
       : !currentBranchIsBehindSelectedBranch
       ? '当前分支已与所选分支同步。'
       : undefined
@@ -108,7 +108,7 @@ export class RebaseChooseBranchDialog extends React.Component<
     )
     return (
       <>
-        重构 <strong>{truncatedName}</strong>
+        变基 <strong>{truncatedName}</strong>
       </>
     )
   }
@@ -148,11 +148,11 @@ export class RebaseChooseBranchDialog extends React.Component<
   }
 
   private renderLoadingRebaseMessage() {
-    return <>正在检查重构冲突…</>
+    return <>正在检查变基冲突…</>
   }
 
   private renderInvalidRebaseMessage() {
-    return <>无法启动重构，请检查选择的分支是否有效。</>
+    return <>无法启动变基，请检查选择的分支是否有效。</>
   }
 
   private renderCleanRebaseMessage(

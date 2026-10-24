@@ -75,7 +75,7 @@ interface IRepositoryPathState {
  * Reusable component for the name + path fields used when creating a
  * repository or worktree directory. Manages its own state, loads the
  * default directory when no initial path is provided, handles the
- * Choose… file picker, and shows a warning when the name is sanitized
+ * 选择… file picker, and shows a warning when the name is sanitized
  * for the file system.
  *
  * The primary output is the `onFullPathChanged` callback which emits
@@ -164,12 +164,10 @@ export class RepositoryPath extends React.Component<
       <InputWarning
         id="repo-sanitized-name-warning"
         trackedUserInput={this.state.name}
-        ariaLiveMessage={`Will be created as ${sanitizedName}. Invalid characters have been replaced by hyphens.`}
+        ariaLiveMessage={`将创建为 ${sanitizedName}。无效字符已替换为连字符。`}
       >
-        <p>Will be created as {sanitizedName}</p>
-        <span className="sr-only">
-          Invalid characters have been replaced by hyphens.
-        </span>
+        <p>将创建为 {sanitizedName}</p>
+        <span className="sr-only">无效字符已替换为连字符。</span>
       </InputWarning>
     )
   }
@@ -182,8 +180,8 @@ export class RepositoryPath extends React.Component<
         <Row>
           <TextBox
             value={this.state.name}
-            label={this.props.nameLabel ?? 'Name'}
-            placeholder={this.props.namePlaceholder ?? 'name'}
+            label={this.props.nameLabel ?? '名称'}
+            placeholder={this.props.namePlaceholder ?? '名称'}
             onValueChanged={this.onNameChanged}
             ariaDescribedBy={this.props.nameAriaDescribedBy}
           />
@@ -194,16 +192,14 @@ export class RepositoryPath extends React.Component<
         <Row>
           <TextBox
             value={this.state.path ?? ''}
-            label={
-              this.props.pathLabel ?? (__DARWIN__ ? 'Local Path' : 'Local path')
-            }
-            placeholder={this.props.pathPlaceholder ?? 'path'}
+            label={this.props.pathLabel ?? '本地路径'}
+            placeholder={this.props.pathPlaceholder ?? '路径'}
             onValueChanged={this.onPathChanged}
             disabled={loadingPath}
             ariaDescribedBy={this.props.pathAriaDescribedBy}
           />
           <Button onClick={this.showFilePicker} disabled={loadingPath}>
-            Choose…
+            选择…
           </Button>
         </Row>
       </>

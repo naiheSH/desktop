@@ -1,0 +1,34 @@
+name: Branch Checks
+
+on:
+  push:
+    branches: [l10n, l10n-beta]
+  pull_request:
+    branches: [l10n, l10n-beta]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - uses: ./.github/actions/setup-ci-environment
+        with:
+          node-version: 24.15.0
+          arch: arm64
+      - run: yarn validate-electron-version
+      - run: yarn lint
+      - run: yarn compile:script
+      - run: yarn compile:prod
+      - run: yarn test:setup
+      - run: yarn test:unit
+      - run: yarn test:script
+      - run: git diff --exit-code

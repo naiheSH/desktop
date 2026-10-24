@@ -25,19 +25,16 @@ export class CopilotAppNotFoundDialog extends React.Component<ICopilotAppNotFoun
       >
         <DialogContent>
           <p>
-            Couldn't find the GitHub Copilot App on your machine. Experience
-            agent-driven development built natively on GitHub by{' '}
+            未在此电脑上找到 GitHub Copilot 应用。你可以
             <LinkButton uri={copilotAppMarketingUrl}>
-              downloading GitHub Copilot
+              下载 GitHub Copilot
             </LinkButton>
-            .
+            。
           </p>
           <p>
-            Already installed it? Let us know where in{' '}
-            <LinkButton onClick={this.onShowPreferences}>
-              Preferences
-            </LinkButton>
-            .
+            已经安装？请在
+            <LinkButton onClick={this.onShowPreferences}>偏好设置</LinkButton>
+            中指定应用位置。
           </p>
         </DialogContent>
         <DefaultDialogFooter />

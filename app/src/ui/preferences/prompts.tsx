@@ -307,7 +307,7 @@ export class Prompts extends React.Component<
               onChange={this.onConfirmCommitMessageOverrideChanged}
             />
             <Checkbox
-              label="Removing worktrees"
+              label="删除工作树"
               value={
                 this.state.confirmWorktreeRemoval
                   ? CheckboxValue.On

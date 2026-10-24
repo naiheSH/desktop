@@ -372,7 +372,7 @@ export class Integrations extends React.Component<
 
   private onChooseCopilotAppPath = async () => {
     const path = await showOpenDialog({
-      title: 'Choose GitHub Copilot',
+      title: '选择 GitHub Copilot',
       properties: __DARWIN__ ? ['openFile', 'openDirectory'] : ['openFile'],
       filters: [
         { name: 'GitHub Copilot', extensions: [__DARWIN__ ? 'app' : 'exe'] },
@@ -395,22 +395,20 @@ export class Integrations extends React.Component<
           <h2>GitHub Copilot</h2>
         </legend>
         <p>
-          Experience agent-driven development built natively on GitHub.{' '}
+          体验 GitHub 原生的智能体开发功能。
           <LinkButton uri={copilotAppMarketingUrl}>
-            Learn more about GitHub Copilot
+            了解 GitHub Copilot
           </LinkButton>
-          .
+          。
         </p>
         <Row>
           <div className="custom-integration-form-container">
             <div className="custom-integration-form-path-container">
               <TextBox
-                label="App location"
+                label="应用位置"
                 value={this.state.copilotAppPath}
                 placeholder={
-                  __DARWIN__
-                    ? 'path to GitHub Copilot.app'
-                    : 'path to github.exe'
+                  __DARWIN__ ? 'GitHub Copilot.app 的路径' : 'github.exe 的路径'
                 }
                 onValueChanged={this.onCopilotAppPathChanged}
                 ariaDescribedBy={
@@ -419,7 +417,7 @@ export class Integrations extends React.Component<
                     : 'copilot-app-path-error'
                 }
               />
-              <Button onClick={this.onChooseCopilotAppPath}>Choose…</Button>
+              <Button onClick={this.onChooseCopilotAppPath}>选择…</Button>
             </div>
             {this.props.copilotAppPathError !== undefined && (
               <div className="custom-integration-form-error">

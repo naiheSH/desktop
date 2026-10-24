@@ -33,13 +33,13 @@ function renderAppearance(alwaysShowWorktreeList = false) {
 }
 
 describe('Appearance preferences', () => {
-  it('shows the worktree preference below Diff Tab Size in Miscellaneous', () => {
+  it('shows the worktree preference below Diff Tab Size in 其他', () => {
     renderAppearance()
 
-    const heading = screen.getByRole('heading', { name: 'Miscellaneous' })
-    const tabSize = screen.getByRole('combobox', { name: /Diff Tab Size/i })
+    const heading = screen.getByRole('heading', { name: '其他' })
+    const tabSize = screen.getByRole('combobox', { name: '差异对比制表符宽度' })
     const checkbox = screen.getByRole('checkbox', {
-      name: 'Always show worktree list',
+      name: '始终显示工作树列表',
     })
 
     assert.strictEqual(
@@ -61,7 +61,7 @@ describe('Appearance preferences', () => {
   it('reports enabling and disabling the preference and reflects updated props', () => {
     const { rerender, props, changes } = renderAppearance()
     const checkbox = screen.getByRole('checkbox', {
-      name: 'Always show worktree list',
+      name: '始终显示工作树列表',
     })
     fireEvent.click(checkbox)
     assert.deepStrictEqual(changes, [true])

@@ -41,7 +41,7 @@ export class RebaseConflictsBanner extends React.Component<
         <Octicon className="alert-icon" symbol={octicons.alert} />
         <div className="banner-message">
           <span>
-            解决冲突后才能继续重构 <strong>{this.props.targetBranch}</strong>。
+            解决冲突后才能继续变基 <strong>{this.props.targetBranch}</strong>。
           </span>
           <LinkButton onClick={this.openDialog}>查看冲突</LinkButton>
         </div>

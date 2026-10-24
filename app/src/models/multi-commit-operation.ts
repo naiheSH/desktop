@@ -11,7 +11,7 @@ import { IDetachedHead, IUnbornRepository, IValidBranch } from './tip'
  * and as such should be capitalized.
  */
 export const enum MultiCommitOperationKind {
-  Rebase = '重构',
+  Rebase = '变基',
   CherryPick = '摘取',
   Squash = '压缩',
   Merge = '合并',

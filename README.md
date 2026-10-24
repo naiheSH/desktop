@@ -20,7 +20,7 @@
 
 ## 安装
 
-请前往 [**最新发行版**](https://github.com/zetaloop/desktop/releases/latest) 中下载中文版安装包。
+请前往 [**最新发行版**](https://github.com/naiheSH/desktop/releases/latest) 中下载中文版安装包。
 
 | 系统            | 下载哪个安装包                  | 说明           |
 | --------------- | ------------------------------- | -------------- |
@@ -59,7 +59,7 @@
 
 ## 自动更新
 
-更新服务器 [zetaloop/desktop-metadata](https://github.com/zetaloop/desktop-metadata) (GitHub Pages)
+更新服务器 [naiheSH/desktop-metadata](https://github.com/naiheSH/desktop-metadata) (GitHub Pages)
 
 Windows：支持自动更新。<br>
 macOS：支持自动更新。<br>

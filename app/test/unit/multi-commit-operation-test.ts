@@ -15,7 +15,7 @@ import { TipState } from '../../src/models/tip'
 describe('multi-commit-operation', () => {
   describe('isIdMultiCommitOperation', () => {
     it('returns true for Rebase', () => {
-      assert.equal(isIdMultiCommitOperation('重构'), true)
+      assert.equal(isIdMultiCommitOperation('变基'), true)
     })
 
     it('returns true for Cherry-pick', () => {

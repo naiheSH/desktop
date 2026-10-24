@@ -81,11 +81,9 @@ describe('AddExistingRepository directory exceptions', () => {
       />
     )
 
-    fireEvent.click(
-      screen.getByRole('button', { name: /add repository/i, hidden: true })
-    )
+    fireEvent.click(screen.getByRole('button', { name: '添加', hidden: true }))
     const trustButton = await screen.findByRole('button', {
-      name: 'add an exception for this directory',
+      name: '把文件夹添加到信任列表',
       hidden: true,
     })
     assert.deepStrictEqual(getRepositoryType.mock.calls[0].arguments, [
@@ -112,7 +110,7 @@ describe('AddExistingRepository directory exceptions', () => {
       assert.ok(view.container.querySelector('.dialog-header .spin') === null)
       assert.ok(
         screen.queryByRole('button', {
-          name: 'add an exception for this directory',
+          name: '把文件夹添加到信任列表',
           hidden: true,
         }) === null
       )
@@ -152,7 +150,7 @@ describe('AddExistingRepository directory exceptions', () => {
     assert.strictEqual(getRepositoryType.mock.callCount(), 1)
     assert.ok(
       screen.getByRole('button', {
-        name: 'add an exception for this directory',
+        name: '把文件夹添加到信任列表',
         hidden: true,
       })
     )
@@ -174,7 +172,7 @@ describe('MissingRepository directory exceptions', () => {
       />
     )
     const trustButton = await screen.findByRole('button', {
-      name: /trust repository/i,
+      name: '信任该仓库',
     })
     assert.deepStrictEqual(getRepositoryType.mock.calls[0].arguments, [
       requestedPath,

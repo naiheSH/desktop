@@ -141,22 +141,16 @@ describe('welcome and sign-in wrappers', () => {
     const state = createConfirmationState()
     render(
       <SignIn signInState={state} dispatcher={toDispatcher(dispatcher)}>
-        <button type="button">Cancel</button>
+        <button type="button">取消</button>
       </SignIn>
     )
 
     assert.ok(screen.getByText('https://enterprise.example.com'))
+    assert.ok(screen.getByText('Git 正在请求登录以下服务器：'))
+    assert.ok(screen.getByText('请确认你认识并信任此服务器后再继续。'))
     assert.ok(
       screen.getByText(
-        'Git is requesting permission to sign in to this server:'
-      )
-    )
-    assert.ok(
-      screen.getByText('Only continue if you recognize and trust this server.')
-    )
-    assert.ok(
-      screen.getByText(
-        /Confirm this address appears in your browser\. Otherwise, cancel and contact your repository administrator\./
+        /请确认浏览器中显示的是此地址。如果不一致，请取消并联系仓库管理员。/
       )
     )
     assert.strictEqual(screen.queryByRole('list'), null)
@@ -166,9 +160,7 @@ describe('welcome and sign-in wrappers', () => {
       warning.querySelector('svg')?.getAttribute('aria-hidden'),
       'true'
     )
-    fireEvent.click(
-      screen.getByRole('link', { name: /sign in using your browser/i })
-    )
+    fireEvent.click(screen.getByRole('link', { name: /通过浏览器登录/ }))
 
     assert.deepStrictEqual(dispatcher.enteredEndpoints, [])
     assert.deepStrictEqual(dispatcher.confirmationGuidanceRequests, [])
@@ -212,9 +204,7 @@ describe('welcome and sign-in wrappers', () => {
       null
     )
     assert.ok(screen.getByText('https://enterprise.example.com'))
-    assert.ok(
-      screen.getByText('Only continue if you recognize and trust this server.')
-    )
+    assert.ok(screen.getByText('请确认你认识并信任此服务器后再继续。'))
     assert.strictEqual(
       screen.queryByRole('button', {
         name: /trust server/i,
@@ -226,7 +216,7 @@ describe('welcome and sign-in wrappers', () => {
 
     fireEvent.click(
       screen.getByRole('button', {
-        name: /continue with browser/i,
+        name: /打开浏览器/,
         hidden: true,
       })
     )
@@ -235,9 +225,7 @@ describe('welcome and sign-in wrappers', () => {
       'https://enterprise.example.com',
     ])
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Cancel', hidden: true })
-    )
+    fireEvent.click(screen.getByRole('button', { name: '取消', hidden: true }))
     assert.strictEqual(await result, undefined)
     assert.strictEqual(dispatcher.closedPopupCount, 1)
   })
@@ -260,9 +248,7 @@ describe('welcome and sign-in wrappers', () => {
       />
     )
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Cancel', hidden: true })
-    )
+    fireEvent.click(screen.getByRole('button', { name: '取消', hidden: true }))
 
     assert.strictEqual(await result, undefined)
     assert.strictEqual(store.getState(), null)
@@ -279,7 +265,7 @@ describe('welcome and sign-in wrappers', () => {
         signInState={createEndpointState()}
         dispatcher={toDispatcher(dispatcher)}
       >
-        <button type="button">Cancel</button>
+        <button type="button">取消</button>
       </SignIn>
     )
 
@@ -294,7 +280,7 @@ describe('welcome and sign-in wrappers', () => {
     assert.deepEqual(dispatcher.enteredEndpoints, [
       'https://enterprise.example.com',
     ])
-    assert.ok(screen.getByRole('button', { name: 'Cancel' }))
+    assert.ok(screen.getByRole('button', { name: '取消' }))
   })
 
   it('renders warning and browser-authentication states in the shared sign-in wrapper', () => {
@@ -304,7 +290,7 @@ describe('welcome and sign-in wrappers', () => {
         signInState={createExistingAccountWarningState()}
         dispatcher={toDispatcher(dispatcher)}
       >
-        <button type="button">Cancel</button>
+        <button type="button">取消</button>
       </SignIn>
     )
 

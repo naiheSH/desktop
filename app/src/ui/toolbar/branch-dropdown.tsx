@@ -187,11 +187,11 @@ export class BranchDropdown extends React.Component<IBranchDropdownProps> {
       canOpen = false
     } else if (conflictState !== null && isRebaseConflictState(conflictState)) {
       title = conflictState.targetBranch
-      description = '正在重构分支'
+      description = '正在变基分支'
       icon = octicons.gitBranch
       canOpen = false
       disabled = true
-      tooltip = `正在重构 ${conflictState.targetBranch}`
+      tooltip = `正在变基 ${conflictState.targetBranch}`
     }
 
     const isOpen = this.props.isOpen

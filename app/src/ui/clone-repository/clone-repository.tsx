@@ -691,7 +691,7 @@ export class CloneRepository extends React.Component<
       Path.basename(Path.resolve(path)).toLowerCase().endsWith('.app')
     ) {
       return new Error(
-        'The local path cannot end in .app on macOS. Choose a different folder name to avoid creating an application bundle.'
+        '在 macOS 上，本地路径不能以 .app 结尾。请使用其他文件夹名称，以免被识别为应用程序包。'
       )
     }
 

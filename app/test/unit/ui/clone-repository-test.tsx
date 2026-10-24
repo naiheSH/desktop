@@ -12,7 +12,7 @@ import { createTempDirectory } from '../../helpers/temp'
 import { fireEvent, render, screen, waitFor } from '../../helpers/ui/render'
 
 const applicationPathError =
-  'The local path cannot end in .app on macOS. Choose a different folder name to avoid creating an application bundle.'
+  '在 macOS 上，本地路径不能以 .app 结尾。请使用其他文件夹名称，以免被识别为应用程序包。'
 
 async function renderCloneDialog(
   t: TestContext,
@@ -57,13 +57,13 @@ async function renderCloneDialog(
   )
 
   const pathInput = screen.getByRole('textbox', {
-    name: /Local path/i,
+    name: /本地保存文件夹/,
     hidden: true,
   })
   assert.ok(pathInput instanceof HTMLInputElement)
   await waitFor(() => assert.notStrictEqual(pathInput.value, ''))
   const cloneButton = screen.getByRole('button', {
-    name: 'Clone',
+    name: '克隆',
     hidden: true,
   })
   assert.ok(cloneButton instanceof HTMLButtonElement)
@@ -130,7 +130,7 @@ describe('CloneRepository path validation', () => {
   it('validates paths derived after editing the repository URL', async t => {
     const { directory, pathInput, cloneButton } = await renderCloneDialog(t)
     const urlInput = screen.getByRole('textbox', {
-      name: /Repository URL/,
+      name: /仓库网址/,
       hidden: true,
     })
     fireEvent.change(urlInput, {
@@ -160,9 +160,7 @@ describe('CloneRepository path validation', () => {
       return path
     })
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Choose…', hidden: true })
-    )
+    fireEvent.click(screen.getByRole('button', { name: '选择…', hidden: true }))
 
     await waitFor(() => assert.ok(screen.getByText(applicationPathError)))
     assert.strictEqual(pathInput.value, path)
@@ -194,9 +192,7 @@ describe('CloneRepository path validation', () => {
 
     await waitFor(() =>
       assert.ok(
-        screen.getByText(
-          'This folder contains files. Git can only clone to empty folders.'
-        )
+        screen.getByText('该文件夹存在文件，Git 需要克隆到空的文件夹里。')
       )
     )
     assert.strictEqual(cloneButton.getAttribute('aria-disabled'), 'true')

@@ -15,12 +15,12 @@ export function SuccessfulRebase({
       <span>
         {'成功将 '}
         <strong>{targetBranch}</strong>
-        {' 重构于 '}
+        {' 变基于 '}
         <strong>{baseBranch}</strong>
       </span>
     ) : (
       <span>
-        {'成功重构了 '}
+        {'成功变基了 '}
         <strong>{targetBranch}</strong>
       </span>
     )

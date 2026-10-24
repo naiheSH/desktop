@@ -115,7 +115,7 @@ export class CIStatus extends React.PureComponent<
           this.props.className
         )}
         symbol={getSymbolForCheck(check)}
-        title={`Checks: ${getCheckRunConclusionAdjective(check.conclusion)}`}
+        title={`检查：${getCheckRunConclusionAdjective(check.conclusion)}`}
       />
     )
   }

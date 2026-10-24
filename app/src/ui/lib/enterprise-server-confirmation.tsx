@@ -19,18 +19,15 @@ export class EnterpriseServerConfirmation extends React.Component<IEnterpriseSer
         id={enterpriseServerConfirmationDescriptionId}
         className="enterprise-server-confirmation"
       >
-        <p>Git is requesting permission to sign in to this server:</p>
+        <p>Git 正在请求登录以下服务器：</p>
         <p>
           <Ref>{getHTMLURL(this.props.endpoint)}</Ref>
         </p>
         <div className="enterprise-server-warning">
           <Octicon symbol={octicons.alert} />
           <p>
-            <strong>
-              Only continue if you recognize and trust this server.
-            </strong>{' '}
-            Confirm this address appears in your browser. Otherwise, cancel and
-            contact your repository administrator.
+            <strong>请确认你认识并信任此服务器后再继续。</strong>{' '}
+            请确认浏览器中显示的是此地址。如果不一致，请取消并联系仓库管理员。
           </p>
         </div>
       </div>

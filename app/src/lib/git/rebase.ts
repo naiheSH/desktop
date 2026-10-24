@@ -625,7 +625,7 @@ export async function rebaseInteractive(
       ref,
     ],
     repository.path,
-    opts?.action ?? '交互式重构',
+    opts?.action ?? '交互式变基',
     options
   )
 

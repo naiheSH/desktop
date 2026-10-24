@@ -1028,8 +1028,8 @@ export class Preferences extends React.Component<
       this.setState({
         selectedIndex: PreferencesTab.Integrations,
         copilotAppPathError: __DARWIN__
-          ? 'Choose the GitHub Copilot application (.app).'
-          : 'Choose the GitHub Copilot executable (github.exe).',
+          ? '请选择 GitHub Copilot 应用程序（.app）。'
+          : '请选择 GitHub Copilot 可执行文件（github.exe）。',
       })
       return
     }

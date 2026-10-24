@@ -541,7 +541,7 @@ export class PushPullButton extends React.Component<
 
   private detachedHeadButton(rebaseInProgress: boolean) {
     const description = rebaseInProgress
-      ? '正在重构'
+      ? '正在变基'
       : '无法发布分离的 HEAD 指针'
 
     return (
@@ -612,7 +612,7 @@ export class PushPullButton extends React.Component<
     onClick: () => void
   ) {
     const title = pullWithRebase
-      ? `拉取 ${remoteName} 并重构`
+      ? `拉取 ${remoteName} 并变基`
       : `拉取 ${remoteName}`
 
     const dropdownItemTypes = [DropdownItemType.Fetch]

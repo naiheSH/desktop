@@ -126,14 +126,14 @@ const buildWorktreeMenuItems = (
 
   if (onShowWorktrees !== undefined) {
     items.push({
-      label: __DARWIN__ ? 'Show Worktrees' : 'Show worktrees',
+      label: '显示工作树',
       action: () => onShowWorktrees(repository),
     })
   }
 
   if (onCreateWorktree !== undefined) {
     items.push({
-      label: __DARWIN__ ? 'New Worktree…' : 'New worktree…',
+      label: '新建工作树…',
       action: () => onCreateWorktree(repository),
     })
   }
